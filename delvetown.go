@@ -2,6 +2,7 @@ package main
 
 import "github.com/veandco/go-sdl2/sdl"
 import "github.com/bennicholls/delvetown/console"
+import "github.com/bennicholls/delvetown/modes"
 import "fmt"
 
 func main() {
@@ -10,6 +11,8 @@ func main() {
 	var event sdl.Event
 
 	console.Setup(100, 50, 16)
+
+	gameMode := modes.NewTown(100, 100)
 
 	running = true
 	frames := 0
@@ -34,7 +37,8 @@ func main() {
 			}
 		}
 
-		console.Render()
+		gameMode.Update()
+		gameMode.Render()
 		frames += 1
 
 		if frames % 1000 == 0 {

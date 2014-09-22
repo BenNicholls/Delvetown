@@ -70,7 +70,6 @@ func Setup(w, h, size int) {
 }
 
 func Render() {
-	spamGlyphs()
 	if masterDirty {
 		var src, dst sdl.Rect
 
@@ -152,7 +151,7 @@ func ChangeSquare(x, y, glyph int, fore, back uint32) {
 }
 
 //Test function.
-func spamGlyphs() {
+func SpamGlyphs() {
 	for n := 0; n < 100; n++ {
 		x := rand.Intn(width)
 		y := rand.Intn(height)
