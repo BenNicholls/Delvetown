@@ -9,14 +9,12 @@ func main() {
 	var running bool
 	var event sdl.Event
 
-	console.Setup(40, 40, 16)
+	console.Setup(100, 50, 16)
 
 	running = true
-
 	frames := 0
 
 	for running {
-
 		for event = sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 			switch event.(type) {
 			case *sdl.QuitEvent:
@@ -34,7 +32,6 @@ func main() {
 			// 	fmt.Printf("[%d ms] Keyboard\ttype:%d\tsym:%c\tmodifiers:%d\tstate:%d\trepeat:%d\n",
 			// 		t.Timestamp, t.Type, t.Keysym.Sym, t.Keysym.Mod, t.State, t.Repeat)
 			}
-
 		}
 
 		console.Render()
