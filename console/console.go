@@ -4,6 +4,7 @@ import "github.com/veandco/go-sdl2/sdl"
 import "fmt"
 import "os"
 import "math/rand"
+import "github.com/bennicholls/delvetown/data"
 
 var window *sdl.Window
 var renderer *sdl.Renderer
@@ -76,10 +77,11 @@ func Render() {
 		for i, s := range grid {
 			if s.dirty {
 				dst = makeRect((i%width)*tileSize, (i/width)*tileSize, tileSize, tileSize)
+				src = makeRect((s.glyph%16)*tileSize, (s.glyph/16)*tileSize, tileSize, tileSize)
+
 				renderer.SetDrawColor(sdl.GetRGBA(s.backColour, format))
 				renderer.FillRect(&dst)
 
-				src = makeRect((s.glyph%16)*tileSize, (s.glyph/16)*tileSize, tileSize, tileSize)
 				sprites.SetColorMod(sdl.GetRGB(s.foreColour, format))
 				renderer.Copy(sprites, &src, &dst)
 
@@ -148,6 +150,16 @@ func ChangeSquare(x, y, glyph int, fore, back uint32) {
 		grid[s].dirty = true
 		masterDirty = true
 	}
+}
+
+//takes (x,y) and a tiletype 
+func DrawTile(x, y, t int) {
+	v := data.GetVisuals(t)
+	ChangeSquare(x, y, v.Glyph, v.ForeColour, v.BackColour)
+}
+
+func GetDims() (w, h int) {
+	return width, height
 }
 
 //Test function.

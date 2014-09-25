@@ -7,14 +7,15 @@ import "fmt"
 
 func main() {
 
-	var running bool
 	var event sdl.Event
 
 	console.Setup(100, 50, 16)
 
-	gameMode := modes.NewTown(100, 100)
+	t := modes.NewTownMode()
 
-	running = true
+	mode := modes.GameModer(t)
+
+	running := true
 	frames := 0
 
 	for running {
@@ -37,8 +38,8 @@ func main() {
 			}
 		}
 
-		gameMode.Update()
-		gameMode.Render()
+		mode.Update()
+		mode.Render()
 		frames += 1
 
 		if frames % 1000 == 0 {
