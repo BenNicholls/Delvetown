@@ -4,8 +4,10 @@ var tiledata []tileTypeData
 
 //tiletypes NOTE: Currently capped to 50 tile types. see init()
 const (
-	TILE_GRASS = iota
+	TILE_NOTHING = iota
+	TILE_GRASS
 	TILE_WALL
+	TILE_WATER
 	MAX_TILETYPES
 )
 
@@ -18,7 +20,6 @@ type tileTypeData struct {
 type tileVisuals struct {
 	Glyph int
 	ForeColour uint32
-	BackColour uint32
 }
 
 func init() {
@@ -26,8 +27,10 @@ func init() {
 	//tiledata[TILETYPE]
 	tiledata = make([]tileTypeData, 50)
 
-	tiledata[TILE_GRASS] = tileTypeData{"Grass", true, tileVisuals{176, 0x00FF00, 0x000000}}
-	tiledata[TILE_WALL] = tileTypeData{"Wall", false, tileVisuals{178, 0x333333, 0x000000}}
+	tiledata[TILE_NOTHING] = tileTypeData{"Nothing", false, tileVisuals{0, 0x000000}}
+	tiledata[TILE_GRASS] = tileTypeData{"Grass", true, tileVisuals{0x2e, 0x00FF00}}
+	tiledata[TILE_WALL] = tileTypeData{"Wall", false, tileVisuals{0x23, 0x333333}}
+	tiledata[TILE_WATER] = tileTypeData{"Water", false, tileVisuals{0xf7, 0x0000FF}}
 }
 
 //takes tiletype, returns glyph

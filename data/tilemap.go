@@ -18,11 +18,36 @@ func (m *TileMap) ChangeTileType(x, y, tile int) {
 }
 
 func (m *TileMap) GetTileType(x, y int) int {
-	if x < m.width && y < m.height {
+	if x < m.width && y < m.height && x >= 0 && y >= 0{
 		return m.tiles[y*m.width + x].tileType
 	} else {
 		return 0
 	}
+}
+
+func (m TileMap) GetEntity(x, y int) *entities.Entity {
+	if x < m.width && y < m.height && x >= 0 && y >= 0 {
+		return m.tiles[x + y * m.width].Entity
+		} else {
+			return nil
+		}
+}
+
+func (m *TileMap) AddEntity(x, y int, e *entities.Entity) {
+	if x < m.width && y < m.height && x >= 0 && y >= 0 {
+		m.tiles[x + y * m.width].Entity = e
+	}
+}
+
+func (m *TileMap) RemoveEntity(x, y int) {
+	if x < m.width && y < m.height && x >= 0 && y >= 0 {
+		m.tiles[x + y * m.width].Entity = nil
+	}
+}
+
+func (m *TileMap) MoveEntity(x, y, dx, dy int) {
+	m.AddEntity(x + dx, y + dy, m.tiles[x + y* m.width].Entity)
+	m.RemoveEntity(x, y)
 }
 
 //Basic unit for the world. Holds a type (grass, wall, etc), a list of contained items
@@ -31,5 +56,5 @@ func (m *TileMap) GetTileType(x, y int) int {
 type Tile struct {
 	tileType, variant int
 	passable bool
-	entity *entities.Entity
+	Entity *entities.Entity
 }

@@ -4,7 +4,6 @@ import "github.com/veandco/go-sdl2/sdl"
 import "fmt"
 import "os"
 import "math/rand"
-import "github.com/bennicholls/delvetown/data"
 
 var window *sdl.Window
 var renderer *sdl.Renderer
@@ -13,15 +12,25 @@ var format *sdl.PixelFormat
 
 var width, height, tileSize int
 
-var grid []square
-var masterDirty bool
+var grid []GridPoint
+var masterDirty bool //is this necessary?
 
-//NOTE: rename this sometime. square? come on.
-type square struct {
-	glyph int
-	foreColour uint32
-	backColour uint32
-	dirty bool
+type GridPoint struct {
+	Glyph int
+	ForeColour uint32
+	BackColour uint32
+	Z int 
+	Dirty bool
+}
+
+func (g *GridPoint) Set(gl int, fore, back uint32, z int) {
+	if g.Glyph != gl || g.ForeColour != fore || g.BackColour != back {
+		g.Glyph = gl
+		g.ForeColour = fore
+		g.BackColour = back
+		g.Z = z
+		g.Dirty = true
+	}
 }
 
 //Setup the game window, renderer, etc TODO: have this function emit errors instead of just borking the program
@@ -65,9 +74,8 @@ func Setup(w, h, size int) {
 
 	image.Free()
 
-	grid = make([]square, width*height)
+	grid = make([]GridPoint, width*height)
 	masterDirty = true
-
 }
 
 func Render() {
@@ -75,17 +83,17 @@ func Render() {
 		var src, dst sdl.Rect
 
 		for i, s := range grid {
-			if s.dirty {
+			if s.Dirty {
 				dst = makeRect((i%width)*tileSize, (i/width)*tileSize, tileSize, tileSize)
-				src = makeRect((s.glyph%16)*tileSize, (s.glyph/16)*tileSize, tileSize, tileSize)
+				src = makeRect((s.Glyph%16)*tileSize, (s.Glyph/16)*tileSize, tileSize, tileSize)
 
-				renderer.SetDrawColor(sdl.GetRGBA(s.backColour, format))
+				renderer.SetDrawColor(sdl.GetRGBA(s.BackColour, format))
 				renderer.FillRect(&dst)
 
-				sprites.SetColorMod(sdl.GetRGB(s.foreColour, format))
+				sprites.SetColorMod(sdl.GetRGB(s.ForeColour, format))
 				renderer.Copy(sprites, &src, &dst)
 
-				grid[i].dirty = false
+				grid[i].Dirty = false
 			}
 		}
 
@@ -106,56 +114,62 @@ func Cleanup() {
 }
 
 func ChangeGlyph(x, y, glyph int) {
-	if (x >= width || y >= height) {
+	if x >= width || y >= height {
 		return
 	}
-	if grid[y*width + x].glyph != glyph {
-		grid[y*width + x].glyph = glyph	
-		grid[y*width + x].dirty = true
+	if grid[y*width + x].Glyph != glyph {
+		grid[y*width + x].Glyph = glyph	
+		grid[y*width + x].Dirty = true
 		masterDirty = true
 	}
 }
 
 func ChangeForeColour(x, y int, fore uint32) {
-	if (x >= width || y >= height) {
+	if x >= width || y >= height {
 		return
 	}
-	if grid[y*width + x].foreColour != fore {
-		grid[y*width + x].foreColour = fore
-		grid[y*width + x].dirty = true
+	if grid[y*width + x].ForeColour != fore {
+		grid[y*width + x].ForeColour = fore
+		grid[y*width + x].Dirty = true
 		masterDirty = true
 	}
 }
 
 func ChangeBackColour(x, y int, back uint32) {
-	if (x >= width || y >= height) {
+	if x >= width || y >= height {
 		return
 	}
-	if grid[y*width + x].backColour != back {
-		grid[y*width + x].backColour = back
-		grid[y*width + x].dirty = true
+	if grid[y*width + x].BackColour != back {
+		grid[y*width + x].BackColour = back
+		grid[y*width + x].Dirty = true
 		masterDirty = true
 	}
 }
 
-func ChangeSquare(x, y, glyph int, fore, back uint32) {
-	if (x >= width || y >= height) {
-		return
-	}
+func ChangeGridPoint(x, y, z, glyph int, fore, back uint32) {
 	s := y*width + x
-	if grid[s].glyph != glyph || grid[s].foreColour != fore || grid[s].backColour != back {
-		grid[s].glyph = glyph
-		grid[s].foreColour = fore
-		grid[s].backColour = back
-		grid[s].dirty = true
-		masterDirty = true
+	if x >= width || y >= height || grid[s].Z > z {
+		return
 	}
+	grid[s].Set(glyph, fore, back, z)
+	masterDirty = true
 }
 
-//takes (x,y) and a tiletype 
-func DrawTile(x, y, t int) {
-	v := data.GetVisuals(t)
-	ChangeSquare(x, y, v.Glyph, v.ForeColour, v.BackColour)
+//TODO: border glyph merging, custom colouring, multiple styles, title text
+func DrawBorder(x, y, z, w, h int) {
+	for i := 0; i < w; i++ {
+		ChangeGridPoint(x + i, y - 1, z, 0xc4, 0xFFFFFF, 0x000000)
+		ChangeGridPoint(x + i, y + h, z, 0xc4, 0xFFFFFF, 0x000000)
+	}
+	for i := 0; i < h; i++ {
+		ChangeGridPoint(x - 1, y + i, z, 0xb3, 0xFFFFFF, 0x000000)
+		ChangeGridPoint(x + w, y + i, z, 0xb3, 0xFFFFFF, 0x000000)
+	}
+	ChangeGridPoint(x - 1, y - 1, z, 0xda, 0xFFFFFF, 0x000000)
+	ChangeGridPoint(x - 1, y + h, z, 0xc0, 0xFFFFFF, 0x000000)
+	ChangeGridPoint(x + w, y + h, z, 0xd9, 0xFFFFFF, 0x000000)
+	ChangeGridPoint(x + w, y - 1, z, 0xbf, 0xFFFFFF, 0x000000)
+
 }
 
 func GetDims() (w, h int) {
@@ -167,6 +181,6 @@ func SpamGlyphs() {
 	for n := 0; n < 100; n++ {
 		x := rand.Intn(width)
 		y := rand.Intn(height)
-		ChangeSquare(x, y, rand.Intn(255), sdl.MapRGBA(format, 0, 255, 0, 50), sdl.MapRGBA(format, 255, 0, 0, 255))
+		ChangeGridPoint(x, y, 0, rand.Intn(255), sdl.MapRGBA(format, 0, 255, 0, 50), sdl.MapRGBA(format, 255, 0, 0, 255))
 	}
 }

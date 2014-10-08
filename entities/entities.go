@@ -1,11 +1,14 @@
 package entities
 
 type Entity struct {
-	eType int
-	x, y int
+	Glyph int
+	X, Y int
+	Name string
+	Enemy bool
+	Health int
 }
 
 func (e *Entity) Move(dx, dy int) {
-	e.x += dx
-	e.y += dy
+	e.X += dx
+	e.Y += dy
 }
