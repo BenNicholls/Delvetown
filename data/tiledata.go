@@ -12,18 +12,18 @@ const (
 )
 
 type tileTypeData struct {
-	name string
+	name     string
 	passable bool
-	vis tileVisuals
+	vis      tileVisuals
 }
 
 type tileVisuals struct {
-	Glyph int
+	Glyph      int
 	ForeColour uint32
 }
 
 func init() {
-	
+
 	//tiledata[TILETYPE]
 	tiledata = make([]tileTypeData, 50)
 
@@ -45,4 +45,3 @@ func IsPassable(t int) bool {
 func GetVisuals(t int) tileVisuals {
 	return tiledata[t].vis
 }
-

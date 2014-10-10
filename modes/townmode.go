@@ -46,9 +46,8 @@ func (tm TownMode) Update() {
 
 }
 
-func (tm TownMode)  Render() {
+func (tm TownMode) Render() {
 
 	tm.text.Render()
 
 }
-

@@ -4,7 +4,7 @@ import "github.com/bennicholls/delvetown/entities"
 
 type TileMap struct {
 	width, height int
-	tiles []Tile
+	tiles         []Tile
 }
 
 func NewMap(w, h int) *TileMap {
@@ -13,13 +13,13 @@ func NewMap(w, h int) *TileMap {
 
 func (m *TileMap) ChangeTileType(x, y, tile int) {
 	if x < m.width && y < m.height {
-		m.tiles[y*m.width + x].tileType = tile
+		m.tiles[y*m.width+x].tileType = tile
 	}
 }
 
 func (m *TileMap) GetTileType(x, y int) int {
-	if x < m.width && y < m.height && x >= 0 && y >= 0{
-		return m.tiles[y*m.width + x].tileType
+	if x < m.width && y < m.height && x >= 0 && y >= 0 {
+		return m.tiles[y*m.width+x].tileType
 	} else {
 		return 0
 	}
@@ -27,26 +27,26 @@ func (m *TileMap) GetTileType(x, y int) int {
 
 func (m TileMap) GetEntity(x, y int) *entities.Entity {
 	if x < m.width && y < m.height && x >= 0 && y >= 0 {
-		return m.tiles[x + y * m.width].Entity
-		} else {
-			return nil
-		}
+		return m.tiles[x+y*m.width].Entity
+	} else {
+		return nil
+	}
 }
 
 func (m *TileMap) AddEntity(x, y int, e *entities.Entity) {
 	if x < m.width && y < m.height && x >= 0 && y >= 0 {
-		m.tiles[x + y * m.width].Entity = e
+		m.tiles[x+y*m.width].Entity = e
 	}
 }
 
 func (m *TileMap) RemoveEntity(x, y int) {
 	if x < m.width && y < m.height && x >= 0 && y >= 0 {
-		m.tiles[x + y * m.width].Entity = nil
+		m.tiles[x+y*m.width].Entity = nil
 	}
 }
 
 func (m *TileMap) MoveEntity(x, y, dx, dy int) {
-	m.AddEntity(x + dx, y + dy, m.tiles[x + y* m.width].Entity)
+	m.AddEntity(x+dx, y+dy, m.tiles[x+y*m.width].Entity)
 	m.RemoveEntity(x, y)
 }
 
@@ -55,6 +55,6 @@ func (m *TileMap) MoveEntity(x, y, dx, dy int) {
 //Eventually will hold pathfinding information too.
 type Tile struct {
 	tileType, variant int
-	passable bool
-	Entity *entities.Entity
+	passable          bool
+	Entity            *entities.Entity
 }

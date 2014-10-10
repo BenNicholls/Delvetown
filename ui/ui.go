@@ -3,6 +3,37 @@ package ui
 import "github.com/bennicholls/delvetown/console"
 import "github.com/bennicholls/delvetown/data"
 
+type UIElem interface {
+	Render(offset ...int)
+	GetDims() (int, int)
+}
+
+type Container struct {
+	width, height int
+	x, y, z int
+	bordered bool
+
+	Elements []UIElem
+}
+
+func NewContainer(w,h,x,y,z int, bord bool) *Container {
+	return &Container{w,h,x,y,z,bord, make([]UIElem, 0, 20)}
+}
+
+func (c *Container) Add(elem UIElem) {
+	c.Elements = append(c.Elements, elem)
+}
+
+func (c *Container) Render() {
+	for i := 0; i < len(c.Elements); i++ {
+		c.Elements[i].Render(c.x, c.y)
+	}
+
+	if c.bordered {
+			console.DrawBorder(c.x, c.y, c.z, c.width, c.height)
+		}
+}
+
 //TODO: Split this into separate files for each UI element
 type Textbox struct {
 	width, height int
@@ -27,24 +58,34 @@ func (t *Textbox) ChangeText(txt string) {
 }
 
 //TODO: word wrap. scroll bar? (maybe a "MORE" prompt might be easier), separate dirty flag for the border?
-func (t *Textbox) Render() {
+//Render function optionally takes an offset (for containering), strictly 2 ints.
+func (t *Textbox) Render(offset ...int) {
 	if t.dirty{
+		offX, offY := 0, 0
+		if len(offset) == 2 {
+			offX, offY = offset[0], offset[1]
+		}
+
 		i, r := 0, rune(0)
 		for i, r = range t.text {
 			if i >= t.width*t.height {
 				break
 			}
-			console.ChangeGridPoint(t.x + i%t.width, t.y + i/t.width, t.z, int(r), 0xFFFFFF, 0x000000)
+			console.ChangeGridPoint(offX + t.x + i%t.width, offY + t.y + i/t.width, t.z, int(r), 0xFFFFFF, 0x000000)
 		}
 		for i++ ; i < t.width*t.height; i++ {
-			console.ChangeGridPoint(t.x + i%t.width, t.y + i/t.width, t.z, 0, 0x000000, 0x000000)
+			console.ChangeGridPoint(offX + t.x + i%t.width, offY + t.y + i/t.width, t.z, 0, 0x000000, 0x000000)
 		}
 
 		if t.bordered {
-			console.DrawBorder(t.x, t.y, t.z, t.width, t.height)
+			console.DrawBorder(offX + t.x, offY + t.y, t.z, t.width, t.height)
 		}
 		t.dirty = false
 	}	
+}
+
+func (t Textbox) GetDims() (int, int) {
+	return t.width, t.height
 }
 
 //View object for drawing tiles. (eg. maps). Effectively a buffer for drawing before the console grabs it.
@@ -90,4 +131,8 @@ func (tv TileView) Render() {
 	if tv.bordered {
 		console.DrawBorder(tv.x, tv.y, tv.z, tv.Width, tv.Height)
 	}
+}
+
+func (tv TileView) GetDims() (int, int) {
+	return tv.Width, tv.Height
 }

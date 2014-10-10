@@ -16,11 +16,11 @@ var grid []GridPoint
 var masterDirty bool //is this necessary?
 
 type GridPoint struct {
-	Glyph int
+	Glyph      int
 	ForeColour uint32
 	BackColour uint32
-	Z int 
-	Dirty bool
+	Z          int
+	Dirty      bool
 }
 
 func (g *GridPoint) Set(gl int, fore, back uint32, z int) {
@@ -50,6 +50,7 @@ func Setup(w, h, size int) {
 	format, err = sdl.AllocFormat(uint(window.GetPixelFormat()))
 	if err != nil {
 		fmt.Println("No pixelformat: %s\n", sdl.GetError())
+		os.Exit(2)
 	}
 
 	renderer = sdl.CreateRenderer(window, -1, sdl.RENDERER_ACCELERATED)
@@ -61,7 +62,7 @@ func Setup(w, h, size int) {
 	image := sdl.LoadBMP("res/curses.bmp")
 	if image == nil {
 		fmt.Println("Failed to load image: %s\n", sdl.GetError())
-		os.Exit(2)	
+		os.Exit(2)
 	}
 
 	image.SetColorKey(1, 0xFF00FF)
@@ -69,7 +70,7 @@ func Setup(w, h, size int) {
 	sprites = renderer.CreateTextureFromSurface(image)
 	if sprites == nil {
 		fmt.Println("Failed to create sprite texture: %s\n", sdl.GetError())
-		os.Exit(2)	
+		os.Exit(2)
 	}
 
 	image.Free()
@@ -117,9 +118,9 @@ func ChangeGlyph(x, y, glyph int) {
 	if x >= width || y >= height {
 		return
 	}
-	if grid[y*width + x].Glyph != glyph {
-		grid[y*width + x].Glyph = glyph	
-		grid[y*width + x].Dirty = true
+	if grid[y*width+x].Glyph != glyph {
+		grid[y*width+x].Glyph = glyph
+		grid[y*width+x].Dirty = true
 		masterDirty = true
 	}
 }
@@ -128,9 +129,9 @@ func ChangeForeColour(x, y int, fore uint32) {
 	if x >= width || y >= height {
 		return
 	}
-	if grid[y*width + x].ForeColour != fore {
-		grid[y*width + x].ForeColour = fore
-		grid[y*width + x].Dirty = true
+	if grid[y*width+x].ForeColour != fore {
+		grid[y*width+x].ForeColour = fore
+		grid[y*width+x].Dirty = true
 		masterDirty = true
 	}
 }
@@ -139,9 +140,9 @@ func ChangeBackColour(x, y int, back uint32) {
 	if x >= width || y >= height {
 		return
 	}
-	if grid[y*width + x].BackColour != back {
-		grid[y*width + x].BackColour = back
-		grid[y*width + x].Dirty = true
+	if grid[y*width+x].BackColour != back {
+		grid[y*width+x].BackColour = back
+		grid[y*width+x].Dirty = true
 		masterDirty = true
 	}
 }
@@ -158,17 +159,17 @@ func ChangeGridPoint(x, y, z, glyph int, fore, back uint32) {
 //TODO: border glyph merging, custom colouring, multiple styles, title text
 func DrawBorder(x, y, z, w, h int) {
 	for i := 0; i < w; i++ {
-		ChangeGridPoint(x + i, y - 1, z, 0xc4, 0xFFFFFF, 0x000000)
-		ChangeGridPoint(x + i, y + h, z, 0xc4, 0xFFFFFF, 0x000000)
+		ChangeGridPoint(x+i, y-1, z, 0xc4, 0xFFFFFF, 0x000000)
+		ChangeGridPoint(x+i, y+h, z, 0xc4, 0xFFFFFF, 0x000000)
 	}
 	for i := 0; i < h; i++ {
-		ChangeGridPoint(x - 1, y + i, z, 0xb3, 0xFFFFFF, 0x000000)
-		ChangeGridPoint(x + w, y + i, z, 0xb3, 0xFFFFFF, 0x000000)
+		ChangeGridPoint(x-1, y+i, z, 0xb3, 0xFFFFFF, 0x000000)
+		ChangeGridPoint(x+w, y+i, z, 0xb3, 0xFFFFFF, 0x000000)
 	}
-	ChangeGridPoint(x - 1, y - 1, z, 0xda, 0xFFFFFF, 0x000000)
-	ChangeGridPoint(x - 1, y + h, z, 0xc0, 0xFFFFFF, 0x000000)
-	ChangeGridPoint(x + w, y + h, z, 0xd9, 0xFFFFFF, 0x000000)
-	ChangeGridPoint(x + w, y - 1, z, 0xbf, 0xFFFFFF, 0x000000)
+	ChangeGridPoint(x-1, y-1, z, 0xda, 0xFFFFFF, 0x000000)
+	ChangeGridPoint(x-1, y+h, z, 0xc0, 0xFFFFFF, 0x000000)
+	ChangeGridPoint(x+w, y+h, z, 0xd9, 0xFFFFFF, 0x000000)
+	ChangeGridPoint(x+w, y-1, z, 0xbf, 0xFFFFFF, 0x000000)
 
 }
 

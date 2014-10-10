@@ -3,14 +3,12 @@ package data
 import "github.com/bennicholls/delvetown/entities"
 
 type Town struct {
-	
 	Name string
 
-	Townmap *TileMap
+	Townmap       *TileMap
 	Width, Height int
 
 	entityList []entities.Entity
-
 }
 
 //sets up a bare town object.
