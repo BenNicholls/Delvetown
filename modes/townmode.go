@@ -7,7 +7,7 @@ import "errors"
 
 //eventually move this to a more general "modes.go" file
 type GameModer interface {
-	Update()
+	Update() GameModer
 	Render()
 	HandleKeypress(sdl.Keycode)
 }
@@ -42,8 +42,8 @@ func (tm *TownMode) UnloadTown() {
 	tm.town = nil
 }
 
-func (tm TownMode) Update() {
-
+func (tm TownMode) Update() GameModer {
+	return nil
 }
 
 func (tm TownMode) Render() {

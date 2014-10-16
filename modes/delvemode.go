@@ -15,7 +15,8 @@ type DelveMode struct {
 	sidebar *ui.Container //holds the various ui elements for the player's info display.
 
 	//sidebar ui elements
-	hp *ui.Textbox
+	hp          *ui.Textbox
+	stepCounter *ui.Textbox
 
 	level *data.Level
 
@@ -42,8 +43,8 @@ func NewDelveMode() *DelveMode {
 	dm.sidebar.Add(dm.hp)
 
 	//Level Up!
-	dm.level = data.NewLevel(50, 50)
-	dm.level.GenerateArena(30, 30)
+	dm.level = data.NewLevel(100, 100)
+	dm.level.GenerateArena(100, 100)
 	dm.player = dm.level.Player
 
 	dm.pDX, dm.pDY = 0, 0
@@ -65,7 +66,7 @@ func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 	}
 }
 
-func (dm *DelveMode) Update() {
+func (dm *DelveMode) Update() GameModer {
 
 	//player movement
 	if dm.pDX != 0 || dm.pDY != 0 {
@@ -76,6 +77,12 @@ func (dm *DelveMode) Update() {
 
 	dm.hp.ChangeText("HP: " + strconv.Itoa(dm.player.Health))
 	dm.tick++
+
+	if dm.player.Health <= 0 {
+		return NewGameOver()
+	}
+
+	return nil
 }
 
 func (dm *DelveMode) Render() {
@@ -83,17 +90,22 @@ func (dm *DelveMode) Render() {
 	w, h := dm.view.Width, dm.view.Height
 	dm.xCamera, dm.yCamera = dm.player.X-dm.view.Width/2, dm.player.Y-dm.view.Height/2
 
+	//Draw the world.
 	var e *entities.Entity
 	for i := 0; i < w*h; i++ {
 		x, y := i%w+dm.xCamera, i/w+dm.yCamera
+
+		//try to see if an entity is occupying the space. if so, draw it. otherwise, draw the tile.
 		e = dm.level.Levelmap.GetEntity(x, y)
 		if e != nil {
-			dm.view.DrawEntity(i%w, i/w, e.Glyph)
+			dm.view.DrawEntity(i%w, i/w, e.Glyph, e.Fore)
 		} else {
 			t := dm.level.Levelmap.GetTileType(x, y)
 			dm.view.DrawTile(i%w, i/w, t)
 		}
 	}
+
+	//render ui elements
 	dm.logbox.Render()
 	dm.view.Render()
 	dm.sidebar.Render()

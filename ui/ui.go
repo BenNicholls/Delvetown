@@ -112,10 +112,10 @@ func (tv *TileView) DrawTile(x, y, t int) {
 		
 }
 
-func (tv *TileView) DrawEntity(x, y, g int) {
+func (tv *TileView) DrawEntity(x, y, g int, c uint32) {
 
 	if x < tv.Width && y < tv.Height {
-			tv.grid[y * tv.Width + x].Set(g, 0xFF00FF, 0x000000, tv.z)
+			tv.grid[y * tv.Width + x].Set(g, c, 0x000000, tv.z)
 			tv.dirty = true
 	}
 		

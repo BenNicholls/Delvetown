@@ -8,12 +8,14 @@ import "fmt"
 func main() {
 
 	var event sdl.Event
+	var mode modes.GameModer
 
 	console.Setup(100, 50, 16)
+	defer console.Cleanup()
 
-	m := modes.NewDelveMode()
+	mode = modes.NewDelveMode()
 
-	mode := modes.GameModer(m)
+	//mode := modes.GameModer(m)
 
 	running := true
 	frames := 0
@@ -40,7 +42,11 @@ func main() {
 		}
 
 		//Tick the game
-		mode.Update()
+		m := mode.Update()
+		if m != nil {
+			console.Clear()
+			mode = m
+		}
 
 		//Push changes to console
 		mode.Render()
@@ -49,6 +55,7 @@ func main() {
 		//reconsider when animations and UI effects go in.
 		console.Render()
 
+
 		frames += 1
 
 		if frames%5000 == 0 {
@@ -56,5 +63,4 @@ func main() {
 		}
 	}
 
-	console.Cleanup()
 }

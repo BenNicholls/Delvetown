@@ -7,6 +7,7 @@ type Entity struct {
 	Enemy  bool
 	Health int
 	ID     int
+	Fore uint32
 }
 
 func (e *Entity) Move(dx, dy int) {

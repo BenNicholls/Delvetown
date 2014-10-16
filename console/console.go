@@ -173,6 +173,12 @@ func DrawBorder(x, y, z, w, h int) {
 
 }
 
+func Clear() {
+	for i := 0; i < width*height; i++ {
+		grid[i].Set(0, 0, 0, 0)
+	}
+}
+
 func GetDims() (w, h int) {
 	return width, height
 }
