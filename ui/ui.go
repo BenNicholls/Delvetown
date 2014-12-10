@@ -94,11 +94,11 @@ type TileView struct {
 	x, y, z int
 	bordered, dirty bool
 
-	grid []console.GridPoint
+	grid []console.GridCell
 }
 
 func NewTileView(w, h, x, y, z int, bord bool) *TileView {
-	return &TileView{w, h, x, y, z, bord, true, make([]console.GridPoint, w*h)}
+	return &TileView{w, h, x, y, z, bord, true, make([]console.GridCell, w*h)}
 }
 
 //takes (x,y) and a tiletype 

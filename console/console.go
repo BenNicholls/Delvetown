@@ -12,10 +12,10 @@ var format *sdl.PixelFormat
 
 var width, height, tileSize int
 
-var grid []GridPoint
+var grid []GridCell
 var masterDirty bool //is this necessary?
 
-type GridPoint struct {
+type GridCell struct {
 	Glyph      int
 	ForeColour uint32
 	BackColour uint32
@@ -23,7 +23,7 @@ type GridPoint struct {
 	Dirty      bool
 }
 
-func (g *GridPoint) Set(gl int, fore, back uint32, z int) {
+func (g *GridCell) Set(gl int, fore, back uint32, z int) {
 	if g.Glyph != gl || g.ForeColour != fore || g.BackColour != back {
 		g.Glyph = gl
 		g.ForeColour = fore
@@ -75,7 +75,7 @@ func Setup(w, h, size int) {
 
 	image.Free()
 
-	grid = make([]GridPoint, width*height)
+	grid = make([]GridCell, width*height)
 	masterDirty = true
 }
 
