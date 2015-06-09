@@ -23,18 +23,25 @@ func NewLevel(w, h int) *Level {
 }
 
 func (l *Level) MovePlayer(dx, dy int) {
-	e := l.Levelmap.GetEntity(l.Player.X+dx, l.Player.Y+dy)
-	if e != nil {
-		e.Health -= 5
-		l.Player.Health -= 5
-		if e.Health > 0 {
-			return
-		}
-	}
+	
+	//move player if tile is passable
 	t := l.Levelmap.GetTileType(l.Player.X+dx, l.Player.Y+dy)
 	if IsPassable(t) {
 		l.Levelmap.MoveEntity(l.Player.X, l.Player.Y, dx, dy)
 		l.Player.Move(dx, dy)
+	}
+}
+
+func (l *Level) MoveMob(ID, dx, dy int) {
+	
+	//move player if tile is passable
+	e := l.MobList[ID]
+	if e != nil {
+		t := l.Levelmap.GetTileType(e.X+dx, e.Y+dy)
+		if IsPassable(t) {
+			l.Levelmap.MoveEntity(e.X, e.Y, dx, dy)
+			e.Move(dx, dy)
+		}
 	}
 }
 
@@ -59,6 +66,22 @@ func (l *Level) GenerateArena(w, h int) {
 				l.AddMob(x, y)
 			}
 		}
+	}
+}
+
+func (l Level) GetEntity(x, y int) *entities.Entity {
+	if x < l.Width && y < l.Height && x >= 0 && y >= 0 {
+		return l.Levelmap.tiles[x+y*l.Width].Entity
+	} else {
+		return nil
+	}
+}
+
+func (l *Level) RemoveEntity(id int) {
+	e := l.MobList[id]
+	if e != nil {
+		l.Levelmap.RemoveEntity(e.X, e.Y)
+		delete(l.MobList, id)
 	}
 }
 

@@ -25,14 +25,6 @@ func (m *TileMap) GetTileType(x, y int) int {
 	}
 }
 
-func (m TileMap) GetEntity(x, y int) *entities.Entity {
-	if x < m.width && y < m.height && x >= 0 && y >= 0 {
-		return m.tiles[x+y*m.width].Entity
-	} else {
-		return nil
-	}
-}
-
 func (m *TileMap) AddEntity(x, y int, e *entities.Entity) {
 	if x < m.width && y < m.height && x >= 0 && y >= 0 {
 		m.tiles[x+y*m.width].Entity = e

@@ -4,8 +4,8 @@ import "github.com/bennicholls/delvetown/ui"
 import "github.com/bennicholls/delvetown/data"
 import "github.com/bennicholls/delvetown/entities"
 import "github.com/veandco/go-sdl2/sdl"
-import "fmt"
 import "strconv"
+import "math/rand"
 
 type DelveMode struct {
 
@@ -26,6 +26,7 @@ type DelveMode struct {
 	log    string
 
 	tick int
+	step int
 
 	//player offset
 	pDX, pDY int
@@ -39,16 +40,18 @@ func NewDelveMode() *DelveMode {
 	dm.view = ui.NewTileView(83, 39, 1, 10, 0, true)
 	dm.sidebar = ui.NewContainer(14, 39, 85, 10, 0, true)
 	dm.hp = ui.NewTextbox(10, 1, 0, 0, 0, false, "hello")
+	dm.stepCounter = ui.NewTextbox(10, 1, 0, 1, 0, false, "")
 	
 	dm.sidebar.Add(dm.hp)
+	dm.sidebar.Add(dm.stepCounter)
 
 	//Level Up!
 	dm.level = data.NewLevel(100, 100)
-	dm.level.GenerateArena(100, 100)
+	dm.level.GenerateRandom()
 	dm.player = dm.level.Player
 
 	dm.pDX, dm.pDY = 0, 0
-	dm.tick = 0
+	dm.tick, dm.step = 0, 0
 
 	return dm
 }
@@ -66,18 +69,57 @@ func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 	}
 }
 
+
 func (dm *DelveMode) Update() GameModer {
 
 	//player movement
 	if dm.pDX != 0 || dm.pDY != 0 {
-		dm.level.MovePlayer(dm.pDX, dm.pDY)
-		dm.logbox.ChangeText(fmt.Sprint("(", dm.pDX, ", ", dm.pDY, ")"))
+		
+		//check if this is an attack, if so, attack!
+		e := dm.level.GetEntity(dm.player.X + dm.pDX, dm.player.Y + dm.pDY)
+		if e != nil {
+			e.Health -= 5
+			dm.player.Health -= 1
+			dm.logbox.ChangeText("You attack! TO VALHALLA!!!")
+			if e.Health <= 0 {
+				dm.level.RemoveEntity(e.ID)
+				dm.logbox.ChangeText("You are a MURDERER!")
+			}
+		} else {
+			dm.level.MovePlayer(dm.pDX, dm.pDY)
+			dm.step += 1
+		}
+		
 		dm.pDX, dm.pDY = 0, 0
+		
+		//enemy movement
+		for ID, mob := range dm.level.MobList {
+			eDX, eDY := rand.Intn(3) - 1, rand.Intn(3) - 1
+		
+			//check if attacking the player
+			if mob.X + eDX == dm.player.X && mob.Y + eDY == dm.player.Y {
+				dm.player.Health -= 5
+				dm.level.MobList[ID].Health -= 1
+				if mob.Health <= 0 {
+					dm.level.RemoveEntity(ID)
+					dm.logbox.ChangeText("It HIT YOU. OUCH!")
+				}
+			} else {
+				e = dm.level.GetEntity(mob.X + eDX, mob.Y + eDY)
+				if e == nil {
+					dm.level.MoveMob(ID, eDX, eDY)
+				}
+			}
+		}	
 	}
-
+	
+	
+	//update UI elements
 	dm.hp.ChangeText("HP: " + strconv.Itoa(dm.player.Health))
+	dm.stepCounter.ChangeText("Steps: " + strconv.Itoa(dm.step))
 	dm.tick++
 
+	//check for gamestate changes
 	if dm.player.Health <= 0 {
 		return NewGameOver()
 	}
@@ -96,7 +138,7 @@ func (dm *DelveMode) Render() {
 		x, y := i%w+dm.xCamera, i/w+dm.yCamera
 
 		//try to see if an entity is occupying the space. if so, draw it. otherwise, draw the tile.
-		e = dm.level.Levelmap.GetEntity(x, y)
+		e = dm.level.GetEntity(x, y)
 		if e != nil {
 			dm.view.DrawEntity(i%w, i/w, e.Glyph, e.Fore)
 		} else {
