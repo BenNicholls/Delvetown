@@ -34,6 +34,10 @@ func (c *Container) Render() {
 		}
 }
 
+func (c Container) GetDims() (int, int) {
+	return c.width, c.height
+}
+
 //TODO: Split this into separate files for each UI element
 type Textbox struct {
 	width, height int

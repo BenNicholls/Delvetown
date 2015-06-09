@@ -39,36 +39,39 @@ func Setup(w, h, size int) {
 	width = w
 	height = h
 	tileSize = size
+	var err error
 
-	window = sdl.CreateWindow("Delvetown", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED, width*tileSize, height*tileSize, sdl.WINDOW_SHOWN)
-	if window == nil {
+	window, err = sdl.CreateWindow("Delvetown", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED, width*tileSize, height*tileSize, sdl.WINDOW_SHOWN)
+	if  err != nil {
 		fmt.Println("Failed to create window: %s\n", sdl.GetError())
 		os.Exit(1)
 	}
 
-	var err error
-	format, err = sdl.AllocFormat(uint(window.GetPixelFormat()))
+	pixelFormat, err:= window.GetPixelFormat()
+
+
+	format, err = sdl.AllocFormat(uint(pixelFormat))
 	if err != nil {
 		fmt.Println("No pixelformat: %s\n", sdl.GetError())
 		os.Exit(2)
 	}
 
-	renderer = sdl.CreateRenderer(window, -1, sdl.RENDERER_ACCELERATED)
-	if renderer == nil {
+	renderer, err = sdl.CreateRenderer(window, -1, sdl.RENDERER_ACCELERATED)
+	if err != nil {
 		fmt.Println("Failed to create renderer: %s\n", sdl.GetError())
 		os.Exit(2)
 	}
 
-	image := sdl.LoadBMP("res/curses.bmp")
-	if image == nil {
-		fmt.Println("Failed to load image: %s\n", sdl.GetError())
+	image, err := sdl.LoadBMP("res/curses.bmp")
+	if err != nil {
+		fmt.Println("Failed to load image: \n", sdl.GetError())
 		os.Exit(2)
 	}
 
 	image.SetColorKey(1, 0xFF00FF)
 
-	sprites = renderer.CreateTextureFromSurface(image)
-	if sprites == nil {
+	sprites, err = renderer.CreateTextureFromSurface(image)
+	if err != nil {
 		fmt.Println("Failed to create sprite texture: %s\n", sdl.GetError())
 		os.Exit(2)
 	}

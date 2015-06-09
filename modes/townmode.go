@@ -1,16 +1,8 @@
 package modes
 
-import "github.com/veandco/go-sdl2/sdl"
 import "github.com/bennicholls/delvetown/data"
 import "github.com/bennicholls/delvetown/ui"
 import "errors"
-
-//eventually move this to a more general "modes.go" file
-type GameModer interface {
-	Update() GameModer
-	Render()
-	HandleKeypress(sdl.Keycode)
-}
 
 type TownMode struct {
 	town *data.Town
