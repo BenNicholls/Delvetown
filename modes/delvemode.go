@@ -39,7 +39,7 @@ func NewDelveMode() *DelveMode {
 	dm.view = ui.NewTileView(83, 39, 1, 10, 0, true)
 	dm.sidebar = ui.NewContainer(14, 39, 85, 10, 0, true)
 	dm.hp = ui.NewTextbox(10, 1, 0, 0, 0, false, "hello")
-
+	
 	dm.sidebar.Add(dm.hp)
 
 	//Level Up!

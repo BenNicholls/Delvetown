@@ -24,13 +24,20 @@ func (c *Container) Add(elem UIElem) {
 	c.Elements = append(c.Elements, elem)
 }
 
-func (c *Container) Render() {
+func (c *Container) Render(offset ...int) {
+	offX, offY, offZ := 0, 0, 0
+	if len(offset) >= 2 {
+		offX, offY = offset[0], offset[1]
+		if len(offset) == 3 {
+			offZ = offset[2]
+		}
+	}
 	for i := 0; i < len(c.Elements); i++ {
-		c.Elements[i].Render(c.x, c.y)
+		c.Elements[i].Render(c.x + offX, c.y + offY, c.z + offZ)
 	}
 
 	if c.bordered {
-			console.DrawBorder(c.x, c.y, c.z, c.width, c.height)
+			console.DrawBorder(c.x + offX, c.y + offY, c.z + offZ, c.width, c.height)
 		}
 }
 
@@ -65,9 +72,12 @@ func (t *Textbox) ChangeText(txt string) {
 //Render function optionally takes an offset (for containering), strictly 2 ints.
 func (t *Textbox) Render(offset ...int) {
 	if t.dirty{
-		offX, offY := 0, 0
-		if len(offset) == 2 {
+		offX, offY, offZ := 0, 0, 0
+		if len(offset) >= 2 {
 			offX, offY = offset[0], offset[1]
+			if len(offset) == 3 {
+				offZ = offset[2]
+			}
 		}
 
 		i, r := 0, rune(0)
@@ -75,14 +85,14 @@ func (t *Textbox) Render(offset ...int) {
 			if i >= t.width*t.height {
 				break
 			}
-			console.ChangeGridPoint(offX + t.x + i%t.width, offY + t.y + i/t.width, t.z, int(r), 0xFFFFFF, 0x000000)
+			console.ChangeGridPoint(offX + t.x + i%t.width, offY + t.y + i/t.width, t.z + offZ, int(r), 0xFFFFFF, 0x000000)
 		}
 		for i++ ; i < t.width*t.height; i++ {
-			console.ChangeGridPoint(offX + t.x + i%t.width, offY + t.y + i/t.width, t.z, 0, 0x000000, 0x000000)
+			console.ChangeGridPoint(offX + t.x + i%t.width, offY + t.y + i/t.width, t.z + offZ, 0, 0x000000, 0x000000)
 		}
 
 		if t.bordered {
-			console.DrawBorder(offX + t.x, offY + t.y, t.z, t.width, t.height)
+			console.DrawBorder(offX + t.x, offY + t.y, t.z + offZ, t.width, t.height)
 		}
 		t.dirty = false
 	}	
@@ -125,15 +135,22 @@ func (tv *TileView) DrawEntity(x, y, g int, c uint32) {
 		
 }
 
-func (tv TileView) Render() {
+func (tv TileView) Render(offset ...int) {
+	offX, offY, offZ := 0, 0, 0
+	if len(offset) >= 2 {
+		offX, offY = offset[0], offset[1]
+		if len(offset) == 3 {
+			offZ = offset[2]
+		}
+	}
 	for i, p := range tv.grid {
 		if p.Dirty {
-			console.ChangeGridPoint(tv.x + i%tv.Width, tv.y + i/tv.Width, tv.z, p.Glyph, p.ForeColour, 0x000000)
+			console.ChangeGridPoint(tv.x + offX + i%tv.Width, tv.y + offY + i/tv.Width, tv.z + offZ, p.Glyph, p.ForeColour, 0x000000)
 			p.Dirty = false
 		}
 	}
 	if tv.bordered {
-		console.DrawBorder(tv.x, tv.y, tv.z, tv.Width, tv.Height)
+		console.DrawBorder(tv.x + offX, tv.y + offY, tv.z + offZ, tv.Width, tv.Height)
 	}
 }
 
