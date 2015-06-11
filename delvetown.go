@@ -55,7 +55,6 @@ func main() {
 		//reconsider when animations and UI effects go in.
 		console.Render()
 
-
 		frames += 1
 
 		if frames%5000 == 0 {

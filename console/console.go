@@ -33,6 +33,10 @@ func (g *GridCell) Set(gl int, fore, back uint32, z int) {
 	}
 }
 
+func (g *GridCell) Clear() {
+	g.Set(0, 0, 0, 0)
+}
+
 //Setup the game window, renderer, etc TODO: have this function emit errors instead of just borking the program
 func Setup(w, h, size int) {
 
@@ -42,14 +46,12 @@ func Setup(w, h, size int) {
 	var err error
 
 	window, err = sdl.CreateWindow("Delvetown", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED, width*tileSize, height*tileSize, sdl.WINDOW_SHOWN)
-	if  err != nil {
+	if err != nil {
 		fmt.Println("Failed to create window: %s\n", sdl.GetError())
 		os.Exit(1)
 	}
 
-	pixelFormat, err:= window.GetPixelFormat()
-
-
+	pixelFormat, err := window.GetPixelFormat()
 	format, err = sdl.AllocFormat(uint(pixelFormat))
 	if err != nil {
 		fmt.Println("No pixelformat: %s\n", sdl.GetError())
@@ -61,22 +63,21 @@ func Setup(w, h, size int) {
 		fmt.Println("Failed to create renderer: %s\n", sdl.GetError())
 		os.Exit(2)
 	}
+	renderer.Clear()
 
 	image, err := sdl.LoadBMP("res/curses.bmp")
 	if err != nil {
 		fmt.Println("Failed to load image: \n", sdl.GetError())
 		os.Exit(2)
 	}
+	defer image.Free()
 
 	image.SetColorKey(1, 0xFF00FF)
-
 	sprites, err = renderer.CreateTextureFromSurface(image)
 	if err != nil {
 		fmt.Println("Failed to create sprite texture: %s\n", sdl.GetError())
 		os.Exit(2)
 	}
-
-	image.Free()
 
 	grid = make([]GridCell, width*height)
 	masterDirty = true
@@ -160,7 +161,7 @@ func ChangeGridPoint(x, y, z, glyph int, fore, back uint32) {
 }
 
 //TODO: border glyph merging, custom colouring, multiple styles, title text
-func DrawBorder(x, y, z, w, h int) {
+func DrawBorder(x, y, z, w, h int, title string) {
 	for i := 0; i < w; i++ {
 		ChangeGridPoint(x+i, y-1, z, 0xc4, 0xFFFFFF, 0x000000)
 		ChangeGridPoint(x+i, y+h, z, 0xc4, 0xFFFFFF, 0x000000)
@@ -174,11 +175,16 @@ func DrawBorder(x, y, z, w, h int) {
 	ChangeGridPoint(x+w, y+h, z, 0xd9, 0xFFFFFF, 0x000000)
 	ChangeGridPoint(x+w, y-1, z, 0xbf, 0xFFFFFF, 0x000000)
 
+	if len(title) < w {
+		for i, r := range title {
+			ChangeGridPoint(x+(w/2-len(title)/2)+i, y-1, z, int(r), 0xFFFFFF, 0x000000)
+		}
+	}
 }
 
 func Clear() {
 	for i := 0; i < width*height; i++ {
-		grid[i].Set(0, 0, 0, 0)
+		grid[i].Clear()
 	}
 }
 

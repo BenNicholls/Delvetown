@@ -37,11 +37,12 @@ func NewDelveMode() *DelveMode {
 
 	//UI stuff
 	dm.logbox = ui.NewTextbox(98, 8, 1, 1, 0, true, "TEST TEXT whatever blah blah blahxxx")
+	dm.logbox.SetTitle("LOG")
 	dm.view = ui.NewTileView(83, 39, 1, 10, 0, true)
 	dm.sidebar = ui.NewContainer(14, 39, 85, 10, 0, true)
 	dm.hp = ui.NewTextbox(10, 1, 0, 0, 0, false, "hello")
 	dm.stepCounter = ui.NewTextbox(10, 1, 0, 1, 0, false, "")
-	
+
 	dm.sidebar.Add(dm.hp)
 	dm.sidebar.Add(dm.stepCounter)
 
@@ -69,14 +70,13 @@ func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 	}
 }
 
-
 func (dm *DelveMode) Update() GameModer {
 
 	//player movement
 	if dm.pDX != 0 || dm.pDY != 0 {
-		
+
 		//check if this is an attack, if so, attack!
-		e := dm.level.GetEntity(dm.player.X + dm.pDX, dm.player.Y + dm.pDY)
+		e := dm.level.GetEntity(dm.player.X+dm.pDX, dm.player.Y+dm.pDY)
 		if e != nil {
 			e.Health -= 5
 			dm.player.Health -= 1
@@ -89,15 +89,15 @@ func (dm *DelveMode) Update() GameModer {
 			dm.level.MovePlayer(dm.pDX, dm.pDY)
 			dm.step += 1
 		}
-		
+
 		dm.pDX, dm.pDY = 0, 0
-		
+
 		//enemy movement
 		for ID, mob := range dm.level.MobList {
-			eDX, eDY := rand.Intn(3) - 1, rand.Intn(3) - 1
-		
+			eDX, eDY := rand.Intn(3)-1, rand.Intn(3)-1
+
 			//check if attacking the player
-			if mob.X + eDX == dm.player.X && mob.Y + eDY == dm.player.Y {
+			if mob.X+eDX == dm.player.X && mob.Y+eDY == dm.player.Y {
 				dm.player.Health -= 5
 				dm.level.MobList[ID].Health -= 1
 				if mob.Health <= 0 {
@@ -105,15 +105,14 @@ func (dm *DelveMode) Update() GameModer {
 					dm.logbox.ChangeText("It HIT YOU. OUCH!")
 				}
 			} else {
-				e = dm.level.GetEntity(mob.X + eDX, mob.Y + eDY)
+				e = dm.level.GetEntity(mob.X+eDX, mob.Y+eDY)
 				if e == nil {
 					dm.level.MoveMob(ID, eDX, eDY)
 				}
 			}
-		}	
+		}
 	}
-	
-	
+
 	//update UI elements
 	dm.hp.ChangeText("HP: " + strconv.Itoa(dm.player.Health))
 	dm.stepCounter.ChangeText("Steps: " + strconv.Itoa(dm.step))
@@ -129,11 +128,13 @@ func (dm *DelveMode) Update() GameModer {
 
 func (dm *DelveMode) Render() {
 
+	//focus camera
 	w, h := dm.view.Width, dm.view.Height
-	dm.xCamera, dm.yCamera = dm.player.X-dm.view.Width/2, dm.player.Y-dm.view.Height/2
+	dm.xCamera, dm.yCamera = dm.player.X-w/2, dm.player.Y-h/2
 
 	//Draw the world.
 	var e *entities.Entity
+
 	for i := 0; i < w*h; i++ {
 		x, y := i%w+dm.xCamera, i/w+dm.yCamera
 

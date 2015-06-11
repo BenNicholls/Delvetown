@@ -22,5 +22,5 @@ func (g *GameOverMode) Render() {
 }
 
 func (g *GameOverMode) HandleKeypress(sdl.Keycode) {
-	
+
 }

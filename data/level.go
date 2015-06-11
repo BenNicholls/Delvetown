@@ -23,7 +23,7 @@ func NewLevel(w, h int) *Level {
 }
 
 func (l *Level) MovePlayer(dx, dy int) {
-	
+
 	//move player if tile is passable
 	t := l.Levelmap.GetTileType(l.Player.X+dx, l.Player.Y+dy)
 	if IsPassable(t) {
@@ -33,7 +33,7 @@ func (l *Level) MovePlayer(dx, dy int) {
 }
 
 func (l *Level) MoveMob(ID, dx, dy int) {
-	
+
 	//move player if tile is passable
 	e := l.MobList[ID]
 	if e != nil {
