@@ -12,9 +12,10 @@ const (
 )
 
 type tileTypeData struct {
-	name     string
-	passable bool
-	vis      tileVisuals
+	name        string
+	passable    bool
+	transparent bool
+	vis         tileVisuals
 }
 
 type tileVisuals struct {
@@ -27,10 +28,10 @@ func init() {
 	//tiledata[TILETYPE]
 	tiledata = make([]tileTypeData, 50)
 
-	tiledata[TILE_NOTHING] = tileTypeData{"Nothing", false, tileVisuals{0, 0x000000}}
-	tiledata[TILE_GRASS] = tileTypeData{"Grass", true, tileVisuals{0x2e, 0x00FF00}}
-	tiledata[TILE_WALL] = tileTypeData{"Wall", false, tileVisuals{0x23, 0x333333}}
-	tiledata[TILE_WATER] = tileTypeData{"Water", false, tileVisuals{0xf7, 0x0000FF}}
+	tiledata[TILE_NOTHING] = tileTypeData{"Nothing", false, true, tileVisuals{0, 0x000000}}
+	tiledata[TILE_GRASS] = tileTypeData{"Grass", true, true, tileVisuals{0x2e, 0x00FF00}}
+	tiledata[TILE_WALL] = tileTypeData{"Wall", false, false, tileVisuals{0x23, 0x333333}}
+	tiledata[TILE_WATER] = tileTypeData{"Water", false, true, tileVisuals{0xf7, 0x0000FF}}
 }
 
 //takes tiletype, returns glyph

@@ -160,7 +160,7 @@ func ChangeGridPoint(x, y, z, glyph int, fore, back uint32) {
 	masterDirty = true
 }
 
-//TODO: border glyph merging, custom colouring, multiple styles, title text
+//TODO: border glyph merging, custom colouring, multiple styles
 func DrawBorder(x, y, z, w, h int, title string) {
 	for i := 0; i < w; i++ {
 		ChangeGridPoint(x+i, y-1, z, 0xc4, 0xFFFFFF, 0x000000)
@@ -175,7 +175,7 @@ func DrawBorder(x, y, z, w, h int, title string) {
 	ChangeGridPoint(x+w, y+h, z, 0xd9, 0xFFFFFF, 0x000000)
 	ChangeGridPoint(x+w, y-1, z, 0xbf, 0xFFFFFF, 0x000000)
 
-	if len(title) < w {
+	if len(title) < w && title != "" {
 		for i, r := range title {
 			ChangeGridPoint(x+(w/2-len(title)/2)+i, y-1, z, int(r), 0xFFFFFF, 0x000000)
 		}
@@ -188,7 +188,7 @@ func Clear() {
 	}
 }
 
-func GetDims() (w, h int) {
+func Dims() (w, h int) {
 	return width, height
 }
 

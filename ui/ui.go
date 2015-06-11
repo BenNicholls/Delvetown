@@ -4,7 +4,8 @@ import "github.com/bennicholls/delvetown/console"
 
 type UIElem interface {
 	Render(offset ...int)
-	GetDims() (int, int)
+	GetDims() (w int, h int)
+	SetTitle(title string)
 }
 
 type Container struct {
@@ -50,5 +51,3 @@ func (c *Container) Render(offset ...int) {
 func (c Container) GetDims() (int, int) {
 	return c.width, c.height
 }
-
-//TODO: Split this into separate files for each UI element

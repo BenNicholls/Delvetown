@@ -3,6 +3,7 @@ package main
 import "github.com/veandco/go-sdl2/sdl"
 import "github.com/bennicholls/delvetown/console"
 import "github.com/bennicholls/delvetown/modes"
+import "github.com/bennicholls/delvetown/modes/delvemode"
 import "fmt"
 
 func main() {
@@ -13,7 +14,7 @@ func main() {
 	console.Setup(100, 50, 16)
 	defer console.Cleanup()
 
-	mode = modes.NewDelveMode()
+	mode = delvemode.New()
 
 	//mode := modes.GameModer(m)
 
