@@ -7,10 +7,15 @@ type Entity struct {
 	Enemy  bool
 	Health int
 	ID     int
-	Fore uint32
+	Fore   uint32
 }
 
 func (e *Entity) Move(dx, dy int) {
 	e.X += dx
 	e.Y += dy
+}
+
+func (e *Entity) MoveTo(x, y int) {
+	e.X = x
+	e.Y = y
 }

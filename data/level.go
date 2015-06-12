@@ -69,6 +69,43 @@ func (l *Level) GenerateArena(w, h int) {
 	}
 }
 
+func (l *Level) GenerateCave() {
+
+	//fill with walls
+	for i := 0; i < l.Width*l.Height; i++ {
+		x, y := i%l.Width, i/l.Width
+		l.Levelmap.ChangeTileType(x, y, 2)
+		l.Levelmap.ChangeTileColour(x, y, 0)
+	}
+
+	l.seedBranch(l.Width/2, l.Height/2, 200)
+	l.Levelmap.RemoveEntity(l.Player.X, l.Player.Y)
+	l.Player.MoveTo(l.Width/2, l.Height/2)
+	l.Levelmap.AddEntity(l.Width/2, l.Height/2, l.Player)
+
+}
+
+func (l *Level) seedBranch(x, y, branch int) {
+
+	l.Levelmap.ChangeTileType(x, y, 1)
+	l.Levelmap.ChangeTileColour(x, y, branch)
+	if branch <= 0 {
+		l.Levelmap.ChangeTileColour(x, y, 0)
+		return
+	}
+
+	//decide num of branches, then branch that many times
+	branches := 4
+	for i := 0; i < branches; i++ {
+		dx, dy := rand.Intn(3)-1, rand.Intn(3)-1
+		if x < 0 || x >= l.Width || y < 0 || y >= l.Height {
+			continue
+		} else if l.Levelmap.GetTileType(x+dx, y+dy) != 1 {
+			l.seedBranch(x+dx, y+dy, branch-branches)
+		}
+	}
+}
+
 func (l Level) GetEntity(x, y int) *entities.Entity {
 	if x < l.Width && y < l.Height && x >= 0 && y >= 0 {
 		return l.Levelmap.tiles[x+y*l.Width].Entity

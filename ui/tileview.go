@@ -22,11 +22,11 @@ func (tv *TileView) SetTitle(s string) {
 }
 
 //takes (x,y) and a tiletype
-func (tv *TileView) DrawTile(x, y, t int) {
+func (tv *TileView) DrawTile(x, y int, t data.Tile) {
 
 	if x < tv.Width && y < tv.Height {
-		v := data.GetVisuals(t)
-		tv.grid[y*tv.Width+x].Set(v.Glyph, v.ForeColour, 0x000000, tv.z)
+		v := data.GetVisuals(t.Type())
+		tv.grid[y*tv.Width+x].Set(v.Glyph, v.ForeColour, console.MakeColour(t.TestColour, 0, 0), tv.z)
 		tv.dirty = true
 	}
 
@@ -51,7 +51,7 @@ func (tv TileView) Render(offset ...int) {
 	}
 	for i, p := range tv.grid {
 		if p.Dirty {
-			console.ChangeGridPoint(tv.x+offX+i%tv.Width, tv.y+offY+i/tv.Width, tv.z+offZ, p.Glyph, p.ForeColour, 0x000000)
+			console.ChangeGridPoint(tv.x+offX+i%tv.Width, tv.y+offY+i/tv.Width, tv.z+offZ, p.Glyph, p.ForeColour, p.BackColour)
 			p.Dirty = false
 		}
 	}

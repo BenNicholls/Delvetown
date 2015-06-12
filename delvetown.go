@@ -5,8 +5,12 @@ import "github.com/bennicholls/delvetown/console"
 import "github.com/bennicholls/delvetown/modes"
 import "github.com/bennicholls/delvetown/modes/delvemode"
 import "fmt"
+import "math/rand"
+import "time"
 
 func main() {
+
+	rand.Seed(time.Now().UTC().UnixNano())
 
 	var event sdl.Event
 	var mode modes.GameModer

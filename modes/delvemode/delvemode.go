@@ -46,7 +46,7 @@ func New() *DelveMode {
 	dm.gamelog = NewLog(dm.logbox)
 
 	dm.sidebar = ui.NewContainer(14, 48, 85, 1, 0, true)
-	dm.sidebar.SetTitle("STATS, YO")
+	dm.sidebar.SetTitle("GOOD STATS")
 	dm.hp = ui.NewTextbox(10, 1, 0, 0, 0, false, "hello")
 	dm.stepCounter = ui.NewTextbox(10, 1, 0, 1, 0, false, "")
 
@@ -55,7 +55,7 @@ func New() *DelveMode {
 
 	//Level Up!
 	dm.level = data.NewLevel(100, 100)
-	dm.level.GenerateArena(100, 100)
+	dm.level.GenerateCave()
 	dm.player = dm.level.Player
 
 	dm.pDX, dm.pDY = 0, 0
@@ -74,6 +74,8 @@ func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 		dm.pDX = -1
 	case sdl.K_RIGHT:
 		dm.pDX = 1
+	case sdl.K_SPACE:
+		dm.level.GenerateCave()
 	}
 }
 
@@ -150,7 +152,7 @@ func (dm *DelveMode) Render() {
 		if e != nil {
 			dm.view.DrawEntity(i%w, i/w, e.Glyph, e.Fore)
 		} else {
-			t := dm.level.Levelmap.GetTileType(x, y)
+			t := dm.level.Levelmap.GetTile(x, y)
 			dm.view.DrawTile(i%w, i/w, t)
 		}
 	}

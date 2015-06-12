@@ -200,3 +200,7 @@ func SpamGlyphs() {
 		ChangeGridPoint(x, y, 0, rand.Intn(255), sdl.MapRGBA(format, 0, 255, 0, 50), sdl.MapRGBA(format, 255, 0, 0, 255))
 	}
 }
+
+func MakeColour(r, g, b int) uint32 {
+	return sdl.MapRGBA(format, uint8(r), uint8(g), uint8(b), 0)
+}
