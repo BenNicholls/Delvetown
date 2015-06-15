@@ -4,7 +4,8 @@ import "github.com/bennicholls/delvetown/entities"
 import "math/rand"
 
 type Level struct {
-	Levelmap      *TileMap
+	LevelMap      *TileMap
+	MemoryMap     *TileMap
 	Width, Height int
 
 	Player *entities.Entity
@@ -15,19 +16,19 @@ type Level struct {
 
 //sets up a bare level object.
 func NewLevel(w, h int) *Level {
-	l := Level{Levelmap: NewMap(w, h), Width: w, Height: h}
+	l := Level{LevelMap: NewMap(w, h), MemoryMap: NewMap(w, h), Width: w, Height: h}
 	l.Player = &entities.Entity{2, w / 2, h / 2, "player", false, 50, 0, 0xFFFFFF}
 	l.MobList = make(map[int]*entities.Entity)
-	l.Levelmap.AddEntity(l.Player.X, l.Player.Y, l.Player)
+	l.LevelMap.AddEntity(l.Player.X, l.Player.Y, l.Player)
 	return &l
 }
 
 func (l *Level) MovePlayer(dx, dy int) {
 
 	//move player if tile is passable
-	t := l.Levelmap.GetTileType(l.Player.X+dx, l.Player.Y+dy)
+	t := l.LevelMap.GetTileType(l.Player.X+dx, l.Player.Y+dy)
 	if IsPassable(t) {
-		l.Levelmap.MoveEntity(l.Player.X, l.Player.Y, dx, dy)
+		l.LevelMap.MoveEntity(l.Player.X, l.Player.Y, dx, dy)
 		l.Player.Move(dx, dy)
 	}
 }
@@ -37,9 +38,9 @@ func (l *Level) MoveMob(ID, dx, dy int) {
 	//move player if tile is passable
 	e := l.MobList[ID]
 	if e != nil {
-		t := l.Levelmap.GetTileType(e.X+dx, e.Y+dy)
+		t := l.LevelMap.GetTileType(e.X+dx, e.Y+dy)
 		if IsPassable(t) {
-			l.Levelmap.MoveEntity(e.X, e.Y, dx, dy)
+			l.LevelMap.MoveEntity(e.X, e.Y, dx, dy)
 			e.Move(dx, dy)
 		}
 	}
@@ -51,7 +52,7 @@ func (l *Level) GenerateRandom() {
 		if r != TILE_GRASS {
 			r = r - rand.Intn(2)
 		}
-		l.Levelmap.ChangeTileType(i%l.Width, i/l.Width, r)
+		l.LevelMap.ChangeTileType(i%l.Width, i/l.Width, r)
 	}
 }
 
@@ -59,9 +60,9 @@ func (l *Level) GenerateArena(w, h int) {
 	for i := 0; i < l.Width*l.Height; i++ {
 		x, y := i%l.Width, i/l.Width
 		if x < l.Width/2-w/2 || x > l.Width/2+w/2 || y < l.Height/2-h/2 || y > l.Height/2+h/2 {
-			l.Levelmap.ChangeTileType(x, y, 0)
+			l.LevelMap.ChangeTileType(x, y, 0)
 		} else {
-			l.Levelmap.ChangeTileType(x, y, 1)
+			l.LevelMap.ChangeTileType(x, y, 1)
 			if rand.Intn(40) == 0 {
 				l.AddMob(x, y)
 			}
@@ -74,23 +75,22 @@ func (l *Level) GenerateCave() {
 	//fill with walls
 	for i := 0; i < l.Width*l.Height; i++ {
 		x, y := i%l.Width, i/l.Width
-		l.Levelmap.ChangeTileType(x, y, 2)
-		l.Levelmap.ChangeTileColour(x, y, 0)
+		l.LevelMap.ChangeTileType(x, y, 2)
+		l.LevelMap.ChangeTileColour(x, y, 0)
+		l.LevelMap.SetVisible(x, y, 0)
 	}
 
 	l.seedBranch(l.Width/2, l.Height/2, 200)
-	l.Levelmap.RemoveEntity(l.Player.X, l.Player.Y)
+	l.LevelMap.RemoveEntity(l.Player.X, l.Player.Y)
 	l.Player.MoveTo(l.Width/2, l.Height/2)
-	l.Levelmap.AddEntity(l.Width/2, l.Height/2, l.Player)
+	l.LevelMap.AddEntity(l.Width/2, l.Height/2, l.Player)
 
 }
 
 func (l *Level) seedBranch(x, y, branch int) {
 
-	l.Levelmap.ChangeTileType(x, y, 1)
-	l.Levelmap.ChangeTileColour(x, y, branch)
+	l.LevelMap.ChangeTileType(x, y, 1)
 	if branch <= 0 {
-		l.Levelmap.ChangeTileColour(x, y, 0)
 		return
 	}
 
@@ -100,24 +100,16 @@ func (l *Level) seedBranch(x, y, branch int) {
 		dx, dy := rand.Intn(3)-1, rand.Intn(3)-1
 		if x < 0 || x >= l.Width || y < 0 || y >= l.Height {
 			continue
-		} else if l.Levelmap.GetTileType(x+dx, y+dy) != 1 {
+		} else if l.LevelMap.GetTileType(x+dx, y+dy) != 1 {
 			l.seedBranch(x+dx, y+dy, branch-branches)
 		}
-	}
-}
-
-func (l Level) GetEntity(x, y int) *entities.Entity {
-	if x < l.Width && y < l.Height && x >= 0 && y >= 0 {
-		return l.Levelmap.tiles[x+y*l.Width].Entity
-	} else {
-		return nil
 	}
 }
 
 func (l *Level) RemoveEntity(id int) {
 	e := l.MobList[id]
 	if e != nil {
-		l.Levelmap.RemoveEntity(e.X, e.Y)
+		l.LevelMap.RemoveEntity(e.X, e.Y)
 		delete(l.MobList, id)
 	}
 }
@@ -134,5 +126,5 @@ func (l *Level) AddMob(x, y int) {
 
 	e := entities.Entity{15, x, y, "baddie", true, 10, id, 0xFF0000}
 	l.MobList[id] = &e
-	l.Levelmap.AddEntity(x, y, &e)
+	l.LevelMap.AddEntity(x, y, &e)
 }

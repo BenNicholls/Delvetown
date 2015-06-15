@@ -63,3 +63,9 @@ func (tv TileView) Render(offset ...int) {
 func (tv TileView) GetDims() (int, int) {
 	return tv.Width, tv.Height
 }
+
+func (tv *TileView) Clear() {
+	for i, _ := range tv.grid {
+		tv.grid[i].Set(0, 0, 0, 0)
+	}
+}

@@ -33,6 +33,12 @@ func (m TileMap) GetTile(x, y int) Tile {
 	}
 }
 
+func (m *TileMap) SetTile(x, y int, t Tile) {
+	if x < m.width && y < m.height && x >= 0 && y >= 0 {
+		m.tiles[x+y*m.width] = t
+	}
+}
+
 func (m *TileMap) AddEntity(x, y int, e *entities.Entity) {
 	if x < m.width && y < m.height && x >= 0 && y >= 0 {
 		m.tiles[x+y*m.width].Entity = e
@@ -50,10 +56,33 @@ func (m *TileMap) MoveEntity(x, y, dx, dy int) {
 	m.RemoveEntity(x, y)
 }
 
+func (m TileMap) GetEntity(x, y int) *entities.Entity {
+	if x < m.width && y < m.height && x >= 0 && y >= 0 {
+		return m.tiles[x+y*m.width].Entity
+	} else {
+		return nil
+	}
+}
+
 //For testing purposes.
 func (m *TileMap) ChangeTileColour(x, y, c int) {
 	if x < m.width && y < m.height && x >= 0 && y >= 0 {
 		m.tiles[x+y*m.width].TestColour = c
+	}
+}
+
+func (m TileMap) LastVisible(x, y int) int {
+	if x < m.width && y < m.height && x >= 0 && y >= 0 {
+		return m.tiles[x+y*m.width].lastSeen
+	} else {
+		return 0
+	}
+}
+
+//NOTE: Consider renaming this.
+func (m *TileMap) SetVisible(x, y, tick int) {
+	if x < m.width && y < m.height && x >= 0 && y >= 0 {
+		m.tiles[x+y*m.width].lastSeen = tick
 	}
 }
 
@@ -65,6 +94,7 @@ type Tile struct {
 	passable          bool
 	Entity            *entities.Entity
 	TestColour        int // NOTE: DELETE THIS SOMEDAY.
+	lastSeen          int // Records the last tick that this tile was seen
 }
 
 func (t Tile) Type() int {

@@ -81,11 +81,13 @@ func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 
 func (dm *DelveMode) Update() modes.GameModer {
 
+	dm.pDX, dm.pDY = rand.Intn(3)-1, rand.Intn(3)-1
+
 	//player movement
 	if dm.pDX != 0 || dm.pDY != 0 {
 
 		//check if this is an attack, if so, attack!
-		e := dm.level.GetEntity(dm.player.X+dm.pDX, dm.player.Y+dm.pDY)
+		e := dm.level.LevelMap.GetEntity(dm.player.X+dm.pDX, dm.player.Y+dm.pDY)
 		if e != nil {
 			e.Health -= 5
 			dm.player.Health -= 1
@@ -114,7 +116,7 @@ func (dm *DelveMode) Update() modes.GameModer {
 					dm.level.RemoveEntity(ID)
 				}
 			} else {
-				e = dm.level.GetEntity(mob.X+eDX, mob.Y+eDY)
+				e = dm.level.LevelMap.GetEntity(mob.X+eDX, mob.Y+eDY)
 				if e == nil {
 					dm.level.MoveMob(ID, eDX, eDY)
 				}
@@ -141,19 +143,35 @@ func (dm *DelveMode) Render() {
 	w, h := dm.view.Width, dm.view.Height
 	dm.xCamera, dm.yCamera = dm.player.X-w/2, dm.player.Y-h/2
 
+	dm.view.Clear()
+
 	var e *entities.Entity
 
 	//Draw the world.
 	for i := 0; i < w*h; i++ {
 		x, y := i%w+dm.xCamera, i/w+dm.yCamera
 
+		//compute visibility
+		x2, y2 := x-dm.player.X, y-dm.player.Y
+		if x2*x2+y2*y2 < 100 {
+			dm.level.LevelMap.SetVisible(x, y, dm.tick)
+
+			//copy the tile into the player's memory
+			dm.level.MemoryMap.SetTile(x, y, dm.level.LevelMap.GetTile(x, y))
+		}
+
 		//try to see if an entity is occupying the space. if so, draw it. otherwise, draw the tile.
-		e = dm.level.GetEntity(x, y)
-		if e != nil {
-			dm.view.DrawEntity(i%w, i/w, e.Glyph, e.Fore)
-		} else {
-			t := dm.level.Levelmap.GetTile(x, y)
-			dm.view.DrawTile(i%w, i/w, t)
+		if dm.level.MemoryMap.LastVisible(x, y) != 0 {
+			if dm.level.MemoryMap.LastVisible(x, y) != dm.tick {
+				dm.level.MemoryMap.ChangeTileColour(x, y, 150)
+			}
+			e = dm.level.MemoryMap.GetEntity(x, y)
+			if e != nil {
+				dm.view.DrawEntity(i%w, i/w, e.Glyph, e.Fore)
+			} else {
+				t := dm.level.MemoryMap.GetTile(x, y)
+				dm.view.DrawTile(i%w, i/w, t)
+			}
 		}
 	}
 
