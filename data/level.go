@@ -80,7 +80,7 @@ func (l *Level) GenerateCave() {
 		l.LevelMap.SetVisible(x, y, 0)
 	}
 
-	l.seedBranch(l.Width/2, l.Height/2, 200)
+	l.seedBranch(l.Width/2, l.Height/2, 300)
 	l.LevelMap.RemoveEntity(l.Player.X, l.Player.Y)
 	l.Player.MoveTo(l.Width/2, l.Height/2)
 	l.LevelMap.AddEntity(l.Width/2, l.Height/2, l.Player)

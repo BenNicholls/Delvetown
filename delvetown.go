@@ -62,7 +62,7 @@ func main() {
 
 		frames += 1
 
-		if frames%5000 == 0 {
+		if frames%500 == 0 {
 			fmt.Printf("%d fps\n", frames*1000/int(sdl.GetTicks()))
 		}
 	}

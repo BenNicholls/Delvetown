@@ -7,6 +7,7 @@ import "github.com/bennicholls/delvetown/modes"
 import "github.com/veandco/go-sdl2/sdl"
 import "strconv"
 import "math/rand"
+import "math"
 
 type DelveMode struct {
 
@@ -81,7 +82,8 @@ func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 
 func (dm *DelveMode) Update() modes.GameModer {
 
-	dm.pDX, dm.pDY = rand.Intn(3)-1, rand.Intn(3)-1
+	//Brownian motion for player, for testing engine speed.
+	//dm.pDX, dm.pDY = rand.Intn(3)-1, rand.Intn(3)-1
 
 	//player movement
 	if dm.pDX != 0 || dm.pDY != 0 {
@@ -147,23 +149,27 @@ func (dm *DelveMode) Render() {
 
 	var e *entities.Entity
 
+	//naive raycasting FOV. NOTE: Replace this with something fancy
+	for ray := 0.; ray < 2*math.Pi; ray += 0.025 {
+		for rx, ry, d := 0, 0, 0.; d < 40; d += 1 {
+			rx, ry = dm.player.X+int(d*math.Cos(ray)), dm.player.Y+int(d*math.Sin(ray))
+			dm.level.LevelMap.SetVisible(rx, ry, dm.tick)
+			dm.level.MemoryMap.SetTile(rx, ry, dm.level.LevelMap.GetTile(rx, ry))
+			if !data.IsPassable(dm.level.LevelMap.GetTileType(rx, ry)) {
+				break
+			}
+		}
+	}
+
 	//Draw the world.
 	for i := 0; i < w*h; i++ {
+
+		//Map coordinates
 		x, y := i%w+dm.xCamera, i/w+dm.yCamera
-
-		//compute visibility
-		x2, y2 := x-dm.player.X, y-dm.player.Y
-		if x2*x2+y2*y2 < 100 {
-			dm.level.LevelMap.SetVisible(x, y, dm.tick)
-
-			//copy the tile into the player's memory
-			dm.level.MemoryMap.SetTile(x, y, dm.level.LevelMap.GetTile(x, y))
-		}
-
 		//try to see if an entity is occupying the space. if so, draw it. otherwise, draw the tile.
 		if dm.level.MemoryMap.LastVisible(x, y) != 0 {
 			if dm.level.MemoryMap.LastVisible(x, y) != dm.tick {
-				dm.level.MemoryMap.ChangeTileColour(x, y, 150)
+				dm.level.MemoryMap.ChangeTileColour(x, y, 70)
 			}
 			e = dm.level.MemoryMap.GetEntity(x, y)
 			if e != nil {
