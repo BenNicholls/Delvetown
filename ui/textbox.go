@@ -2,14 +2,14 @@ package ui
 
 import "github.com/bennicholls/delvetown/console"
 
-//Area for displyaing text.
+//Area for displaying text.
 type Textbox struct {
 	width, height int
 	x, y, z       int
 	bordered      bool
 	title         string
 	text          string
-	dirty         bool
+	visible       bool
 }
 
 //TODO: sanity checks.
@@ -25,14 +25,13 @@ func (t *Textbox) SetTitle(s string) {
 func (t *Textbox) ChangeText(txt string) {
 	if t.text != txt {
 		t.text = txt
-		t.dirty = true
 	}
 }
 
 //TODO: word wrap. scroll bar? (maybe a "MORE" prompt might be easier), separate dirty flag for the border?
 //Render function optionally takes an offset (for containering), strictly 2 ints.
 func (t *Textbox) Render(offset ...int) {
-	if t.dirty {
+	if t.visible {
 		offX, offY, offZ := 0, 0, 0
 		if len(offset) >= 2 {
 			offX, offY = offset[0], offset[1]
@@ -41,24 +40,30 @@ func (t *Textbox) Render(offset ...int) {
 			}
 		}
 
-		i, r := 0, rune(0)
-		for i, r = range t.text {
+		//fill textbox with background colour
+		for i := len(t.text); i < t.width*t.height; i++ {
+			console.ChangeGridPoint(offX+t.x+i%t.width, offY+t.y+i/t.width, t.z+offZ, 0, 0xFF0000, 0x000000)
+		}
+
+		//print text
+		for i, r := range t.text {
 			if i >= t.width*t.height {
 				break
 			}
 			console.ChangeGridPoint(offX+t.x+i%t.width, offY+t.y+i/t.width, t.z+offZ, int(r), 0xFFFFFF, 0x000000)
 		}
-		for i++; i < t.width*t.height; i++ {
-			console.ChangeGridPoint(offX+t.x+i%t.width, offY+t.y+i/t.width, t.z+offZ, 0, 0x000000, 0x000000)
-		}
 
 		if t.bordered {
 			console.DrawBorder(offX+t.x, offY+t.y, t.z+offZ, t.width, t.height, t.title)
 		}
-		t.dirty = false
 	}
 }
 
 func (t Textbox) GetDims() (int, int) {
 	return t.width, t.height
+}
+
+func (t *Textbox) ToggleVisible() {
+	t.visible = !t.visible
+	console.Clear()
 }

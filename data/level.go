@@ -85,6 +85,10 @@ func (l *Level) GenerateCave() {
 	l.Player.MoveTo(l.Width/2, l.Height/2)
 	l.LevelMap.AddEntity(l.Width/2, l.Height/2, l.Player)
 
+	for i := 0; i < 5; i++ {
+		l.seedBranch(rand.Intn(l.Width), rand.Intn(l.Height), 200)
+	}
+
 }
 
 func (l *Level) seedBranch(x, y, branch int) {
@@ -100,7 +104,7 @@ func (l *Level) seedBranch(x, y, branch int) {
 		dx, dy := rand.Intn(3)-1, rand.Intn(3)-1
 		if x < 0 || x >= l.Width || y < 0 || y >= l.Height {
 			continue
-		} else if l.LevelMap.GetTileType(x+dx, y+dy) != 1 {
+		} else if l.LevelMap.GetTileType(x+dx, y+dy) > 1 {
 			l.seedBranch(x+dx, y+dy, branch-branches)
 		}
 	}

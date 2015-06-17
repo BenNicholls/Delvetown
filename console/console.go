@@ -202,5 +202,5 @@ func SpamGlyphs() {
 }
 
 func MakeColour(r, g, b int) uint32 {
-	return sdl.MapRGBA(format, uint8(r), uint8(g), uint8(b), 0)
+	return sdl.MapRGBA(format, uint8(r), uint8(g), uint8(b), 255)
 }

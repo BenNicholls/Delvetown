@@ -94,6 +94,7 @@ type Tile struct {
 	passable          bool
 	Entity            *entities.Entity
 	TestColour        int // NOTE: DELETE THIS SOMEDAY.
+	mask              tileVisuals
 	lastSeen          int // Records the last tick that this tile was seen
 }
 

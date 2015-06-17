@@ -16,18 +16,20 @@ type DelveMode struct {
 	view    *ui.TileView  //main map area
 	sidebar *ui.Container //holds the various ui elements for the player's info display.
 
-	gamelog Log
-
 	//sidebar ui elements
 	hp          *ui.Textbox
 	stepCounter *ui.Textbox
 
-	level *data.Level
+	debug *ui.Inputbox
+
+	activeElem ui.UIElem
+
+	level   *data.Level
+	gamelog Log
 
 	xCamera, yCamera int
 
 	player *entities.Entity
-	log    string
 
 	tick, step int
 
@@ -54,6 +56,11 @@ func New() *DelveMode {
 	dm.sidebar.Add(dm.hp)
 	dm.sidebar.Add(dm.stepCounter)
 
+	dm.debug = ui.NewInputbox(20, 1, 10, 20, 2, true)
+	dm.debug.SetTitle("Debugger")
+	dm.debug.ToggleVisible()
+	dm.activeElem = nil
+
 	//Level Up!
 	dm.level = data.NewLevel(100, 100)
 	dm.level.GenerateCave()
@@ -66,17 +73,34 @@ func New() *DelveMode {
 }
 
 func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
-	switch key {
-	case sdl.K_DOWN:
-		dm.pDY = 1
-	case sdl.K_UP:
-		dm.pDY = -1
-	case sdl.K_LEFT:
-		dm.pDX = -1
-	case sdl.K_RIGHT:
-		dm.pDX = 1
-	case sdl.K_SPACE:
-		dm.level.GenerateCave()
+
+	if dm.activeElem == dm.debug {
+		switch key {
+		case sdl.K_a:
+			dm.debug.Insert("a")
+		case sdl.K_BACKSPACE:
+			dm.debug.Delete()
+		case sdl.K_ESCAPE:
+			dm.activeElem = nil
+			dm.debug.ToggleVisible()
+		}
+	} else {
+
+		switch key {
+		case sdl.K_DOWN:
+			dm.pDY = 1
+		case sdl.K_UP:
+			dm.pDY = -1
+		case sdl.K_LEFT:
+			dm.pDX = -1
+		case sdl.K_RIGHT:
+			dm.pDX = 1
+		case sdl.K_SPACE:
+			dm.level.GenerateCave()
+		case sdl.K_ESCAPE:
+			dm.activeElem = dm.debug
+			dm.debug.ToggleVisible()
+		}
 	}
 }
 
@@ -185,4 +209,5 @@ func (dm *DelveMode) Render() {
 	dm.logbox.Render()
 	dm.view.Render()
 	dm.sidebar.Render()
+	dm.debug.Render()
 }
