@@ -24,6 +24,8 @@ func main() {
 
 	running := true
 	frames := 0
+	frameTime, ticks := uint32(0), uint32(0)
+	fps := uint32(17)
 
 	for running {
 		for event = sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
@@ -46,13 +48,14 @@ func main() {
 			}
 		}
 
+		frameTime = sdl.GetTicks()
+
 		//Tick the game
 		m := mode.Update()
 		if m != nil {
 			console.Clear()
 			mode = m
 		}
-
 		//Push changes to console
 		mode.Render()
 
@@ -62,8 +65,13 @@ func main() {
 
 		frames += 1
 
-		if frames%500 == 0 {
+		if frames%50 == 0 {
 			fmt.Printf("%d fps\n", frames*1000/int(sdl.GetTicks()))
+		}
+
+		ticks = sdl.GetTicks() - frameTime
+		if ticks < fps {
+			sdl.Delay(fps - ticks)
 		}
 	}
 
