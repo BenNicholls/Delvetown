@@ -42,13 +42,7 @@ func (tv *TileView) DrawEntity(x, y, g int, c uint32) {
 
 func (tv TileView) Render(offset ...int) {
 	if tv.visible {
-		offX, offY, offZ := 0, 0, 0
-		if len(offset) >= 2 {
-			offX, offY = offset[0], offset[1]
-			if len(offset) == 3 {
-				offZ = offset[2]
-			}
-		}
+		offX, offY, offZ := processOffset(offset)
 		for i, p := range tv.grid {
 			if p.Dirty {
 				console.ChangeGridPoint(tv.x+offX+i%tv.Width, tv.y+offY+i/tv.Width, tv.z+offZ, p.Glyph, p.ForeColour, p.BackColour)

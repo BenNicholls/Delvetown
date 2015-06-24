@@ -48,8 +48,6 @@ func main() {
 			}
 		}
 
-		frameTime = sdl.GetTicks()
-
 		//Tick the game
 		m := mode.Update()
 		if m != nil {
@@ -69,10 +67,12 @@ func main() {
 			fmt.Printf("%d fps\n", frames*1000/int(sdl.GetTicks()))
 		}
 
+		//framerate limiter. keeps the cpu usage down, you know?
 		ticks = sdl.GetTicks() - frameTime
 		if ticks < fps {
 			sdl.Delay(fps - ticks)
 		}
+		frameTime = sdl.GetTicks()
 	}
 
 }

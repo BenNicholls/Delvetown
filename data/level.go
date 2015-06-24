@@ -1,6 +1,7 @@
 package data
 
 import "github.com/bennicholls/delvetown/entities"
+import "github.com/bennicholls/delvetown/util"
 import "math/rand"
 
 type Level struct {
@@ -101,7 +102,7 @@ func (l *Level) seedBranch(x, y, branch int) {
 	//decide num of branches, then branch that many times
 	branches := 4
 	for i := 0; i < branches; i++ {
-		dx, dy := rand.Intn(3)-1, rand.Intn(3)-1
+		dx, dy := util.GenerateDirection()
 		if x < 0 || x >= l.Width || y < 0 || y >= l.Height {
 			continue
 		} else if l.LevelMap.GetTileType(x+dx, y+dy) > 1 {
@@ -128,7 +129,7 @@ func (l *Level) AddMob(x, y int) {
 		_, ok = l.MobList[id]
 	}
 
-	e := entities.Entity{15, x, y, "baddie", true, 10, id, 0xFF0000}
+	e := entities.Entity{15, x, y, "butts", true, 10, id, 0xFF0000}
 	l.MobList[id] = &e
 	l.LevelMap.AddEntity(x, y, &e)
 }

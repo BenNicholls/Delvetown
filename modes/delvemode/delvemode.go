@@ -4,6 +4,7 @@ import "github.com/bennicholls/delvetown/ui"
 import "github.com/bennicholls/delvetown/data"
 import "github.com/bennicholls/delvetown/entities"
 import "github.com/bennicholls/delvetown/modes"
+import "github.com/bennicholls/delvetown/util"
 import "github.com/veandco/go-sdl2/sdl"
 import "strconv"
 import "math/rand"
@@ -41,14 +42,14 @@ func New() *DelveMode {
 	dm := new(DelveMode)
 
 	//UI stuff
-	dm.view = ui.NewTileView(83, 39, 1, 1, 0, true)
+	dm.view = ui.NewTileView(83, 38, 1, 1, 0, true)
 
 	dm.logbox = ui.NewTextbox(83, 8, 1, 41, 1, true, "TEST TEXT whatever blah blah blahxxx")
 	dm.logbox.SetTitle("LOG")
 
 	dm.gamelog = NewLog(dm.logbox)
 
-	dm.sidebar = ui.NewContainer(14, 48, 85, 1, 0, true)
+	dm.sidebar = ui.NewContainer(13, 48, 86, 1, 0, true)
 	dm.sidebar.SetTitle("GOOD STATS")
 	dm.hp = ui.NewTextbox(10, 1, 0, 0, 0, false, "hello")
 	dm.stepCounter = ui.NewTextbox(10, 1, 0, 1, 0, false, "")
@@ -56,7 +57,7 @@ func New() *DelveMode {
 	dm.sidebar.Add(dm.hp)
 	dm.sidebar.Add(dm.stepCounter)
 
-	dm.debug = ui.NewInputbox(20, 1, 10, 20, 2, true)
+	dm.debug = ui.NewInputbox(83, 1, 1, 48, 2, true)
 	dm.debug.SetTitle("Debugger")
 	dm.debug.ToggleVisible()
 	dm.activeElem = nil
@@ -75,28 +76,43 @@ func New() *DelveMode {
 func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 
 	if dm.activeElem == dm.debug {
-		switch key {
-		case sdl.K_a:
-			dm.debug.Insert("a")
-		case sdl.K_BACKSPACE:
-			dm.debug.Delete()
-		case sdl.K_ESCAPE:
-			dm.activeElem = nil
-			dm.debug.ToggleVisible()
+		if util.ValidText(rune(key)) {
+			dm.debug.InsertText(rune(key))
+		} else {
+			switch key {
+			case sdl.K_BACKSPACE:
+				dm.debug.Delete()
+			case sdl.K_SPACE:
+				dm.debug.Insert(" ")
+			case sdl.K_ESCAPE:
+				dm.activeElem = nil
+				dm.debug.ToggleVisible()
+			case sdl.K_RETURN:
+				dm.Execute(dm.debug.GetText())
+				dm.debug.Reset()
+				dm.activeElem = nil
+				dm.debug.ToggleVisible()
+			}
 		}
 	} else {
 
 		switch key {
-		case sdl.K_DOWN:
+		case sdl.K_DOWN, sdl.K_KP_2:
 			dm.pDY = 1
-		case sdl.K_UP:
+		case sdl.K_UP, sdl.K_KP_8:
 			dm.pDY = -1
-		case sdl.K_LEFT:
+		case sdl.K_LEFT, sdl.K_KP_4:
 			dm.pDX = -1
-		case sdl.K_RIGHT:
+		case sdl.K_RIGHT, sdl.K_KP_6:
 			dm.pDX = 1
-		case sdl.K_SPACE:
-			dm.level.GenerateCave()
+		case sdl.K_KP_7:
+			dm.pDX, dm.pDY = -1, -1
+		case sdl.K_KP_9:
+			dm.pDX, dm.pDY = 1, -1
+		case sdl.K_KP_1:
+			dm.pDX, dm.pDY = -1, 1
+		case sdl.K_KP_3:
+			dm.pDX, dm.pDY = 1, 1
 		case sdl.K_ESCAPE:
 			dm.activeElem = dm.debug
 			dm.debug.ToggleVisible()

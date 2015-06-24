@@ -32,17 +32,11 @@ func (t *Textbox) ChangeText(txt string) {
 //Render function optionally takes an offset (for containering), strictly 2 ints.
 func (t *Textbox) Render(offset ...int) {
 	if t.visible {
-		offX, offY, offZ := 0, 0, 0
-		if len(offset) >= 2 {
-			offX, offY = offset[0], offset[1]
-			if len(offset) == 3 {
-				offZ = offset[2]
-			}
-		}
+		offX, offY, offZ := processOffset(offset)
 
 		//fill textbox with background colour
 		for i := len(t.text); i < t.width*t.height; i++ {
-			console.ChangeGridPoint(offX+t.x+i%t.width, offY+t.y+i/t.width, t.z+offZ, 0, 0xFF0000, 0x000000)
+			console.ChangeGridPoint(offX+t.x+i%t.width, offY+t.y+i/t.width, t.z+offZ, 0, 0xFFFFFF, 0x000000)
 		}
 
 		//print text

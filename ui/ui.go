@@ -59,3 +59,14 @@ func (c Container) GetDims() (int, int) {
 func (c *Container) ToggleVisible() {
 	c.visible = !c.visible
 }
+
+func processOffset(offset []int) (x, y, z int) {
+	x, y, z = 0, 0, 0
+	if len(offset) >= 2 {
+		x, y = offset[0], offset[1]
+		if len(offset) == 3 {
+			z = offset[2]
+		}
+	}
+	return
+}
