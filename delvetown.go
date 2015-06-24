@@ -4,12 +4,12 @@ import "github.com/veandco/go-sdl2/sdl"
 import "github.com/bennicholls/delvetown/console"
 import "github.com/bennicholls/delvetown/modes"
 import "github.com/bennicholls/delvetown/modes/delvemode"
-import "fmt"
 import "math/rand"
 import "time"
 
 func main() {
 
+	//Set the seed for the RNG. TODO: be able to manually set seed
 	rand.Seed(time.Now().UTC().UnixNano())
 
 	var event sdl.Event
@@ -25,7 +25,7 @@ func main() {
 	running := true
 	frames := 0
 	frameTime, ticks := uint32(0), uint32(0)
-	fps := uint32(17)
+	fps := uint32(17) //17ms = 60 FPS approxs
 
 	for running {
 		for event = sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
@@ -63,9 +63,10 @@ func main() {
 
 		frames += 1
 
-		if frames%50 == 0 {
-			fmt.Printf("%d fps\n", frames*1000/int(sdl.GetTicks()))
-		}
+		//framerate printer thing. super tacky.
+		// if frames%50 == 0 {
+		// 	fmt.Printf("%d fps\n", frames*1000/int(sdl.GetTicks()))
+		// }
 
 		//framerate limiter. keeps the cpu usage down, you know?
 		ticks = sdl.GetTicks() - frameTime

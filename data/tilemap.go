@@ -65,15 +65,15 @@ func (m TileMap) GetEntity(x, y int) *entities.Entity {
 }
 
 //For testing purposes.
-func (m *TileMap) ChangeTileColour(x, y, c int) {
+func (m *TileMap) ChangeTileColour(x, y int, c uint32) {
 	if x < m.width && y < m.height && x >= 0 && y >= 0 {
-		m.tiles[x+y*m.width].TestColour = c
+		m.tiles[x+y*m.width].Light.Colour = c
 	}
 }
 
 func (m TileMap) LastVisible(x, y int) int {
 	if x < m.width && y < m.height && x >= 0 && y >= 0 {
-		return m.tiles[x+y*m.width].lastSeen
+		return m.tiles[x+y*m.width].LastVisible
 	} else {
 		return 0
 	}
@@ -82,7 +82,7 @@ func (m TileMap) LastVisible(x, y int) int {
 //NOTE: Consider renaming this.
 func (m *TileMap) SetVisible(x, y, tick int) {
 	if x < m.width && y < m.height && x >= 0 && y >= 0 {
-		m.tiles[x+y*m.width].lastSeen = tick
+		m.tiles[x+y*m.width].LastVisible = tick
 	}
 }
 
@@ -93,11 +93,16 @@ type Tile struct {
 	tileType, variant int
 	passable          bool
 	Entity            *entities.Entity
-	TestColour        int // NOTE: DELETE THIS SOMEDAY.
-	mask              tileVisuals
-	lastSeen          int // Records the last tick that this tile was seen
+	LastVisible       int // Records the last tick that this tile was seen
+	Light             TileLight
 }
 
 func (t Tile) Type() int {
 	return t.tileType
+}
+
+//Light characteristics for each tile.
+type TileLight struct {
+	Colour uint32
+	Bright int //Brightness level 0-100
 }

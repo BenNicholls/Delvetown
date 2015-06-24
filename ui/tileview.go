@@ -22,14 +22,13 @@ func (tv *TileView) SetTitle(s string) {
 	tv.title = s
 }
 
-//takes (x,y) and a tiletype
+//takes (x,y) and a tile
 func (tv *TileView) DrawTile(x, y int, t data.Tile) {
 
 	if x < tv.Width && y < tv.Height {
 		v := data.GetVisuals(t.Type())
-		tv.grid[y*tv.Width+x].Set(v.Glyph, v.ForeColour, console.MakeColour(t.TestColour, 0, 0), tv.z)
+		tv.grid[y*tv.Width+x].Set(v.Glyph, v.ForeColour, 0x000000, tv.z)
 	}
-
 }
 
 func (tv *TileView) DrawEntity(x, y, g int, c uint32) {
@@ -37,7 +36,15 @@ func (tv *TileView) DrawEntity(x, y, g int, c uint32) {
 	if x < tv.Width && y < tv.Height {
 		tv.grid[y*tv.Width+x].Set(g, c, 0x000000, tv.z)
 	}
+}
 
+//Apply light level. 0-255. TODO: add colour mask (soft orange glow??)
+func (tv *TileView) ApplyLight(x, y, b int) {
+	if x < tv.Width && y < tv.Height {
+		s := y*tv.Width + x
+		tv.grid[s].BackColour = 0x000000
+		tv.grid[s].ForeColour = console.ChangeColourAlpha(tv.grid[s].ForeColour, uint8(b))
+	}
 }
 
 func (tv TileView) Render(offset ...int) {
@@ -67,4 +74,5 @@ func (tv *TileView) Clear() {
 
 func (tv *TileView) ToggleVisible() {
 	tv.visible = !tv.visible
+	console.Clear()
 }

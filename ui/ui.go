@@ -35,13 +35,7 @@ func (c *Container) SetTitle(s string) {
 //to the nested elements.
 func (c *Container) Render(offset ...int) {
 	if c.visible {
-		offX, offY, offZ := 0, 0, 0
-		if len(offset) >= 2 {
-			offX, offY = offset[0], offset[1]
-			if len(offset) == 3 {
-				offZ = offset[2]
-			}
-		}
+		offX, offY, offZ := processOffset(offset)
 		for i := 0; i < len(c.Elements); i++ {
 			c.Elements[i].Render(c.x+offX, c.y+offY, c.z+offZ)
 		}

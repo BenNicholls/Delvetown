@@ -206,11 +206,11 @@ func (dm *DelveMode) Render() {
 
 		//Map coordinates
 		x, y := i%w+dm.xCamera, i/w+dm.yCamera
-		//try to see if an entity is occupying the space. if so, draw it. otherwise, draw the tile.
+
+		//check if tile has ever been seen.
 		if dm.level.MemoryMap.LastVisible(x, y) != 0 {
-			if dm.level.MemoryMap.LastVisible(x, y) != dm.tick {
-				dm.level.MemoryMap.ChangeTileColour(x, y, 70)
-			}
+
+			//try to see if an entity is occupying the space. if so, draw it. otherwise, draw the tile.
 			e = dm.level.MemoryMap.GetEntity(x, y)
 			if e != nil {
 				dm.view.DrawEntity(i%w, i/w, e.Glyph, e.Fore)
@@ -218,6 +218,20 @@ func (dm *DelveMode) Render() {
 				t := dm.level.MemoryMap.GetTile(x, y)
 				dm.view.DrawTile(i%w, i/w, t)
 			}
+
+			if dm.level.MemoryMap.LastVisible(x, y) != dm.tick {
+				dm.view.ApplyLight(i%w, i/w, 30)
+			} else {
+
+				d := (x-dm.player.X)*(x-dm.player.X) + (y-dm.player.Y)*(y-dm.player.Y)
+				b := 80
+				if d < 225 {
+					b = 255 - int(125.0*(float32(d))/225)
+				}
+
+				dm.view.ApplyLight(i%w, i/w, b)
+			}
+
 		}
 	}
 

@@ -45,14 +45,14 @@ func Setup(w, h, size int) {
 	tileSize = size
 	var err error
 
-	window, err = sdl.CreateWindow("Delvetown", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED, width*tileSize, height*tileSize, sdl.WINDOW_SHOWN)
+	window, err = sdl.CreateWindow("Delvetown", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED, width*tileSize, height*tileSize, sdl.WINDOW_OPENGL)
 	if err != nil {
 		fmt.Println("Failed to create window: %s\n", sdl.GetError())
 		os.Exit(1)
 	}
 
-	pixelFormat, err := window.GetPixelFormat()
-	format, err = sdl.AllocFormat(uint(pixelFormat))
+	//manually set pixelformat to ARGB (window defaults to RGB for some reason)
+	format, err = sdl.AllocFormat(uint(sdl.PIXELFORMAT_ARGB8888))
 	if err != nil {
 		fmt.Println("No pixelformat: %s\n", sdl.GetError())
 		os.Exit(2)
@@ -78,6 +78,11 @@ func Setup(w, h, size int) {
 		fmt.Println("Failed to create sprite texture: %s\n", sdl.GetError())
 		os.Exit(2)
 	}
+	err = sprites.SetBlendMode(sdl.BLENDMODE_BLEND)
+	if err != nil {
+		fmt.Println("Failed to set blendmode: %s\n", sdl.GetError())
+		os.Exit(2)
+	}
 
 	grid = make([]GridCell, width*height)
 	masterDirty = true
@@ -95,7 +100,9 @@ func Render() {
 				renderer.SetDrawColor(sdl.GetRGBA(s.BackColour, format))
 				renderer.FillRect(&dst)
 
-				sprites.SetColorMod(sdl.GetRGB(s.ForeColour, format))
+				r, g, b, a := sdl.GetRGBA(s.ForeColour, format)
+				sprites.SetColorMod(r, g, b)
+				sprites.SetAlphaMod(a)
 				renderer.Copy(sprites, &src, &dst)
 
 				grid[i].Dirty = false
@@ -113,6 +120,7 @@ func makeRect(x, y, w, h int) sdl.Rect {
 }
 
 func Cleanup() {
+	format.Free()
 	sprites.Destroy()
 	renderer.Destroy()
 	window.Destroy()
@@ -163,21 +171,21 @@ func ChangeGridPoint(x, y, z, glyph int, fore, back uint32) {
 //TODO: border glyph merging, custom colouring, multiple styles
 func DrawBorder(x, y, z, w, h int, title string) {
 	for i := 0; i < w; i++ {
-		ChangeGridPoint(x+i, y-1, z, 0xc4, 0xFFFFFF, 0x000000)
-		ChangeGridPoint(x+i, y+h, z, 0xc4, 0xFFFFFF, 0x000000)
+		ChangeGridPoint(x+i, y-1, z, 0xc4, 0xFFFFFFFF, 0x000000)
+		ChangeGridPoint(x+i, y+h, z, 0xc4, 0xFFFFFFFF, 0x000000)
 	}
 	for i := 0; i < h; i++ {
-		ChangeGridPoint(x-1, y+i, z, 0xb3, 0xFFFFFF, 0x000000)
-		ChangeGridPoint(x+w, y+i, z, 0xb3, 0xFFFFFF, 0x000000)
+		ChangeGridPoint(x-1, y+i, z, 0xb3, 0xFFFFFFFF, 0x000000)
+		ChangeGridPoint(x+w, y+i, z, 0xb3, 0xFFFFFFFF, 0x000000)
 	}
-	ChangeGridPoint(x-1, y-1, z, 0xda, 0xFFFFFF, 0x000000)
-	ChangeGridPoint(x-1, y+h, z, 0xc0, 0xFFFFFF, 0x000000)
-	ChangeGridPoint(x+w, y+h, z, 0xd9, 0xFFFFFF, 0x000000)
-	ChangeGridPoint(x+w, y-1, z, 0xbf, 0xFFFFFF, 0x000000)
+	ChangeGridPoint(x-1, y-1, z, 0xda, 0xFFFFFFFF, 0x000000)
+	ChangeGridPoint(x-1, y+h, z, 0xc0, 0xFFFFFFFF, 0x000000)
+	ChangeGridPoint(x+w, y+h, z, 0xd9, 0xFFFFFFFF, 0x000000)
+	ChangeGridPoint(x+w, y-1, z, 0xbf, 0xFFFFFFFF, 0x000000)
 
 	if len(title) < w && title != "" {
 		for i, r := range title {
-			ChangeGridPoint(x+(w/2-len(title)/2)+i, y-1, z, int(r), 0xFFFFFF, 0x000000)
+			ChangeGridPoint(x+(w/2-len(title)/2)+i, y-1, z, int(r), 0xFFFFFFFF, 0x000000)
 		}
 	}
 }
@@ -203,4 +211,9 @@ func SpamGlyphs() {
 
 func MakeColour(r, g, b int) uint32 {
 	return sdl.MapRGBA(format, uint8(r), uint8(g), uint8(b), 255)
+}
+
+func ChangeColourAlpha(c uint32, a uint8) uint32 {
+	r, g, b := sdl.GetRGB(c, format)
+	return sdl.MapRGBA(format, r, g, b, a)
 }

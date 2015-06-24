@@ -29,14 +29,14 @@ func (t *Textbox) ChangeText(txt string) {
 }
 
 //TODO: word wrap. scroll bar? (maybe a "MORE" prompt might be easier), separate dirty flag for the border?
-//Render function optionally takes an offset (for containering), strictly 2 ints.
+//Render function optionally takes an offset (for containering), 2 or 3 ints.
 func (t *Textbox) Render(offset ...int) {
 	if t.visible {
 		offX, offY, offZ := processOffset(offset)
 
 		//fill textbox with background colour
 		for i := len(t.text); i < t.width*t.height; i++ {
-			console.ChangeGridPoint(offX+t.x+i%t.width, offY+t.y+i/t.width, t.z+offZ, 0, 0xFFFFFF, 0x000000)
+			console.ChangeGridPoint(offX+t.x+i%t.width, offY+t.y+i/t.width, t.z+offZ, 0, 0xFFFFFFFF, 0x000000)
 		}
 
 		//print text
@@ -44,7 +44,7 @@ func (t *Textbox) Render(offset ...int) {
 			if i >= t.width*t.height {
 				break
 			}
-			console.ChangeGridPoint(offX+t.x+i%t.width, offY+t.y+i/t.width, t.z+offZ, int(r), 0xFFFFFF, 0x000000)
+			console.ChangeGridPoint(offX+t.x+i%t.width, offY+t.y+i/t.width, t.z+offZ, int(r), 0xFFFFFFFF, 0x000000)
 		}
 
 		if t.bordered {
