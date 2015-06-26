@@ -1,6 +1,6 @@
 package data
 
-import "github.com/bennicholls/delvetown/entities"
+import "github.com/bennicholls/delvetown/data/entities"
 
 type TileMap struct {
 	width, height int
@@ -86,6 +86,12 @@ func (m *TileMap) SetVisible(x, y, tick int) {
 	}
 }
 
+func (m *TileMap) ClearLights() {
+	for i, _ := range m.tiles {
+		m.tiles[i].Light.Bright = 0
+	}
+}
+
 //Basic unit for the world. Holds a type (grass, wall, etc), a list of contained items
 //(dropped weapons, also furniture), and a pointer to an Entity if one is standing there
 //Eventually will hold pathfinding information too.
@@ -101,8 +107,16 @@ func (t Tile) Type() int {
 	return t.tileType
 }
 
+func (t Tile) Passable() bool {
+	return IsPassable(t.tileType) && t.Entity == nil
+}
+
+func (t Tile) Transparent() bool {
+	return IsTransparent(t.tileType)
+}
+
 //Light characteristics for each tile.
 type TileLight struct {
 	Colour uint32
-	Bright int //Brightness level 0-100
+	Bright int //Brightness level 0-255
 }

@@ -43,6 +43,10 @@ func IsPassable(t int) bool {
 	return tiledata[t].passable
 }
 
+func IsTransparent(t int) bool {
+	return tiledata[t].transparent
+}
+
 func GetVisuals(t int) tileVisuals {
 	return tiledata[t].vis
 }

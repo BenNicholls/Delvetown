@@ -42,7 +42,11 @@ func (tv *TileView) DrawEntity(x, y, g int, c uint32) {
 func (tv *TileView) ApplyLight(x, y, b int) {
 	if x < tv.Width && y < tv.Height {
 		s := y*tv.Width + x
-		tv.grid[s].BackColour = 0x000000
+		if b > 255 {
+			b = 255
+		} else if b < 80 && b < 0 {
+			b = 80 //Baseline brightness for memory... TODO: implement this less magically.
+		}
 		tv.grid[s].ForeColour = console.ChangeColourAlpha(tv.grid[s].ForeColour, uint8(b))
 	}
 }

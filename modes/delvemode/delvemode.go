@@ -2,13 +2,12 @@ package delvemode
 
 import "github.com/bennicholls/delvetown/ui"
 import "github.com/bennicholls/delvetown/data"
-import "github.com/bennicholls/delvetown/entities"
+import "github.com/bennicholls/delvetown/data/entities"
 import "github.com/bennicholls/delvetown/modes"
 import "github.com/bennicholls/delvetown/util"
 import "github.com/veandco/go-sdl2/sdl"
 import "strconv"
 import "math/rand"
-import "math"
 
 type DelveMode struct {
 
@@ -36,6 +35,8 @@ type DelveMode struct {
 
 	//player offset
 	pDX, pDY int
+
+	memBrightness int //brightness to show memory tiles
 }
 
 func New() *DelveMode {
@@ -68,7 +69,9 @@ func New() *DelveMode {
 	dm.player = dm.level.Player
 
 	dm.pDX, dm.pDY = 0, 0
-	dm.tick, dm.step = 0, 0
+	dm.tick, dm.step = 1, 0
+
+	dm.memBrightness = 80
 
 	return dm
 }
@@ -189,17 +192,8 @@ func (dm *DelveMode) Render() {
 
 	var e *entities.Entity
 
-	//naive raycasting FOV. NOTE: Replace this with something fancy
-	for ray := 0.; ray < 2*math.Pi; ray += 0.025 {
-		for rx, ry, d := 0, 0, 0.; d < 40; d += 1 {
-			rx, ry = dm.player.X+int(d*math.Cos(ray)), dm.player.Y+int(d*math.Sin(ray))
-			dm.level.LevelMap.SetVisible(rx, ry, dm.tick)
-			dm.level.MemoryMap.SetTile(rx, ry, dm.level.LevelMap.GetTile(rx, ry))
-			if !data.IsPassable(dm.level.LevelMap.GetTileType(rx, ry)) {
-				break
-			}
-		}
-	}
+	//update player memory
+	dm.level.LevelMap.ShadowCast(dm.player.X, dm.player.Y, 50, dm.MemoryCast())
 
 	//Draw the world.
 	for i := 0; i < w*h; i++ {
@@ -220,16 +214,9 @@ func (dm *DelveMode) Render() {
 			}
 
 			if dm.level.MemoryMap.LastVisible(x, y) != dm.tick {
-				dm.view.ApplyLight(i%w, i/w, 30)
+				dm.view.ApplyLight(i%w, i/w, dm.memBrightness)
 			} else {
-
-				d := (x-dm.player.X)*(x-dm.player.X) + (y-dm.player.Y)*(y-dm.player.Y)
-				b := 80
-				if d < 225 {
-					b = 255 - int(125.0*(float32(d))/225)
-				}
-
-				dm.view.ApplyLight(i%w, i/w, b)
+				dm.view.ApplyLight(i%w, i/w, dm.level.LevelMap.GetTile(x, y).Light.Bright)
 			}
 
 		}
@@ -240,4 +227,18 @@ func (dm *DelveMode) Render() {
 	dm.view.Render()
 	dm.sidebar.Render()
 	dm.debug.Render()
+}
+
+//Baby's first closure. Holy crap I am so proud of this.
+//Pass this into the shadowcaster to copy the visible portion
+//of the map into the player's memory.
+func (dm *DelveMode) MemoryCast() data.Cast {
+	return func(m *data.TileMap, x, y, d, r int) {
+		mem := dm.level.MemoryMap
+		tick := dm.tick
+		if m.GetTile(x, y).Light.Bright > 0 {
+			m.SetVisible(x, y, tick)
+			mem.SetTile(x, y, m.GetTile(x, y))
+		}
+	}
 }
