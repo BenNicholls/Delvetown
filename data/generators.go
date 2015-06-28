@@ -41,7 +41,7 @@ func (l *Level) GenerateCave() {
 	l.LevelMap.RemoveEntity(l.Player.X, l.Player.Y)
 	l.Player.MoveTo(l.Width/2, l.Height/2)
 	l.LevelMap.AddEntity(l.Width/2, l.Height/2, l.Player)
-	l.LevelMap.ShadowCast(l.Player.X, l.Player.Y, l.Player.LightStrength, Light)
+	l.LevelMap.ShadowCast(l.Player.X, l.Player.Y, l.Player.LightStrength, Lighten)
 	//place seeds, let 'em grow!
 	for i := 0; i < 5; i++ {
 		l.seedBranch(rand.Intn(l.Width), rand.Intn(l.Height), 200)
@@ -69,7 +69,7 @@ func (l *Level) seedBranch(x, y, branch int) {
 	branches := 4
 	for i := 0; i < branches; i++ {
 		dx, dy := util.GenerateDirection()
-		if x < 0 || x >= l.Width || y < 0 || y >= l.Height {
+		if !util.CheckBounds(x, y, l.Width, l.Height) {
 			continue
 		} else if l.LevelMap.GetTileType(x+dx, y+dy) > 1 {
 			l.seedBranch(x+dx, y+dy, branch-branches)

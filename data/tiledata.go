@@ -30,7 +30,7 @@ func init() {
 
 	tiledata[TILE_NOTHING] = tileTypeData{"Nothing", false, true, tileVisuals{0, 0x000000}}
 	tiledata[TILE_GRASS] = tileTypeData{"Grass", true, true, tileVisuals{0x2e, 0xFF00FF00}}
-	tiledata[TILE_WALL] = tileTypeData{"Wall", false, false, tileVisuals{0x23, 0xFF333333}}
+	tiledata[TILE_WALL] = tileTypeData{"Wall", false, false, tileVisuals{0x23, 0xFF777777}}
 	tiledata[TILE_WATER] = tileTypeData{"Water", false, true, tileVisuals{0xf7, 0xFF0000FF}}
 }
 

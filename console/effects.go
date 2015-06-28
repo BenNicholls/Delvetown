@@ -1,8 +1,10 @@
 package console
 
+import "github.com/bennicholls/delvetown/util"
+
 //Inverts the foreground and background colours
 func Invert(x, y, z int) {
-	if x < width && x >= 0 && y < height && y >= 0 {
+	if util.CheckBounds(x, y, width, height) {
 		s := y*width + x
 		if grid[s].Z > z {
 			return

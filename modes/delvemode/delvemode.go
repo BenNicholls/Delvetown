@@ -126,7 +126,7 @@ func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 func (dm *DelveMode) Update() modes.GameModer {
 
 	//Brownian motion for player, for testing engine speed.
-	//dm.pDX, dm.pDY = rand.Intn(3)-1, rand.Intn(3)-1
+	//dm.pDX, dm.pDY = util.GenerateDirection()
 
 	//player movement
 	if dm.pDX != 0 || dm.pDY != 0 {

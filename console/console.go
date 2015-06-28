@@ -1,6 +1,7 @@
 package console
 
 import "github.com/veandco/go-sdl2/sdl"
+import "github.com/bennicholls/delvetown/util"
 import "fmt"
 import "os"
 import "math/rand"
@@ -127,10 +128,7 @@ func Cleanup() {
 }
 
 func ChangeGlyph(x, y, glyph int) {
-	if x >= width || y >= height {
-		return
-	}
-	if grid[y*width+x].Glyph != glyph {
+	if util.CheckBounds(x, y, width, height) && grid[y*width+x].Glyph != glyph {
 		grid[y*width+x].Glyph = glyph
 		grid[y*width+x].Dirty = true
 		masterDirty = true
@@ -138,10 +136,7 @@ func ChangeGlyph(x, y, glyph int) {
 }
 
 func ChangeForeColour(x, y int, fore uint32) {
-	if x >= width || y >= height {
-		return
-	}
-	if grid[y*width+x].ForeColour != fore {
+	if util.CheckBounds(x, y, width, height) && grid[y*width+x].ForeColour != fore {
 		grid[y*width+x].ForeColour = fore
 		grid[y*width+x].Dirty = true
 		masterDirty = true
@@ -149,10 +144,7 @@ func ChangeForeColour(x, y int, fore uint32) {
 }
 
 func ChangeBackColour(x, y int, back uint32) {
-	if x >= width || y >= height {
-		return
-	}
-	if grid[y*width+x].BackColour != back {
+	if util.CheckBounds(x, y, width, height) && grid[y*width+x].BackColour != back {
 		grid[y*width+x].BackColour = back
 		grid[y*width+x].Dirty = true
 		masterDirty = true
@@ -161,31 +153,30 @@ func ChangeBackColour(x, y int, back uint32) {
 
 func ChangeGridPoint(x, y, z, glyph int, fore, back uint32) {
 	s := y*width + x
-	if x >= width || y >= height || grid[s].Z > z {
-		return
+	if util.CheckBounds(x, y, width, height) && grid[s].Z <= z {
+		grid[s].Set(glyph, fore, back, z)
+		masterDirty = true
 	}
-	grid[s].Set(glyph, fore, back, z)
-	masterDirty = true
 }
 
 //TODO: border glyph merging, custom colouring, multiple styles
 func DrawBorder(x, y, z, w, h int, title string) {
 	for i := 0; i < w; i++ {
-		ChangeGridPoint(x+i, y-1, z, 0xc4, 0xFFFFFFFF, 0x000000)
-		ChangeGridPoint(x+i, y+h, z, 0xc4, 0xFFFFFFFF, 0x000000)
+		ChangeGridPoint(x+i, y-1, z, 0xc4, 0xFFFFFFFF, 0xFF000000)
+		ChangeGridPoint(x+i, y+h, z, 0xc4, 0xFFFFFFFF, 0xFF000000)
 	}
 	for i := 0; i < h; i++ {
-		ChangeGridPoint(x-1, y+i, z, 0xb3, 0xFFFFFFFF, 0x000000)
-		ChangeGridPoint(x+w, y+i, z, 0xb3, 0xFFFFFFFF, 0x000000)
+		ChangeGridPoint(x-1, y+i, z, 0xb3, 0xFFFFFFFF, 0xFF000000)
+		ChangeGridPoint(x+w, y+i, z, 0xb3, 0xFFFFFFFF, 0xFF000000)
 	}
-	ChangeGridPoint(x-1, y-1, z, 0xda, 0xFFFFFFFF, 0x000000)
-	ChangeGridPoint(x-1, y+h, z, 0xc0, 0xFFFFFFFF, 0x000000)
-	ChangeGridPoint(x+w, y+h, z, 0xd9, 0xFFFFFFFF, 0x000000)
-	ChangeGridPoint(x+w, y-1, z, 0xbf, 0xFFFFFFFF, 0x000000)
+	ChangeGridPoint(x-1, y-1, z, 0xda, 0xFFFFFFFF, 0xFF000000)
+	ChangeGridPoint(x-1, y+h, z, 0xc0, 0xFFFFFFFF, 0xFF000000)
+	ChangeGridPoint(x+w, y+h, z, 0xd9, 0xFFFFFFFF, 0xFF000000)
+	ChangeGridPoint(x+w, y-1, z, 0xbf, 0xFFFFFFFF, 0xFF000000)
 
 	if len(title) < w && title != "" {
 		for i, r := range title {
-			ChangeGridPoint(x+(w/2-len(title)/2)+i, y-1, z, int(r), 0xFFFFFFFF, 0x000000)
+			ChangeGridPoint(x+(w/2-len(title)/2)+i, y-1, z, int(r), 0xFFFFFFFF, 0xFF000000)
 		}
 	}
 }

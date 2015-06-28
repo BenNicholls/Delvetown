@@ -1,6 +1,7 @@
 package data
 
 import "github.com/bennicholls/delvetown/data/entities"
+import "github.com/bennicholls/delvetown/util"
 
 type TileMap struct {
 	width, height int
@@ -12,13 +13,13 @@ func NewMap(w, h int) *TileMap {
 }
 
 func (m *TileMap) ChangeTileType(x, y, tile int) {
-	if x < m.width && y < m.height {
+	if util.CheckBounds(x, y, m.width, m.height) {
 		m.tiles[y*m.width+x].tileType = tile
 	}
 }
 
 func (m TileMap) GetTileType(x, y int) int {
-	if x < m.width && y < m.height && x >= 0 && y >= 0 {
+	if util.CheckBounds(x, y, m.width, m.height) {
 		return m.tiles[y*m.width+x].tileType
 	} else {
 		return 0
@@ -26,7 +27,7 @@ func (m TileMap) GetTileType(x, y int) int {
 }
 
 func (m TileMap) GetTile(x, y int) Tile {
-	if x < m.width && y < m.height && x >= 0 && y >= 0 {
+	if util.CheckBounds(x, y, m.width, m.height) {
 		return m.tiles[y*m.width+x]
 	} else {
 		return Tile{}
@@ -34,19 +35,19 @@ func (m TileMap) GetTile(x, y int) Tile {
 }
 
 func (m *TileMap) SetTile(x, y int, t Tile) {
-	if x < m.width && y < m.height && x >= 0 && y >= 0 {
+	if util.CheckBounds(x, y, m.width, m.height) {
 		m.tiles[x+y*m.width] = t
 	}
 }
 
 func (m *TileMap) AddEntity(x, y int, e *entities.Entity) {
-	if x < m.width && y < m.height && x >= 0 && y >= 0 {
+	if util.CheckBounds(x, y, m.width, m.height) {
 		m.tiles[x+y*m.width].Entity = e
 	}
 }
 
 func (m *TileMap) RemoveEntity(x, y int) {
-	if x < m.width && y < m.height && x >= 0 && y >= 0 {
+	if util.CheckBounds(x, y, m.width, m.height) {
 		m.tiles[x+y*m.width].Entity = nil
 	}
 }
@@ -57,7 +58,7 @@ func (m *TileMap) MoveEntity(x, y, dx, dy int) {
 }
 
 func (m TileMap) GetEntity(x, y int) *entities.Entity {
-	if x < m.width && y < m.height && x >= 0 && y >= 0 {
+	if util.CheckBounds(x, y, m.width, m.height) {
 		return m.tiles[x+y*m.width].Entity
 	} else {
 		return nil
@@ -66,13 +67,13 @@ func (m TileMap) GetEntity(x, y int) *entities.Entity {
 
 //For testing purposes.
 func (m *TileMap) ChangeTileColour(x, y int, c uint32) {
-	if x < m.width && y < m.height && x >= 0 && y >= 0 {
+	if util.CheckBounds(x, y, m.width, m.height) {
 		m.tiles[x+y*m.width].Light.Colour = c
 	}
 }
 
 func (m TileMap) LastVisible(x, y int) int {
-	if x < m.width && y < m.height && x >= 0 && y >= 0 {
+	if util.CheckBounds(x, y, m.width, m.height) {
 		return m.tiles[x+y*m.width].LastVisible
 	} else {
 		return 0
@@ -81,7 +82,7 @@ func (m TileMap) LastVisible(x, y int) int {
 
 //NOTE: Consider renaming this.
 func (m *TileMap) SetVisible(x, y, tick int) {
-	if x < m.width && y < m.height && x >= 0 && y >= 0 {
+	if util.CheckBounds(x, y, m.width, m.height) {
 		m.tiles[x+y*m.width].LastVisible = tick
 	}
 }

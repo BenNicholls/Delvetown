@@ -31,7 +31,7 @@ func (l *Level) MovePlayer(dx, dy int) {
 		l.LevelMap.ShadowCast(l.Player.X, l.Player.Y, l.Player.LightStrength, Darken)
 		l.LevelMap.MoveEntity(l.Player.X, l.Player.Y, dx, dy)
 		l.Player.Move(dx, dy)
-		l.LevelMap.ShadowCast(l.Player.X, l.Player.Y, l.Player.LightStrength, Light)
+		l.LevelMap.ShadowCast(l.Player.X, l.Player.Y, l.Player.LightStrength, Lighten)
 	}
 }
 
@@ -45,7 +45,7 @@ func (l *Level) MoveMob(ID, dx, dy int) {
 			l.LevelMap.ShadowCast(e.X, e.Y, e.LightStrength, Darken)
 			l.LevelMap.MoveEntity(e.X, e.Y, dx, dy)
 			e.Move(dx, dy)
-			l.LevelMap.ShadowCast(e.X, e.Y, e.LightStrength, Light)
+			l.LevelMap.ShadowCast(e.X, e.Y, e.LightStrength, Lighten)
 		}
 	}
 }
@@ -53,6 +53,8 @@ func (l *Level) MoveMob(ID, dx, dy int) {
 func (l *Level) RemoveEntity(id int) {
 	e := l.MobList[id]
 	if e != nil {
+		//kill the lights, then kill the mob
+		l.LevelMap.ShadowCast(e.X, e.Y, e.LightStrength, Darken)
 		l.LevelMap.RemoveEntity(e.X, e.Y)
 		delete(l.MobList, id)
 	}
@@ -71,5 +73,5 @@ func (l *Level) AddMob(x, y int) {
 	e := entities.Entity{15, x, y, "butts", true, 10, id, 0xFFFF0000, 7}
 	l.MobList[id] = &e
 	l.LevelMap.AddEntity(x, y, &e)
-	l.LevelMap.ShadowCast(e.X, e.Y, e.LightStrength, Light)
+	l.LevelMap.ShadowCast(e.X, e.Y, e.LightStrength, Lighten)
 }

@@ -20,12 +20,10 @@ func main() {
 
 	mode = delvemode.New()
 
-	//mode := modes.GameModer(m)
-
 	running := true
 	frames := 0
 	frameTime, ticks := uint32(0), uint32(0)
-	fps := uint32(17) //17ms = 60 FPS approxs
+	fps := uint32(17) //17ms = 60 FPS approx
 
 	for running {
 		for event = sdl.PollEvent(); event != nil; event = sdl.PollEvent() {

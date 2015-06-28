@@ -2,6 +2,7 @@ package ui
 
 import "github.com/bennicholls/delvetown/console"
 import "github.com/bennicholls/delvetown/data"
+import "github.com/bennicholls/delvetown/util"
 
 //View object for drawing tiles. (eg. maps). Effectively a buffer for drawing before the console grabs it.
 type TileView struct {
@@ -25,7 +26,7 @@ func (tv *TileView) SetTitle(s string) {
 //takes (x,y) and a tile
 func (tv *TileView) DrawTile(x, y int, t data.Tile) {
 
-	if x < tv.Width && y < tv.Height {
+	if util.CheckBounds(x, y, tv.Width, tv.Height) {
 		v := data.GetVisuals(t.Type())
 		tv.grid[y*tv.Width+x].Set(v.Glyph, v.ForeColour, 0x000000, tv.z)
 	}
@@ -33,18 +34,18 @@ func (tv *TileView) DrawTile(x, y int, t data.Tile) {
 
 func (tv *TileView) DrawEntity(x, y, g int, c uint32) {
 
-	if x < tv.Width && y < tv.Height {
+	if util.CheckBounds(x, y, tv.Width, tv.Height) {
 		tv.grid[y*tv.Width+x].Set(g, c, 0x000000, tv.z)
 	}
 }
 
 //Apply light level. 0-255. TODO: add colour mask (soft orange glow??)
 func (tv *TileView) ApplyLight(x, y, b int) {
-	if x < tv.Width && y < tv.Height {
+	if util.CheckBounds(x, y, tv.Width, tv.Height) {
 		s := y*tv.Width + x
 		if b > 255 {
 			b = 255
-		} else if b < 80 && b < 0 {
+		} else if b < 80 && b > 0 {
 			b = 80 //Baseline brightness for memory... TODO: implement this less magically.
 		}
 		tv.grid[s].ForeColour = console.ChangeColourAlpha(tv.grid[s].ForeColour, uint8(b))
