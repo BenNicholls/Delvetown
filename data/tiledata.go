@@ -8,6 +8,7 @@ const (
 	TILE_GRASS
 	TILE_WALL
 	TILE_WATER
+	TILE_CAVEFLOOR
 	MAX_TILETYPES
 )
 
@@ -32,6 +33,7 @@ func init() {
 	tiledata[TILE_GRASS] = tileTypeData{"Grass", true, true, tileVisuals{0x2e, 0xFF00FF00}}
 	tiledata[TILE_WALL] = tileTypeData{"Wall", false, false, tileVisuals{0x23, 0xFF777777}}
 	tiledata[TILE_WATER] = tileTypeData{"Water", false, true, tileVisuals{0xf7, 0xFF0000FF}}
+	tiledata[TILE_CAVEFLOOR] = tileTypeData{"Cave Floor", true, true, tileVisuals{0x2e, 0xFF746253}}
 }
 
 //takes tiletype, returns glyph

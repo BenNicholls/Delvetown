@@ -21,6 +21,6 @@ func (g *GameOverMode) Render() {
 	g.toobad.Render()
 }
 
-func (g *GameOverMode) HandleKeypress(sdl.Keycode) {
+func (g *GameOverMode) HandleKeypress(key sdl.Keycode) {
 
 }

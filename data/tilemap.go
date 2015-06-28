@@ -43,18 +43,23 @@ func (m *TileMap) SetTile(x, y int, t Tile) {
 func (m *TileMap) AddEntity(x, y int, e *entities.Entity) {
 	if util.CheckBounds(x, y, m.width, m.height) {
 		m.tiles[x+y*m.width].Entity = e
+		m.ShadowCast(x, y, e.LightStrength, Lighten)
 	}
 }
 
 func (m *TileMap) RemoveEntity(x, y int) {
 	if util.CheckBounds(x, y, m.width, m.height) {
+		m.ShadowCast(x, y, m.tiles[x+y*m.width].Entity.LightStrength, Darken)
 		m.tiles[x+y*m.width].Entity = nil
 	}
 }
 
 func (m *TileMap) MoveEntity(x, y, dx, dy int) {
-	m.AddEntity(x+dx, y+dy, m.tiles[x+y*m.width].Entity)
-	m.RemoveEntity(x, y)
+	e := m.tiles[x+y*m.width].Entity
+	if e != nil {
+		m.AddEntity(x+dx, y+dy, e)
+		m.RemoveEntity(x, y)
+	}
 }
 
 func (m TileMap) GetEntity(x, y int) *entities.Entity {

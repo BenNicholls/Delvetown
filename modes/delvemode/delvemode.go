@@ -7,7 +7,6 @@ import "github.com/bennicholls/delvetown/modes"
 import "github.com/bennicholls/delvetown/util"
 import "github.com/veandco/go-sdl2/sdl"
 import "strconv"
-import "math/rand"
 
 type DelveMode struct {
 
@@ -35,6 +34,7 @@ type DelveMode struct {
 
 	//player offset
 	pDX, pDY int
+	wait     bool
 
 	memBrightness int //brightness to show memory tiles
 }
@@ -68,7 +68,7 @@ func New() *DelveMode {
 	dm.level.GenerateCave()
 	dm.player = dm.level.Player
 
-	dm.pDX, dm.pDY = 0, 0
+	dm.pDX, dm.pDY, dm.wait = 0, 0, false
 	dm.tick, dm.step = 1, 0
 
 	dm.memBrightness = 80
@@ -116,6 +116,8 @@ func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 			dm.pDX, dm.pDY = -1, 1
 		case sdl.K_KP_3:
 			dm.pDX, dm.pDY = 1, 1
+		case sdl.K_SPACE:
+			dm.wait = true
 		case sdl.K_ESCAPE:
 			dm.activeElem = dm.debug
 			dm.debug.ToggleVisible()
@@ -129,28 +131,30 @@ func (dm *DelveMode) Update() modes.GameModer {
 	//dm.pDX, dm.pDY = util.GenerateDirection()
 
 	//player movement
-	if dm.pDX != 0 || dm.pDY != 0 {
+	if dm.pDX != 0 || dm.pDY != 0 || dm.wait {
 
-		//check if this is an attack, if so, attack!
-		e := dm.level.LevelMap.GetEntity(dm.player.X+dm.pDX, dm.player.Y+dm.pDY)
-		if e != nil {
-			e.Health -= 5
-			dm.player.Health -= 1
-			dm.gamelog.AddMessage("You attack! TO VALHALLA!!!")
-			if e.Health <= 0 {
-				dm.level.RemoveEntity(e.ID)
-				dm.gamelog.AddMessage("You are a MURDERER!")
+		if !dm.wait {
+			//check if this is an attack, if so, attack!
+			e := dm.level.LevelMap.GetEntity(dm.player.X+dm.pDX, dm.player.Y+dm.pDY)
+			if e != nil {
+				e.Health -= 5
+				dm.player.Health -= 1
+				dm.gamelog.AddMessage("You attack! TO VALHALLA!!!")
+				if e.Health <= 0 {
+					dm.level.RemoveEntity(e.ID)
+					dm.gamelog.AddMessage("You are a MURDERER!")
+				}
+			} else {
+				dm.level.MovePlayer(dm.pDX, dm.pDY)
+				dm.step += 1
 			}
-		} else {
-			dm.level.MovePlayer(dm.pDX, dm.pDY)
-			dm.step += 1
 		}
 
-		dm.pDX, dm.pDY = 0, 0
+		dm.pDX, dm.pDY, dm.wait = 0, 0, false
 
 		//enemy movement
 		for ID, mob := range dm.level.MobList {
-			eDX, eDY := rand.Intn(3)-1, rand.Intn(3)-1
+			eDX, eDY := util.GenerateDirection()
 
 			//check if attacking the player
 			if mob.X+eDX == dm.player.X && mob.Y+eDY == dm.player.Y {
@@ -161,7 +165,7 @@ func (dm *DelveMode) Update() modes.GameModer {
 					dm.level.RemoveEntity(ID)
 				}
 			} else {
-				e = dm.level.LevelMap.GetEntity(mob.X+eDX, mob.Y+eDY)
+				e := dm.level.LevelMap.GetEntity(mob.X+eDX, mob.Y+eDY)
 				if e == nil {
 					dm.level.MoveMob(ID, eDX, eDY)
 				}

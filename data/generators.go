@@ -29,22 +29,28 @@ func (l *Level) GenerateArena(w, h int) {
 
 func (l *Level) GenerateCave() {
 
+	l.LevelMap.RemoveEntity(l.Player.X, l.Player.Y)
+
 	//fill with walls
 	for i := 0; i < l.Width*l.Height; i++ {
 		x, y := i%l.Width, i/l.Width
-		l.LevelMap.ChangeTileType(x, y, 2)
-		l.LevelMap.ChangeTileColour(x, y, 0)
+		l.LevelMap.ChangeTileType(x, y, TILE_WALL)
 		l.LevelMap.SetVisible(x, y, 0)
 	}
 
-	l.seedBranch(l.Width/2, l.Height/2, 300)
-	l.LevelMap.RemoveEntity(l.Player.X, l.Player.Y)
+	l.seedBranch(l.Width/2, l.Height/2, 300, TILE_CAVEFLOOR)
 	l.Player.MoveTo(l.Width/2, l.Height/2)
 	l.LevelMap.AddEntity(l.Width/2, l.Height/2, l.Player)
-	l.LevelMap.ShadowCast(l.Player.X, l.Player.Y, l.Player.LightStrength, Lighten)
-	//place seeds, let 'em grow!
+	//place  more seeds, let 'em grow!
 	for i := 0; i < 5; i++ {
-		l.seedBranch(rand.Intn(l.Width), rand.Intn(l.Height), 200)
+		//keep seeds away from the edges (-10, +10)
+		l.seedBranch(rand.Intn(l.Width-10)+10, rand.Intn(l.Height-10)+10, 200, TILE_CAVEFLOOR)
+	}
+
+	//generate some little pools of water
+	for i := 0; i < 10; i++ {
+		//keep seeds away from the edges (-10, +10)
+		l.seedBranch(rand.Intn(l.Width-10)+10, rand.Intn(l.Height-10)+10, 40, TILE_WATER)
 	}
 
 	//populate with random enemies
@@ -58,21 +64,23 @@ func (l *Level) GenerateCave() {
 	}
 }
 
-func (l *Level) seedBranch(x, y, branch int) {
+//tile is a data.TILETYPE indicating what we're putting down
+func (l *Level) seedBranch(x, y, branch, tile int) {
 
-	l.LevelMap.ChangeTileType(x, y, 1)
+	l.LevelMap.ChangeTileType(x, y, tile)
 	if branch <= 0 {
 		return
 	}
 
 	//decide num of branches, then branch that many times
-	branches := 4
+	branches := 5
 	for i := 0; i < branches; i++ {
 		dx, dy := util.GenerateDirection()
-		if !util.CheckBounds(x, y, l.Width, l.Height) {
+		//ensure branch doesn't reach edge of map (ugly)
+		if !util.CheckBounds(x+dx-1, y+dy-1, l.Width-2, l.Height-2) {
 			continue
-		} else if l.LevelMap.GetTileType(x+dx, y+dy) > 1 {
-			l.seedBranch(x+dx, y+dy, branch-branches)
+		} else if l.LevelMap.GetTileType(x+dx, y+dy) == TILE_WALL {
+			l.seedBranch(x+dx, y+dy, branch-branches, tile)
 		}
 	}
 }

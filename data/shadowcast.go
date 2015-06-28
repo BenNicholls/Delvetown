@@ -31,11 +31,9 @@ func (m *TileMap) Scan(x, y, row int, slope1, slope2 float32, radius int, r [4]i
 
 	//scan #radius rows
 	for j := row; j < radius+1 && !blocked; j++ {
-		dx, dy := -j, -j
-		newStart := slope1
 
 		//scan row
-		for ; dx <= 0; dx++ {
+		for dx, dy, newStart := -j, -j, slope1; dx <= 0; dx++ {
 			mx, my := x+dx*r[0]+dy*r[1], y+dx*r[2]+dy*r[3] //map coordinates
 			if !util.CheckBounds(mx, my, m.width, m.height) {
 				continue

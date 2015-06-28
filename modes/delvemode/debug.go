@@ -7,6 +7,7 @@ func (dm *DelveMode) Execute(command string) {
 	case "regen":
 		dm.level.GenerateCave()
 		dm.gamelog.AddMessage("Level Regenerated!")
+
 	case "nolights":
 		dm.level.LevelMap.ShadowCast(dm.player.X, dm.player.Y, dm.player.LightStrength, data.Darken)
 

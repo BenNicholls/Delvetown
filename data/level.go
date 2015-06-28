@@ -17,7 +17,7 @@ type Level struct {
 //sets up a bare level object.
 func NewLevel(w, h int) *Level {
 	l := Level{LevelMap: NewMap(w, h), MemoryMap: NewMap(w, h), Width: w, Height: h}
-	l.Player = &entities.Entity{2, w / 2, h / 2, "player", false, 50, 0, 0xFFFFFFFF, 15}
+	l.Player = &entities.Entity{2, w / 2, h / 2, "player", false, 50, 0, 0xFFFFFFFF, 0}
 	l.MobList = make(map[int]*entities.Entity)
 	l.LevelMap.AddEntity(l.Player.X, l.Player.Y, l.Player)
 	return &l
@@ -28,10 +28,8 @@ func (l *Level) MovePlayer(dx, dy int) {
 	//move player if tile is passable
 	t := l.LevelMap.GetTileType(l.Player.X+dx, l.Player.Y+dy)
 	if IsPassable(t) {
-		l.LevelMap.ShadowCast(l.Player.X, l.Player.Y, l.Player.LightStrength, Darken)
 		l.LevelMap.MoveEntity(l.Player.X, l.Player.Y, dx, dy)
 		l.Player.Move(dx, dy)
-		l.LevelMap.ShadowCast(l.Player.X, l.Player.Y, l.Player.LightStrength, Lighten)
 	}
 }
 
@@ -42,10 +40,8 @@ func (l *Level) MoveMob(ID, dx, dy int) {
 	if e != nil {
 		t := l.LevelMap.GetTileType(e.X+dx, e.Y+dy)
 		if IsPassable(t) {
-			l.LevelMap.ShadowCast(e.X, e.Y, e.LightStrength, Darken)
 			l.LevelMap.MoveEntity(e.X, e.Y, dx, dy)
 			e.Move(dx, dy)
-			l.LevelMap.ShadowCast(e.X, e.Y, e.LightStrength, Lighten)
 		}
 	}
 }
@@ -53,8 +49,6 @@ func (l *Level) MoveMob(ID, dx, dy int) {
 func (l *Level) RemoveEntity(id int) {
 	e := l.MobList[id]
 	if e != nil {
-		//kill the lights, then kill the mob
-		l.LevelMap.ShadowCast(e.X, e.Y, e.LightStrength, Darken)
 		l.LevelMap.RemoveEntity(e.X, e.Y)
 		delete(l.MobList, id)
 	}
@@ -73,5 +67,4 @@ func (l *Level) AddMob(x, y int) {
 	e := entities.Entity{15, x, y, "butts", true, 10, id, 0xFFFF0000, 7}
 	l.MobList[id] = &e
 	l.LevelMap.AddEntity(x, y, &e)
-	l.LevelMap.ShadowCast(e.X, e.Y, e.LightStrength, Lighten)
 }
