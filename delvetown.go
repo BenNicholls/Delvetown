@@ -15,7 +15,7 @@ func main() {
 	var event sdl.Event
 	var mode modes.GameModer
 
-	console.Setup(100, 50, 16)
+	console.Setup(100, 50)
 	defer console.Cleanup()
 
 	mode = delvemode.New()

@@ -39,12 +39,21 @@ func (g *GridCell) Clear() {
 }
 
 //Setup the game window, renderer, etc TODO: have this function emit errors instead of just borking the program
-func Setup(w, h, size int) {
+func Setup(w, h int) {
 
 	width = w
 	height = h
-	tileSize = size
 	var err error
+
+	//load spritesheet first so we can infer tileSize
+	image, err := sdl.LoadBMP("res/curses.bmp")
+	if err != nil {
+		fmt.Println("Failed to load image: \n", sdl.GetError())
+		os.Exit(2)
+	}
+	defer image.Free()
+	image.SetColorKey(1, 0xFF00FF)
+	tileSize = int(image.W / 16)
 
 	window, err = sdl.CreateWindow("Delvetown", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED, width*tileSize, height*tileSize, sdl.WINDOW_OPENGL)
 	if err != nil {
@@ -66,14 +75,6 @@ func Setup(w, h, size int) {
 	}
 	renderer.Clear()
 
-	image, err := sdl.LoadBMP("res/curses.bmp")
-	if err != nil {
-		fmt.Println("Failed to load image: \n", sdl.GetError())
-		os.Exit(2)
-	}
-	defer image.Free()
-
-	image.SetColorKey(1, 0xFF00FF)
 	sprites, err = renderer.CreateTextureFromSurface(image)
 	if err != nil {
 		fmt.Println("Failed to create sprite texture: %s\n", sdl.GetError())

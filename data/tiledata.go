@@ -27,7 +27,7 @@ type tileVisuals struct {
 func init() {
 
 	//tiledata[TILETYPE]
-	tiledata = make([]tileTypeData, 50)
+	tiledata = make([]tileTypeData, MAX_TILETYPES)
 
 	tiledata[TILE_NOTHING] = tileTypeData{"Nothing", false, true, tileVisuals{0, 0x000000}}
 	tiledata[TILE_GRASS] = tileTypeData{"Grass", true, true, tileVisuals{0x2e, 0xFF00FF00}}

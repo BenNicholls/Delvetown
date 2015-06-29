@@ -17,9 +17,9 @@ func (l *Level) GenerateArena(w, h int) {
 	for i := 0; i < l.Width*l.Height; i++ {
 		x, y := i%l.Width, i/l.Width
 		if x < l.Width/2-w/2 || x > l.Width/2+w/2 || y < l.Height/2-h/2 || y > l.Height/2+h/2 {
-			l.LevelMap.ChangeTileType(x, y, 0)
+			l.LevelMap.ChangeTileType(x, y, TILE_NOTHING)
 		} else {
-			l.LevelMap.ChangeTileType(x, y, 1)
+			l.LevelMap.ChangeTileType(x, y, TILE_GRASS)
 			if rand.Intn(40) == 0 {
 				l.AddMob(x, y)
 			}
@@ -41,16 +41,17 @@ func (l *Level) GenerateCave() {
 	l.seedBranch(l.Width/2, l.Height/2, 300, TILE_CAVEFLOOR)
 	l.Player.MoveTo(l.Width/2, l.Height/2)
 	l.LevelMap.AddEntity(l.Width/2, l.Height/2, l.Player)
-	//place  more seeds, let 'em grow!
-	for i := 0; i < 5; i++ {
-		//keep seeds away from the edges (-10, +10)
-		l.seedBranch(rand.Intn(l.Width-10)+10, rand.Intn(l.Height-10)+10, 200, TILE_CAVEFLOOR)
-	}
 
 	//generate some little pools of water
 	for i := 0; i < 10; i++ {
 		//keep seeds away from the edges (-10, +10)
 		l.seedBranch(rand.Intn(l.Width-10)+10, rand.Intn(l.Height-10)+10, 40, TILE_WATER)
+	}
+
+	//place  more seeds, let 'em grow!
+	for i := 0; i < 5; i++ {
+		//keep seeds away from the edges (-10, +10)
+		l.seedBranch(rand.Intn(l.Width-10)+10, rand.Intn(l.Height-10)+10, 200, TILE_CAVEFLOOR)
 	}
 
 	//populate with random enemies
@@ -79,7 +80,7 @@ func (l *Level) seedBranch(x, y, branch, tile int) {
 		//ensure branch doesn't reach edge of map (ugly)
 		if !util.CheckBounds(x+dx-1, y+dy-1, l.Width-2, l.Height-2) {
 			continue
-		} else if l.LevelMap.GetTileType(x+dx, y+dy) == TILE_WALL {
+		} else if t := l.LevelMap.GetTileType(x+dx, y+dy); t != tile && t != TILE_NOTHING {
 			l.seedBranch(x+dx, y+dy, branch-branches, tile)
 		}
 	}

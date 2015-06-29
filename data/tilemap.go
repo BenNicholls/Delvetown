@@ -1,6 +1,5 @@
 package data
 
-import "github.com/bennicholls/delvetown/data/entities"
 import "github.com/bennicholls/delvetown/util"
 
 type TileMap struct {
@@ -40,7 +39,7 @@ func (m *TileMap) SetTile(x, y int, t Tile) {
 	}
 }
 
-func (m *TileMap) AddEntity(x, y int, e *entities.Entity) {
+func (m *TileMap) AddEntity(x, y int, e *Entity) {
 	if util.CheckBounds(x, y, m.width, m.height) {
 		m.tiles[x+y*m.width].Entity = e
 		m.ShadowCast(x, y, e.LightStrength, Lighten)
@@ -62,7 +61,7 @@ func (m *TileMap) MoveEntity(x, y, dx, dy int) {
 	}
 }
 
-func (m TileMap) GetEntity(x, y int) *entities.Entity {
+func (m TileMap) GetEntity(x, y int) *Entity {
 	if util.CheckBounds(x, y, m.width, m.height) {
 		return m.tiles[x+y*m.width].Entity
 	} else {
@@ -104,7 +103,7 @@ func (m *TileMap) ClearLights() {
 type Tile struct {
 	tileType, variant int
 	passable          bool
-	Entity            *entities.Entity
+	Entity            *Entity
 	LastVisible       int // Records the last tick that this tile was seen
 	Light             TileLight
 }

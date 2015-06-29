@@ -1,6 +1,5 @@
 package data
 
-import "github.com/bennicholls/delvetown/data/entities"
 import "math/rand"
 
 type Level struct {
@@ -8,23 +7,26 @@ type Level struct {
 	MemoryMap     *TileMap
 	Width, Height int
 
-	Player *entities.Entity
+	Player *Entity
 
 	//Map referencing all enemies in the level. indexed by ID  (found in Entity.ID)
-	MobList map[int]*entities.Entity
+	MobList map[int]*Entity
 }
 
 //sets up a bare level object.
 func NewLevel(w, h int) *Level {
 	l := Level{LevelMap: NewMap(w, h), MemoryMap: NewMap(w, h), Width: w, Height: h}
-	l.Player = &entities.Entity{2, w / 2, h / 2, "player", false, 50, 0, 0xFFFFFFFF, 0}
-	l.MobList = make(map[int]*entities.Entity)
+	l.Player = &Entity{2, w / 2, h / 2, "player", false, 50, 0, 0xFFFFFFFF, 15, 1, make(chan Action, 20)}
+	l.MobList = make(map[int]*Entity)
 	l.LevelMap.AddEntity(l.Player.X, l.Player.Y, l.Player)
 	return &l
 }
 
 func (l *Level) MovePlayer(dx, dy int) {
 
+	if dx == 0 && dy == 0 {
+		return
+	}
 	//move player if tile is passable
 	t := l.LevelMap.GetTileType(l.Player.X+dx, l.Player.Y+dy)
 	if IsPassable(t) {
@@ -64,7 +66,7 @@ func (l *Level) AddMob(x, y int) {
 		_, ok = l.MobList[id]
 	}
 
-	e := entities.Entity{15, x, y, "butts", true, 10, id, 0xFFFF0000, 7}
+	e := Entity{15, x, y, "butts", true, 10, id, 0xFFFF0000, 7, 1, make(chan Action, 20)}
 	l.MobList[id] = &e
 	l.LevelMap.AddEntity(x, y, &e)
 }

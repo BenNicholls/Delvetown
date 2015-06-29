@@ -1,4 +1,4 @@
-package entities
+package data
 
 type Entity struct {
 	Glyph         int
@@ -9,7 +9,12 @@ type Entity struct {
 	ID            int
 	Fore          uint32
 	LightStrength int
+	NextTurn      int
+
+	ActionQueue chan Action
 }
+
+type Action func(e *Entity)
 
 func (e *Entity) Move(dx, dy int) {
 	e.X += dx

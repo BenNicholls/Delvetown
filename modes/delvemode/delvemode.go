@@ -2,7 +2,6 @@ package delvemode
 
 import "github.com/bennicholls/delvetown/ui"
 import "github.com/bennicholls/delvetown/data"
-import "github.com/bennicholls/delvetown/data/entities"
 import "github.com/bennicholls/delvetown/modes"
 import "github.com/bennicholls/delvetown/util"
 import "github.com/veandco/go-sdl2/sdl"
@@ -28,7 +27,7 @@ type DelveMode struct {
 
 	xCamera, yCamera int
 
-	player *entities.Entity
+	player *data.Entity
 
 	tick, step int
 
@@ -101,21 +100,21 @@ func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 
 		switch key {
 		case sdl.K_DOWN, sdl.K_KP_2:
-			dm.pDY = 1
+			dm.player.ActionQueue <- dm.AttackMove(dm.player, 0, 1)
 		case sdl.K_UP, sdl.K_KP_8:
-			dm.pDY = -1
+			dm.player.ActionQueue <- dm.AttackMove(dm.player, 0, -1)
 		case sdl.K_LEFT, sdl.K_KP_4:
-			dm.pDX = -1
+			dm.player.ActionQueue <- dm.AttackMove(dm.player, -1, 0)
 		case sdl.K_RIGHT, sdl.K_KP_6:
-			dm.pDX = 1
+			dm.player.ActionQueue <- dm.AttackMove(dm.player, 1, 0)
 		case sdl.K_KP_7:
-			dm.pDX, dm.pDY = -1, -1
+			dm.player.ActionQueue <- dm.AttackMove(dm.player, -1, -1)
 		case sdl.K_KP_9:
-			dm.pDX, dm.pDY = 1, -1
+			dm.player.ActionQueue <- dm.AttackMove(dm.player, 1, -1)
 		case sdl.K_KP_1:
-			dm.pDX, dm.pDY = -1, 1
+			dm.player.ActionQueue <- dm.AttackMove(dm.player, -1, 1)
 		case sdl.K_KP_3:
-			dm.pDX, dm.pDY = 1, 1
+			dm.player.ActionQueue <- dm.AttackMove(dm.player, 1, 1)
 		case sdl.K_SPACE:
 			dm.wait = true
 		case sdl.K_ESCAPE:
@@ -125,50 +124,37 @@ func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 	}
 }
 
+//Decide if a move is an atack or not
+func (dm *DelveMode) AttackMove(e *data.Entity, dx, dy int) data.Action {
+	t := dm.level.LevelMap.GetEntity(e.X+dx, e.Y+dy)
+
+	if t != nil {
+		return dm.AttackAction(dx, dy, 10)
+	} else {
+		return dm.MoveAction(dx, dy, 5)
+	}
+}
+
 func (dm *DelveMode) Update() modes.GameModer {
 
-	//Brownian motion for player, for testing engine speed.
-	//dm.pDX, dm.pDY = util.GenerateDirection()
-
-	//player movement
-	if dm.pDX != 0 || dm.pDY != 0 || dm.wait {
-
-		if !dm.wait {
-			//check if this is an attack, if so, attack!
-			e := dm.level.LevelMap.GetEntity(dm.player.X+dm.pDX, dm.player.Y+dm.pDY)
-			if e != nil {
-				e.Health -= 5
-				dm.player.Health -= 1
-				dm.gamelog.AddMessage("You attack! TO VALHALLA!!!")
-				if e.Health <= 0 {
-					dm.level.RemoveEntity(e.ID)
-					dm.gamelog.AddMessage("You are a MURDERER!")
-				}
-			} else {
-				dm.level.MovePlayer(dm.pDX, dm.pDY)
-				dm.step += 1
-			}
+	if dm.player.NextTurn <= dm.tick {
+		if len(dm.player.ActionQueue) == 0 {
+			//x, y := util.GenerateDirection()
+			//dm.player.ActionQueue <- dm.MoveAction(x, y, 5)
+			return nil // block update, waiting on player move
+		} else {
+			action := <-dm.player.ActionQueue
+			action(dm.player)
 		}
+	}
 
-		dm.pDX, dm.pDY, dm.wait = 0, 0, false
-
-		//enemy movement
-		for ID, mob := range dm.level.MobList {
-			eDX, eDY := util.GenerateDirection()
-
-			//check if attacking the player
-			if mob.X+eDX == dm.player.X && mob.Y+eDY == dm.player.Y {
-				dm.player.Health -= 5
-				dm.level.MobList[ID].Health -= 1
-				dm.gamelog.AddMessage("It HIT YOU. OUCH!")
-				if mob.Health <= 0 {
-					dm.level.RemoveEntity(ID)
-				}
+	for k, e := range dm.level.MobList {
+		if dm.tick <= e.NextTurn {
+			if len(e.ActionQueue) > 0 {
+				action := <-e.ActionQueue
+				action(dm.level.MobList[k])
 			} else {
-				e := dm.level.LevelMap.GetEntity(mob.X+eDX, mob.Y+eDY)
-				if e == nil {
-					dm.level.MoveMob(ID, eDX, eDY)
-				}
+
 			}
 		}
 	}
@@ -194,7 +180,7 @@ func (dm *DelveMode) Render() {
 
 	dm.view.Clear()
 
-	var e *entities.Entity
+	var e *data.Entity
 
 	//update player memory
 	dm.level.LevelMap.ShadowCast(dm.player.X, dm.player.Y, 50, dm.MemoryCast())
@@ -238,11 +224,9 @@ func (dm *DelveMode) Render() {
 //of the map into the player's memory.
 func (dm *DelveMode) MemoryCast() data.Cast {
 	return func(m *data.TileMap, x, y, d, r int) {
-		mem := dm.level.MemoryMap
-		tick := dm.tick
 		if m.GetTile(x, y).Light.Bright > 0 {
-			m.SetVisible(x, y, tick)
-			mem.SetTile(x, y, m.GetTile(x, y))
+			m.SetVisible(x, y, dm.tick)
+			dm.level.MemoryMap.SetTile(x, y, m.GetTile(x, y))
 		}
 	}
 }
