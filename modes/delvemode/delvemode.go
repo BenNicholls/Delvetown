@@ -167,6 +167,8 @@ func (dm *DelveMode) Update() modes.GameModer {
 	//check for gamestate changes
 	if dm.player.Health <= 0 {
 		return modes.NewGameOver()
+	} else if len(dm.level.MobList) == 0 {
+		return modes.NewWinner()
 	}
 
 	return nil
