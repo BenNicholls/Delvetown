@@ -5,8 +5,7 @@ import "github.com/bennicholls/delvetown/data"
 //TODO: infer dur from entity's speed and whatnot
 func (dm *DelveMode) MoveAction(dx, dy, dur int) data.Action {
 	return func(e *data.Entity) {
-		dm.level.MovePlayer(dx, dy)
-		dm.step += 1
+		dm.level.MoveEntity(dx, dy, e)
 		e.NextTurn += dur
 	}
 }
@@ -25,7 +24,6 @@ func (dm *DelveMode) AttackAction(dx, dy, dur int) data.Action {
 		} else {
 			dm.gamelog.AddMessage("No one there to attack, stupid.")
 		}
-		dm.step += 1
 		e.NextTurn += dur
 	}
 }

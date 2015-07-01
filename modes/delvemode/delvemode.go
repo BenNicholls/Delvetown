@@ -29,11 +29,7 @@ type DelveMode struct {
 
 	player *data.Entity
 
-	tick, step int
-
-	//player offset
-	pDX, pDY int
-	wait     bool
+	tick int
 
 	memBrightness int //brightness to show memory tiles
 }
@@ -67,8 +63,7 @@ func New() *DelveMode {
 	dm.level.GenerateCave()
 	dm.player = dm.level.Player
 
-	dm.pDX, dm.pDY, dm.wait = 0, 0, false
-	dm.tick, dm.step = 1, 0
+	dm.tick = 1
 
 	dm.memBrightness = 80
 
@@ -116,7 +111,7 @@ func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 		case sdl.K_KP_3:
 			dm.player.ActionQueue <- dm.AttackMove(dm.player, 1, 1)
 		case sdl.K_SPACE:
-			dm.wait = true
+			dm.player.NextTurn += 1
 		case sdl.K_ESCAPE:
 			dm.activeElem = dm.debug
 			dm.debug.ToggleVisible()
@@ -129,9 +124,9 @@ func (dm *DelveMode) AttackMove(e *data.Entity, dx, dy int) data.Action {
 	t := dm.level.LevelMap.GetEntity(e.X+dx, e.Y+dy)
 
 	if t != nil {
-		return dm.AttackAction(dx, dy, 10)
+		return dm.AttackAction(dx, dy, 5)
 	} else {
-		return dm.MoveAction(dx, dy, 5)
+		return dm.MoveAction(dx, dy, 3)
 	}
 }
 
@@ -149,19 +144,21 @@ func (dm *DelveMode) Update() modes.GameModer {
 	}
 
 	for k, e := range dm.level.MobList {
-		if dm.tick <= e.NextTurn {
+		if e.NextTurn <= dm.tick {
 			if len(e.ActionQueue) > 0 {
 				action := <-e.ActionQueue
 				action(dm.level.MobList[k])
 			} else {
-
+				dx, dy := util.GenerateDirection()
+				action := dm.MoveAction(dx, dy, 10)
+				action(dm.level.MobList[k])
 			}
 		}
 	}
 
 	//update UI elements
 	dm.hp.ChangeText("HP: " + strconv.Itoa(dm.player.Health))
-	dm.stepCounter.ChangeText("Steps: " + strconv.Itoa(dm.step))
+	dm.stepCounter.ChangeText("Ticks: " + strconv.Itoa(dm.tick))
 	dm.tick++
 
 	//check for gamestate changes

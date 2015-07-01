@@ -22,29 +22,15 @@ func NewLevel(w, h int) *Level {
 	return &l
 }
 
-func (l *Level) MovePlayer(dx, dy int) {
+func (l *Level) MoveEntity(dx, dy int, e *Entity) {
 
 	if dx == 0 && dy == 0 {
 		return
 	}
-	//move player if tile is passable
-	t := l.LevelMap.GetTileType(l.Player.X+dx, l.Player.Y+dy)
-	if IsPassable(t) {
-		l.LevelMap.MoveEntity(l.Player.X, l.Player.Y, dx, dy)
-		l.Player.Move(dx, dy)
-	}
-}
-
-func (l *Level) MoveMob(ID, dx, dy int) {
-
-	//move player if tile is passable
-	e := l.MobList[ID]
-	if e != nil {
-		t := l.LevelMap.GetTileType(e.X+dx, e.Y+dy)
-		if IsPassable(t) {
-			l.LevelMap.MoveEntity(e.X, e.Y, dx, dy)
-			e.Move(dx, dy)
-		}
+	//move entity if tile is passable
+	if l.LevelMap.GetTile(e.X+dx, e.Y+dy).Passable() {
+		l.LevelMap.MoveEntity(e.X, e.Y, dx, dy)
+		e.Move(dx, dy)
 	}
 }
 
