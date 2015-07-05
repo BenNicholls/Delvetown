@@ -6,6 +6,7 @@ import "github.com/bennicholls/delvetown/modes"
 import "github.com/bennicholls/delvetown/modes/delvemode"
 import "math/rand"
 import "time"
+import "fmt"
 
 func main() {
 
@@ -15,15 +16,16 @@ func main() {
 	var event sdl.Event
 	var mode modes.GameModer
 
-	console.Setup(100, 50)
+	err := console.Setup(100, 50)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	defer console.Cleanup()
 
 	mode = delvemode.New()
 
 	running := true
-	frames := 0
-	frameTime, ticks := uint32(0), uint32(0)
-	fps := uint32(17) //17ms = 60 FPS approx
 
 	for running {
 		for event = sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
@@ -58,20 +60,6 @@ func main() {
 		//Render to screen NOTE: put this in a channel maybe? maybe with the mode.render?
 		//reconsider when animations and UI effects go in.
 		console.Render()
-
-		frames += 1
-
-		//framerate printer thing. super tacky.
-		// if frames%50 == 0 {
-		// 	fmt.Printf("%d fps\n", frames*1000/int(sdl.GetTicks()))
-		// }
-
-		//framerate limiter. keeps the cpu usage down, you know?
-		ticks = sdl.GetTicks() - frameTime
-		if ticks < fps {
-			sdl.Delay(fps - ticks)
-		}
-		frameTime = sdl.GetTicks()
 	}
 
 }

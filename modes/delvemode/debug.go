@@ -1,6 +1,7 @@
 package delvemode
 
 import "github.com/bennicholls/delvetown/data"
+import "github.com/bennicholls/delvetown/console"
 
 func (dm *DelveMode) Execute(command string) {
 	switch command {
@@ -15,5 +16,7 @@ func (dm *DelveMode) Execute(command string) {
 			e := dm.level.MobList[i]
 			dm.level.LevelMap.ShadowCast(e.X, e.Y, e.LightStrength, data.Darken)
 		}
+	case "fps":
+		console.ShowFPS = !console.ShowFPS
 	}
 }

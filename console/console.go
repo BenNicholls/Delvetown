@@ -3,8 +3,8 @@ package console
 import "github.com/veandco/go-sdl2/sdl"
 import "github.com/bennicholls/delvetown/util"
 import "fmt"
-import "os"
 import "math/rand"
+import "errors"
 
 var window *sdl.Window
 var renderer *sdl.Renderer
@@ -15,6 +15,10 @@ var width, height, tileSize int
 
 var grid []GridCell
 var masterDirty bool //is this necessary?
+
+var frameTime, ticks, fps uint32
+var frames int
+var ShowFPS bool
 
 type GridCell struct {
 	Glyph      int
@@ -39,7 +43,7 @@ func (g *GridCell) Clear() {
 }
 
 //Setup the game window, renderer, etc TODO: have this function emit errors instead of just borking the program
-func Setup(w, h int) {
+func Setup(w, h int) error {
 
 	width = w
 	height = h
@@ -48,8 +52,7 @@ func Setup(w, h int) {
 	//load spritesheet first so we can infer tileSize
 	image, err := sdl.LoadBMP("res/curses.bmp")
 	if err != nil {
-		fmt.Println("Failed to load image: \n", sdl.GetError())
-		os.Exit(2)
+		return errors.New("Failed to load image: " + fmt.Sprint(sdl.GetError()))
 	}
 	defer image.Free()
 	image.SetColorKey(1, 0xFF00FF)
@@ -57,40 +60,52 @@ func Setup(w, h int) {
 
 	window, err = sdl.CreateWindow("Delvetown", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED, width*tileSize, height*tileSize, sdl.WINDOW_OPENGL)
 	if err != nil {
-		fmt.Println("Failed to create window: %s\n", sdl.GetError())
-		os.Exit(1)
+		return errors.New("Failed to create window: " + fmt.Sprint(sdl.GetError()))
 	}
 
 	//manually set pixelformat to ARGB (window defaults to RGB for some reason)
 	format, err = sdl.AllocFormat(uint(sdl.PIXELFORMAT_ARGB8888))
 	if err != nil {
-		fmt.Println("No pixelformat: %s\n", sdl.GetError())
-		os.Exit(2)
+		return errors.New("No pixelformat: " + fmt.Sprint(sdl.GetError()))
 	}
 
 	renderer, err = sdl.CreateRenderer(window, -1, sdl.RENDERER_ACCELERATED)
 	if err != nil {
-		fmt.Println("Failed to create renderer: %s\n", sdl.GetError())
-		os.Exit(2)
+		return errors.New("Failed to create renderer: " + fmt.Sprint(sdl.GetError()))
 	}
 	renderer.Clear()
 
 	sprites, err = renderer.CreateTextureFromSurface(image)
 	if err != nil {
-		fmt.Println("Failed to create sprite texture: %s\n", sdl.GetError())
-		os.Exit(2)
+		return errors.New("Failed to create sprite texture: " + fmt.Sprint(sdl.GetError()))
 	}
 	err = sprites.SetBlendMode(sdl.BLENDMODE_BLEND)
 	if err != nil {
-		fmt.Println("Failed to set blendmode: %s\n", sdl.GetError())
-		os.Exit(2)
+		return errors.New("Failed to set blendmode: " + fmt.Sprint(sdl.GetError()))
 	}
 
 	grid = make([]GridCell, width*height)
 	masterDirty = true
+
+	frames = 0
+	frameTime, ticks = 0, 0
+	fps = 17 //17ms = 60 FPS approx
+	ShowFPS = false
+
+	return nil
 }
 
 func Render() {
+
+	//render fps counter
+	if frames%50 == 0 && ShowFPS {
+		fpsString := fmt.Sprintf("%d fps\n", frames*1000/int(sdl.GetTicks()))
+		for i, r := range fpsString {
+			ChangeGridPoint(i, 0, 10, int(r), 0xFF00FF00, 0xFFFF0000)
+		}
+	}
+
+	//render the scene!
 	if masterDirty {
 		var src, dst sdl.Rect
 
@@ -114,6 +129,14 @@ func Render() {
 		renderer.Present()
 		masterDirty = false
 	}
+
+	//framerate limiter, so my cpu doesn't implode
+	ticks = sdl.GetTicks() - frameTime
+	if ticks < fps {
+		sdl.Delay(fps - ticks)
+	}
+	frameTime = sdl.GetTicks()
+	frames++
 }
 
 //int32 for rect arguments. what a world.
@@ -160,7 +183,7 @@ func ChangeGridPoint(x, y, z, glyph int, fore, back uint32) {
 	}
 }
 
-//TODO: border glyph merging, custom colouring, multiple styles
+//TODO: custom colouring, multiple styles
 func DrawBorder(x, y, z, w, h int, title string) {
 	for i := 0; i < w; i++ {
 		ChangeGridPoint(x+i, y-1, z, 0xc4, 0xFFFFFFFF, 0xFF000000)

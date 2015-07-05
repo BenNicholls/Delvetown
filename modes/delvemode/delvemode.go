@@ -16,7 +16,7 @@ type DelveMode struct {
 
 	//sidebar ui elements
 	hp          *ui.Textbox
-	stepCounter *ui.Textbox
+	tickCounter *ui.Textbox
 
 	debug *ui.Inputbox
 
@@ -36,34 +36,33 @@ type DelveMode struct {
 
 func New() *DelveMode {
 	dm := new(DelveMode)
-
-	//UI stuff
-	dm.view = ui.NewTileView(83, 38, 1, 1, 0, true)
-
-	dm.logbox = ui.NewTextbox(83, 8, 1, 41, 1, true, "TEST TEXT whatever blah blah blahxxx")
-	dm.logbox.SetTitle("LOG")
-
-	dm.gamelog = NewLog(dm.logbox)
-
-	dm.sidebar = ui.NewContainer(13, 48, 86, 1, 0, true)
-	dm.sidebar.SetTitle("GOOD STATS")
-	dm.hp = ui.NewTextbox(10, 1, 0, 0, 0, false, "hello")
-	dm.stepCounter = ui.NewTextbox(10, 1, 0, 1, 0, false, "")
-
-	dm.sidebar.Add(dm.hp)
-	dm.sidebar.Add(dm.stepCounter)
-
-	dm.debug = ui.NewInputbox(83, 1, 1, 48, 2, true)
-	dm.debug.SetTitle("Debugger")
-	dm.debug.ToggleVisible()
-	dm.activeElem = nil
+	dm.tick = 1
 
 	//Level Up!
 	dm.level = data.NewLevel(100, 100)
 	dm.level.GenerateCave()
 	dm.player = dm.level.Player
 
-	dm.tick = 1
+	//UI stuff
+	dm.view = ui.NewTileView(80, 38, 1, 1, 0, true)
+
+	dm.logbox = ui.NewTextbox(80, 8, 1, 41, 1, true, "TEST TEXT whatever blah blah blahxxx")
+	dm.logbox.SetTitle("LOG")
+
+	dm.gamelog = NewLog(dm.logbox)
+
+	dm.sidebar = ui.NewContainer(16, 48, 83, 1, 0, true)
+	dm.sidebar.SetTitle("GOOD STATS")
+	dm.hp = ui.NewTextbox(16, 1, 0, 0, 0, false, "HP: "+strconv.Itoa(dm.player.Health))
+	dm.tickCounter = ui.NewTextbox(16, 1, 0, 1, 0, false, "Ticks: "+strconv.Itoa(dm.tick))
+
+	dm.sidebar.Add(dm.hp)
+	dm.sidebar.Add(dm.tickCounter)
+
+	dm.debug = ui.NewInputbox(80, 1, 1, 48, 2, true)
+	dm.debug.SetTitle("Debugger")
+	dm.debug.ToggleVisible()
+	dm.activeElem = nil
 
 	dm.memBrightness = 80
 
@@ -158,7 +157,7 @@ func (dm *DelveMode) Update() modes.GameModer {
 
 	//update UI elements
 	dm.hp.ChangeText("HP: " + strconv.Itoa(dm.player.Health))
-	dm.stepCounter.ChangeText("Ticks: " + strconv.Itoa(dm.tick))
+	dm.tickCounter.ChangeText("Ticks: " + strconv.Itoa(dm.tick))
 	dm.tick++
 
 	//check for gamestate changes
@@ -179,8 +178,6 @@ func (dm *DelveMode) Render() {
 
 	dm.view.Clear()
 
-	var e *data.Entity
-
 	//update player memory
 	dm.level.LevelMap.ShadowCast(dm.player.X, dm.player.Y, 50, dm.MemoryCast())
 
@@ -194,7 +191,7 @@ func (dm *DelveMode) Render() {
 		if dm.level.MemoryMap.LastVisible(x, y) != 0 {
 
 			//try to see if an entity is occupying the space. if so, draw it. otherwise, draw the tile.
-			e = dm.level.MemoryMap.GetEntity(x, y)
+			e := dm.level.MemoryMap.GetEntity(x, y)
 			if e != nil {
 				dm.view.DrawEntity(i%w, i/w, e.Glyph, e.Fore)
 			} else {
