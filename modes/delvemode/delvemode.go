@@ -118,17 +118,6 @@ func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 	}
 }
 
-//Decide if a move is an atack or not
-func (dm *DelveMode) AttackMove(e *data.Entity, dx, dy int) data.Action {
-	t := dm.level.LevelMap.GetEntity(e.X+dx, e.Y+dy)
-
-	if t != nil && e.Enemy != t.Enemy {
-		return dm.AttackAction(dx, dy, 5)
-	} else {
-		return dm.MoveAction(dx, dy, 3)
-	}
-}
-
 func (dm *DelveMode) Update() modes.GameModer {
 
 	if dm.player.NextTurn <= dm.tick {
@@ -148,8 +137,7 @@ func (dm *DelveMode) Update() modes.GameModer {
 				action := <-e.ActionQueue
 				action(dm.level.MobList[k])
 			} else {
-				dx, dy := util.GenerateDirection()
-				action := dm.AttackMove(e, dx, dy)
+				action := dm.HuntBehaviour(e)
 				action(dm.level.MobList[k])
 			}
 		}
@@ -179,7 +167,7 @@ func (dm *DelveMode) Render() {
 	dm.view.Clear()
 
 	//update player memory
-	dm.level.LevelMap.ShadowCast(dm.player.X, dm.player.Y, 50, dm.MemoryCast())
+	dm.level.LevelMap.ShadowCast(dm.player.X, dm.player.Y, dm.player.SightRange, dm.MemoryCast())
 
 	//Draw the world.
 	for i := 0; i < w*h; i++ {

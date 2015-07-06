@@ -1,14 +1,18 @@
 package data
 
+import "fmt"
+
 type Entity struct {
-	X, Y          int
-	Name          string
-	Enemy         bool
-	Health        int
-	ID            int
-	LightStrength int
-	NextTurn      int
-	eType         int
+	X, Y                   int
+	Name                   string
+	Enemy                  bool
+	Health                 int
+	ID                     int
+	LightStrength          int
+	SightRange             int
+	NextTurn               int
+	EType                  int
+	MoveSpeed, AttackSpeed int
 
 	ActionQueue chan Action
 }
@@ -26,5 +30,9 @@ func (e *Entity) MoveTo(x, y int) {
 }
 
 func (e Entity) GetVisuals() Visuals {
-	return entitydata[e.eType].vis
+	return entitydata[e.EType].vis
+}
+
+func (e Entity) GetInfo() string {
+	return fmt.Sprint(e.Name, "- HP:", e.Health, ", (", e.X, ", ", e.Y, ")")
 }
