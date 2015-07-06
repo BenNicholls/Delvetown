@@ -122,7 +122,7 @@ func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 func (dm *DelveMode) AttackMove(e *data.Entity, dx, dy int) data.Action {
 	t := dm.level.LevelMap.GetEntity(e.X+dx, e.Y+dy)
 
-	if t != nil {
+	if t != nil && e.Enemy != t.Enemy {
 		return dm.AttackAction(dx, dy, 5)
 	} else {
 		return dm.MoveAction(dx, dy, 3)
@@ -149,7 +149,7 @@ func (dm *DelveMode) Update() modes.GameModer {
 				action(dm.level.MobList[k])
 			} else {
 				dx, dy := util.GenerateDirection()
-				action := dm.MoveAction(dx, dy, 10)
+				action := dm.AttackMove(e, dx, dy)
 				action(dm.level.MobList[k])
 			}
 		}
@@ -193,7 +193,7 @@ func (dm *DelveMode) Render() {
 			//try to see if an entity is occupying the space. if so, draw it. otherwise, draw the tile.
 			e := dm.level.MemoryMap.GetEntity(x, y)
 			if e != nil {
-				dm.view.DrawEntity(i%w, i/w, e.Glyph, e.Fore)
+				dm.view.DrawEntity(i%w, i/w, e.GetVisuals())
 			} else {
 				t := dm.level.MemoryMap.GetTile(x, y)
 				dm.view.DrawTile(i%w, i/w, t)

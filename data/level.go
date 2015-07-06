@@ -16,7 +16,7 @@ type Level struct {
 //sets up a bare level object.
 func NewLevel(w, h int) *Level {
 	l := Level{LevelMap: NewMap(w, h), MemoryMap: NewMap(w, h), Width: w, Height: h}
-	l.Player = &Entity{2, w / 2, h / 2, "player", false, 50, 0, 0xFFFFFFFF, 15, 1, make(chan Action, 20)}
+	l.Player = NewEntity(w/2, h/2, 0, PLAYER)
 	l.MobList = make(map[int]*Entity)
 	l.LevelMap.AddEntity(l.Player.X, l.Player.Y, l.Player)
 	return &l
@@ -52,7 +52,7 @@ func (l *Level) AddMob(x, y int) {
 		_, ok = l.MobList[id]
 	}
 
-	e := Entity{15, x, y, "butts", true, 10, id, 0xFFFF0000, 7, 1, make(chan Action, 20)}
-	l.MobList[id] = &e
-	l.LevelMap.AddEntity(x, y, &e)
+	e := NewEntity(x, y, id, BUTTS)
+	l.MobList[id] = e
+	l.LevelMap.AddEntity(x, y, e)
 }

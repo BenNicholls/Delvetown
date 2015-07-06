@@ -27,15 +27,15 @@ func (tv *TileView) SetTitle(s string) {
 func (tv *TileView) DrawTile(x, y int, t data.Tile) {
 
 	if util.CheckBounds(x, y, tv.Width, tv.Height) {
-		v := data.GetVisuals(t.Type())
+		v := data.GetTileVisuals(t.TileType())
 		tv.grid[y*tv.Width+x].Set(v.Glyph, v.ForeColour, 0x000000, tv.z)
 	}
 }
 
-func (tv *TileView) DrawEntity(x, y, g int, c uint32) {
+func (tv *TileView) DrawEntity(x, y int, v data.Visuals) {
 
 	if util.CheckBounds(x, y, tv.Width, tv.Height) {
-		tv.grid[y*tv.Width+x].Set(g, c, 0x000000, tv.z)
+		tv.grid[y*tv.Width+x].Set(v.Glyph, v.ForeColour, 0x000000, tv.z)
 	}
 }
 

@@ -2,7 +2,7 @@ package data
 
 var tiledata []tileTypeData
 
-//tiletypes NOTE: Currently capped to 50 tile types. see init()
+//default tiletypes POSSIBLE TODO: dynamic changing tile properties? Think about this.
 const (
 	TILE_NOTHING = iota
 	TILE_GRASS
@@ -16,10 +16,10 @@ type tileTypeData struct {
 	name        string
 	passable    bool
 	transparent bool
-	vis         tileVisuals
+	vis         Visuals
 }
 
-type tileVisuals struct {
+type Visuals struct {
 	Glyph      int
 	ForeColour uint32
 }
@@ -29,11 +29,11 @@ func init() {
 	//tiledata[TILETYPE]
 	tiledata = make([]tileTypeData, MAX_TILETYPES)
 
-	tiledata[TILE_NOTHING] = tileTypeData{"Nothing", false, true, tileVisuals{0, 0x000000}}
-	tiledata[TILE_GRASS] = tileTypeData{"Grass", true, true, tileVisuals{0x2e, 0xFF00FF00}}
-	tiledata[TILE_WALL] = tileTypeData{"Wall", false, false, tileVisuals{0x23, 0xFF777777}}
-	tiledata[TILE_WATER] = tileTypeData{"Water", false, true, tileVisuals{0xf7, 0xFF0000FF}}
-	tiledata[TILE_CAVEFLOOR] = tileTypeData{"Cave Floor", true, true, tileVisuals{0x2e, 0xFF746253}}
+	tiledata[TILE_NOTHING] = tileTypeData{"Nothing", false, true, Visuals{0, 0x000000}}
+	tiledata[TILE_GRASS] = tileTypeData{"Grass", true, true, Visuals{0x2e, 0xFF00FF00}}
+	tiledata[TILE_WALL] = tileTypeData{"Wall", false, false, Visuals{0x23, 0xFF777777}}
+	tiledata[TILE_WATER] = tileTypeData{"Water", false, true, Visuals{0xf7, 0xFF0000FF}}
+	tiledata[TILE_CAVEFLOOR] = tileTypeData{"Cave Floor", true, true, Visuals{0x2e, 0xFF746253}}
 }
 
 //takes tiletype, returns glyph
@@ -49,6 +49,6 @@ func IsTransparent(t int) bool {
 	return tiledata[t].transparent
 }
 
-func GetVisuals(t int) tileVisuals {
+func GetTileVisuals(t int) Visuals {
 	return tiledata[t].vis
 }

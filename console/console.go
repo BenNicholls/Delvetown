@@ -42,7 +42,7 @@ func (g *GridCell) Clear() {
 	g.Set(0, 0, 0, 0)
 }
 
-//Setup the game window, renderer, etc TODO: have this function emit errors instead of just borking the program
+//Setup the game window, renderer, etc
 func Setup(w, h int) error {
 
 	width = w

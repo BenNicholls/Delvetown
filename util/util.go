@@ -7,9 +7,13 @@ func ValidText(key rune) bool {
 	return (key >= 93 && key < 123) || (key >= 48 && key < 58)
 }
 
-func GenerateDirection() (dx, dy int) {
-	dx, dy = rand.Intn(3)-1, rand.Intn(3)-1
-	return
+func GenerateDirection() (int, int) {
+	for {
+		dx, dy := rand.Intn(3)-1, rand.Intn(3)-1
+		if dx != 0 || dy != 0 {
+			return dx, dy
+		}
+	}
 }
 
 //reports distance squared (sqrt unnecessary usually)

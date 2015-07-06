@@ -108,7 +108,7 @@ type Tile struct {
 	Light             TileLight
 }
 
-func (t Tile) Type() int {
+func (t Tile) TileType() int {
 	return t.tileType
 }
 
