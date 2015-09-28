@@ -7,8 +7,12 @@ import "github.com/bennicholls/delvetown/modes/delvemode"
 import "math/rand"
 import "time"
 import "fmt"
+import "runtime"
 
 func main() {
+
+	//go-sdl2 requires this to not crash the program for unknown reasons. "fix" incoming eventually apparently.
+	runtime.LockOSThread()
 
 	//Set the seed for the RNG. TODO: be able to manually set seed
 	rand.Seed(time.Now().UTC().UnixNano())
