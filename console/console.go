@@ -89,7 +89,7 @@ func Setup(w, h int) error {
 
 	frames = 0
 	frameTime, ticks = 0, 0
-	fps = 17 //17ms = 60 FPS approx
+	fps = 16 //17ms = 60 FPS approx
 	ShowFPS = false
 
 	return nil

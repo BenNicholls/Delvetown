@@ -22,7 +22,7 @@ func init() {
 
 	entitydata = make([]entityTypeData, MAX_ENTITYTYPES)
 
-	entitydata[PLAYER] = entityTypeData{"Player", 100, false, 15, 40, 3, 5, Visuals{2, 0xFFFFFFFF}}
+	entitydata[PLAYER] = entityTypeData{"Player", 100, false, 0, 40, 3, 5, Visuals{2, 0xFFFFFFFF}}
 	entitydata[BUTTS] = entityTypeData{"Butts", 10, true, 7, 10, 5, 7, Visuals{15, 0xFFFF0000}}
 }
 

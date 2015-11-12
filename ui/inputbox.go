@@ -21,27 +21,31 @@ func NewInputbox(w, h, x, y, z int, bord bool) *Inputbox {
 	return ib
 }
 
+//Moves cursor by dx, dy. Ensures cursor does not leave textbox.
 func (ib *Inputbox) MoveCursor(dx, dy int) {
 	ib.cursor += dx
 	ib.cursor += dy * ib.width
 	if ib.cursor < 0 {
 		ib.cursor = 0
-	} else if ib.cursor > len(ib.text)+1 {
-		ib.cursor = ib.width * ib.height
+	} else if ib.cursor > len(ib.text)+1 || ib.cursor >= ib.width*ib.height {
+		ib.cursor = ib.width*ib.height - 1
 	}
 }
 
+//Inserts a character s. TODO: s could be a rune or char or something?
 func (ib *Inputbox) Insert(s string) {
-	if len(ib.text) >= ib.width*ib.height {
+	if len(ib.text)+len(s) > ib.width*ib.height {
 		return
 	}
 	if ib.cursor == len(ib.text) {
-		ib.ChangeText(ib.text + s)
+		if ib.cursor < ib.width*ib.height-1 {
+			ib.ChangeText(ib.text + s)
+		}
 	} else {
 		t := []string{ib.text[0:ib.cursor], s, ib.text[ib.cursor:]}
 		ib.ChangeText(strings.Join(t, ""))
 	}
-	ib.cursor += 1
+	ib.MoveCursor(1, 0)
 }
 
 func (ib *Inputbox) Delete() {
