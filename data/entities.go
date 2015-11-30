@@ -13,6 +13,7 @@ type Entity struct {
 	NextTurn               int
 	EType                  int
 	MoveSpeed, AttackSpeed int
+	Inventory              []*Item
 
 	ActionQueue chan Action
 }

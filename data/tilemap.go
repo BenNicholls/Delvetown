@@ -69,6 +69,26 @@ func (m TileMap) GetEntity(x, y int) *Entity {
 	}
 }
 
+func (m *TileMap) AddItem(x, y int, i *Item) {
+	if util.CheckBounds(x, y, m.width, m.height) {
+		m.tiles[x+y*m.width].Item = i
+	}
+}
+
+func (m *TileMap) RemoveItem(x, y int) {
+	if util.CheckBounds(x, y, m.width, m.height) {
+		m.tiles[x+y*m.width].Item = nil
+	}
+}
+
+func (m *TileMap) GetItem(x, y int) *Item {
+	if util.CheckBounds(x, y, m.width, m.height) {
+		return m.tiles[x+y*m.width].Item
+	} else {
+		return nil
+	}
+}
+
 //For testing purposes.
 func (m *TileMap) ChangeTileColour(x, y int, c uint32) {
 	if util.CheckBounds(x, y, m.width, m.height) {
@@ -106,6 +126,7 @@ type Tile struct {
 	Entity            *Entity
 	LastVisible       int // Records the last tick that this tile was seen
 	Light             TileLight
+	Item              *Item
 }
 
 func (t Tile) TileType() int {

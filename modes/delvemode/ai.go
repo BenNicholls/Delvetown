@@ -45,8 +45,8 @@ func (dm *DelveMode) AttackMove(e *data.Entity, dx, dy int) data.Action {
 	t := dm.level.LevelMap.GetEntity(e.X+dx, e.Y+dy)
 
 	if t != nil && e.Enemy != t.Enemy {
-		return dm.AttackAction(dx, dy, e.AttackSpeed)
+		return dm.AttackAction(dx, dy)
 	} else {
-		return dm.MoveAction(dx, dy, e.MoveSpeed)
+		return dm.MoveAction(dx, dy)
 	}
 }

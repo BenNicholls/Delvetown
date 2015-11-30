@@ -7,6 +7,7 @@ func ValidText(key rune) bool {
 	return (key >= 93 && key < 123) || (key >= 48 && key < 58)
 }
 
+//generates a tuple of cartesian directions (cannot be 0,0)
 func GenerateDirection() (int, int) {
 	for {
 		dx, dy := rand.Intn(3)-1, rand.Intn(3)-1

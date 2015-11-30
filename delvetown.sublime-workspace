@@ -1,0 +1,656 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"GL",
+				"GL_MakeCurrent	error ƒ"
+			],
+			[
+				"REN",
+				"RENDERER_PRESENTVSYNC	 Ɩ"
+			],
+			[
+				"WIND",
+				"WINDOW_OPENGL	 Ɩ"
+			],
+			[
+				"Get",
+				"GetError	error ƒ"
+			],
+			[
+				"REND",
+				"RENDERER_ACCELERATED	 Ɩ"
+			],
+			[
+				"CreateR",
+				"CreateRenderer	*sdl.Renderer, error ƒ"
+			],
+			[
+				"WINDOWPO",
+				"WINDOWPOS_UNDEFINED	 Ɩ"
+			],
+			[
+				"INI",
+				"INIT_EVERYTHING	 Ɩ"
+			],
+			[
+				"WINDOW_",
+				"WINDOW_SHOWN	 Ɩ"
+			],
+			[
+				"RENDERER_",
+				"RENDERER_SOFTWARE	 Ɩ"
+			],
+			[
+				"M",
+				"MoveSpeed	int ν"
+			],
+			[
+				"A",
+				"AttackSpeed	int ν"
+			],
+			[
+				"enti",
+				"entityTypeData	struct ʈ"
+			],
+			[
+				"ent",
+				"entityTypeData	struct ʈ"
+			],
+			[
+				"en",
+				"entityTypeData	struct ʈ"
+			],
+			[
+				"Att",
+				"AttackMove	data.Action ƒ"
+			],
+			[
+				"G",
+				"GetEntity	*data.Entity ƒ"
+			],
+			[
+				"TILE_WA",
+				"TILE_WATER	 Ɩ"
+			],
+			[
+				"S",
+				"ShadowCast	 ƒ"
+			],
+			[
+				"C",
+				"ClearLights	 ƒ"
+			],
+			[
+				"Remo",
+				"RemoveLight	 ƒ"
+			],
+			[
+				"R",
+				"RemoveLight	 ƒ"
+			],
+			[
+				"p",
+				"player	*entities.Entity ν"
+			],
+			[
+				"Int",
+				"Intn	int ƒ"
+			],
+			[
+				"ARG",
+				"PIXELFORMAT_ARGB8888	 Ɩ"
+			],
+			[
+				"W",
+				"WINDOW_OPENGL	 Ɩ"
+			],
+			[
+				"F",
+				"Format	uint32 ν"
+			],
+			[
+				"BL",
+				"BLENDMODE_BLEND	 Ɩ"
+			],
+			[
+				"Se",
+				"SetBlendMode	error ƒ"
+			],
+			[
+				"Chan",
+				"ChangeColourAlpha	uint32 ƒ"
+			],
+			[
+				"Ch",
+				"ChangeForeColour	 ƒ"
+			],
+			[
+				"Cha",
+				"ChangeBackColour	 ƒ"
+			],
+			[
+				"log",
+				"gamelog	Log ν"
+			],
+			[
+				"K_KP",
+				"K_KP_6	 Ɩ"
+			],
+			[
+				"Insert",
+				"InsertText	 ƒ"
+			],
+			[
+				"fra",
+				"frameTime	uint32 ν"
+			],
+			[
+				"B",
+				"K_BACKQUOTE	 Ɩ"
+			],
+			[
+				"BA",
+				"K_BACKSPACE	 Ɩ"
+			],
+			[
+				"K_A",
+				"K_a	 Ɩ"
+			],
+			[
+				"New",
+				"NewInputbox	*ui.Inputbox ƒ"
+			],
+			[
+				"tile",
+				"tileVisuals	struct ʈ"
+			],
+			[
+				"P",
+				"Pi	 Ɩ"
+			],
+			[
+				"Ge",
+				"GetTile	data.Tile ƒ"
+			],
+			[
+				"Move",
+				"MovePlayer"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"last_filter": "package",
+		"selected_items":
+		[
+			[
+				"package",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"pack",
+				"Preferences: Browse Packages"
+			]
+		],
+		"width": 467.0
+	},
+	"console":
+	{
+		"height": 146.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown"
+	],
+	"file_history":
+	[
+		"/home/ben/Projects/web/TGMTS/index.html",
+		"/home/ben/Projects/web/TGMTS/app.js",
+		"/home/ben/Projects/web/index.html",
+		"/home/ben/Projects/web/app.js",
+		"/home/ben/Projects/web/bootstraptest.html",
+		"/home/ben/Projects/web/angulartest.html",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/console/console.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/delvetown.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/util/util.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/ui/inputbox.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/data/entitydata.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/ui/animations.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/sdltest/sdltest.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/data/entities.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/data/generators.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/data/tilemap.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/data/tiledata.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/ui/ui.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/console/effects.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/data/shadowcast.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/modes/delvemode/delvemode.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/autocompile",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/modes/delvemode/actions.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/modes/delvemode/ai.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/modes/gameover.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/modes/winner.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/data/level.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/ui/tileview.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/modes/delvemode/debug.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/ui/textbox.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/data/itemdata.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/data/item.go",
+		"/home/ben/.wine32/drive_c/users/ben/My Documents/My Games/Path of Exile/awakeningbeta_Config.ini",
+		"/home/ben/.wine/drive_c/users/ben/My Documents/My Games/Path of Exile/awakeningbeta_Config.ini",
+		"/home/ben/.wine32/drive_c/users/ben/My Documents/My Games/Path of Exile/production_Config.ini",
+		"/home/ben/.wine/drive_c/users/ben/My Documents/My Games/Path of Exile/production_Config.ini",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/data/entities/entities.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/data/entities/actions.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/modes/gamemoder.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/modes/delvemode/log.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/entities/entities.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/console/colours.go",
+		"/home/ben/Projects/audio/demos/demo1-chords",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/modes/townmode.go",
+		"/home/ben/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/modes/delvemode.go",
+		"/home/ben/Projects/Go/src/github.com/bennicholls/delvetown/README.md",
+		"/home/ben/.config/sublime-text-3/Packages/GitGutter/GitGutter.sublime-settings",
+		"/home/ben/.config/sublime-text-3/Packages/GoSublime/CHANGELOG.md",
+		"/home/ben/.ssh/id_rsa.pub",
+		"/home/ben/Projects/Go/src/github.com/BenNicholls/delvetown/console/console.go",
+		"/home/ben/Projects/Go/src/github.com/BenNicholls/delvetown/delvetown.go",
+		"/home/ben/PlayOnLinux's virtual drives/poe/drive_c/users/ben/My Documents/Downloads/comment_ids-23-May-2015-23-39-42.txt",
+		"/home/ben/PlayOnLinux's virtual drives/poe/drive_c/users/ben/My Documents/My Games/Path of Exile/production_Config.ini",
+		"/home/ben/.local/share/Steam/steamapps/common/dota 2 beta/dota/cfg/autoexec.cfg",
+		"/home/ben/.config/redshift.conf"
+	],
+	"find":
+	{
+		"height": 26.0
+	},
+	"find_in_files":
+	{
+		"height": 90.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"this.roster",
+			"this",
+			"}",
+			"{",
+			"]",
+			"[",
+			"playing\"",
+			"2",
+			"Mark",
+			"Mark Arcobello\n			Jonathan Bernier\n			Brad Boyes\n			Tyler Bozak\n			Rich Clune\n			Byron Froese\n			Jake Gardiner\n			Michael Grabner\n			Scott Harrington\n			Peter Holland\n			Matt Hunwick\n			Nazem Kadri\n			Leo Komarov\n			Joffrey Lupul\n			Martin Marincin\n			Shawn Matthias\n			P.A. Parenteau\n			Dion Phaneuf (C)\n			Roman Polak\n			James Reimer\n			Morgan Rielly\n			Nick Spaling\n			James van Riemsdyk\n			Daniel Winnik",
+			"[]);",
+			"WEAPON",
+			"X",
+			"TypeData",
+			"tileVisuals",
+			"sdl.GetError()",
+			"stepCounter",
+			"MoveMob",
+			"mvoemod",
+			"GameOverMode",
+			"AttackMove(",
+			"MoveAction",
+			"entities.",
+			"l.Player",
+			"l.LevelMap",
+			"0x000000",
+			"0xFFFFFF",
+			"0xFFFFFFFF",
+			"invert",
+			"t",
+			"translationMatrix",
+			"strength",
+			"TODO",
+			"vars[0]",
+			"dm.level.LevelMap",
+			")",
+			"d",
+			"Text.",
+			"switch",
+			"Levelmap",
+			"Container",
+			"..."
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "delvetown.sublime-project",
+	"replace":
+	{
+		"height": 48.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"ind",
+				"index.html"
+			],
+			[
+				"app",
+				"app.js"
+			],
+			[
+				"ap",
+				"app.js"
+			],
+			[
+				"angul",
+				"~/Projects/web/angulartest.html"
+			],
+			[
+				"ang",
+				"~/Projects/web/angulartest.html"
+			],
+			[
+				"item",
+				"data/item.go"
+			],
+			[
+				"",
+				"data/level.go"
+			],
+			[
+				"ent",
+				"data/entitydata.go"
+			],
+			[
+				"delv",
+				"modes/delvemode/delvemode.go"
+			],
+			[
+				"ai",
+				"modes/delvemode/ai.go"
+			],
+			[
+				"dm",
+				"modes/delvemode/delvemode.go"
+			],
+			[
+				"enti",
+				"data/entitydata.go"
+			],
+			[
+				"entit",
+				"data/entities.go"
+			],
+			[
+				"entity",
+				"data/entitydata.go"
+			],
+			[
+				"tilev",
+				"ui/tileview.go"
+			],
+			[
+				"tilemap",
+				"data/tilemap.go"
+			],
+			[
+				"tile",
+				"data/tiledata.go"
+			],
+			[
+				"tilema",
+				"data/tilemap.go"
+			],
+			[
+				"view",
+				"ui/tileview.go"
+			],
+			[
+				"delve",
+				"modes/delvemode/delvemode.go"
+			],
+			[
+				"level",
+				"data/level.go"
+			],
+			[
+				"entt",
+				"data/entitydata.go"
+			],
+			[
+				"enit",
+				"data/entitydata.go"
+			],
+			[
+				"lev",
+				"data/level.go"
+			],
+			[
+				"title",
+				"data/tiledata.go"
+			],
+			[
+				"auto",
+				"autocompile"
+			],
+			[
+				"gener",
+				"data/generators.go"
+			],
+			[
+				"tilem",
+				"data/tilemap.go"
+			],
+			[
+				"levlm",
+				"modes/delvemode/delvemode.go"
+			],
+			[
+				"actions",
+				"modes/delvemode/actions.go"
+			],
+			[
+				"delm",
+				"modes/delvemode/delvemode.go"
+			],
+			[
+				"devl",
+				"delvetown.go"
+			],
+			[
+				"delvm",
+				"modes/delvemode/delvemode.go"
+			],
+			[
+				"delvemo",
+				"modes/delvemode/delvemode.go"
+			],
+			[
+				"delvem",
+				"modes/delvemode/delvemode.go"
+			],
+			[
+				"action",
+				"modes/delvemode/actions.go"
+			],
+			[
+				"act",
+				"modes/delvemode/actions.go"
+			],
+			[
+				"shaod",
+				"data/shadowcast.go"
+			],
+			[
+				"shad",
+				"data/shadowcast.go"
+			],
+			[
+				"tilm",
+				"data/tilemap.go"
+			],
+			[
+				"gen",
+				"data/generators.go"
+			],
+			[
+				"inp",
+				"ui/inputbox.go"
+			],
+			[
+				"shado",
+				"data/shadowcast.go"
+			],
+			[
+				"levl",
+				"data/level.go"
+			],
+			[
+				"conol",
+				"console/console.go"
+			],
+			[
+				"ui",
+				"ui/tileview.go"
+			],
+			[
+				"delvmo",
+				"modes/delvemode/delvemode.go"
+			],
+			[
+				"debug",
+				"modes/delvemode/debug.go"
+			],
+			[
+				"dmo",
+				"modes/delvemode.go"
+			],
+			[
+				"cono",
+				"console/console.go"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 148.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

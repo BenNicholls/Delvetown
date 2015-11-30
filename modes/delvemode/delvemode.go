@@ -137,7 +137,7 @@ func (dm *DelveMode) Update() modes.GameModer {
 				action := <-e.ActionQueue
 				action(dm.level.MobList[k])
 			} else {
-				action := dm.HuntBehaviour(e)
+				action := dm.HuntBehaviour(e) //TODO: replace with context-specific AI
 				action(dm.level.MobList[k])
 			}
 		}
@@ -180,8 +180,11 @@ func (dm *DelveMode) Render() {
 
 			//try to see if an entity is occupying the space. if so, draw it. otherwise, draw the tile.
 			e := dm.level.MemoryMap.GetEntity(x, y)
+			item := dm.level.MemoryMap.GetItem(x, y)
 			if e != nil {
 				dm.view.DrawEntity(i%w, i/w, e.GetVisuals())
+			} else if item != nil {
+				dm.view.DrawEntity(i%w, i/w, item.GetVisuals())
 			} else {
 				t := dm.level.MemoryMap.GetTile(x, y)
 				dm.view.DrawTile(i%w, i/w, t)

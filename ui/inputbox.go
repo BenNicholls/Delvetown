@@ -14,7 +14,6 @@ type Inputbox struct {
 }
 
 func NewInputbox(w, h, x, y, z int, bord bool) *Inputbox {
-
 	ib := &Inputbox{Textbox{w, h, x, y, z, bord, "", "", true}, 0, make([]Animator, 0, 20)}
 	ib.anims = append(ib.anims, NewBlinkAnimation(0, 0, 30))
 
@@ -49,7 +48,6 @@ func (ib *Inputbox) Insert(s string) {
 }
 
 func (ib *Inputbox) Delete() {
-
 	switch len(ib.text) {
 	case 0:
 		return
