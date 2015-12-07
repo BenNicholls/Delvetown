@@ -20,7 +20,7 @@ func main() {
 	var event sdl.Event
 	var mode modes.GameModer
 
-	err := console.Setup(100, 50)
+	err := console.Setup(96, 54)
 	if err != nil {
 		fmt.Println(err)
 		return

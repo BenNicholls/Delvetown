@@ -15,8 +15,9 @@ type DelveMode struct {
 	sidebar *ui.Container //holds the various ui elements for the player's info display.
 
 	//sidebar ui elements
-	hp          *ui.Textbox
-	tickCounter *ui.Textbox
+	HUDname   *ui.Textbox
+	HUDhp     *ui.Textbox
+	HUDattack *ui.Textbox
 
 	debug *ui.Inputbox
 
@@ -42,24 +43,28 @@ func New() *DelveMode {
 	dm.level = data.NewLevel(100, 100)
 	dm.level.GenerateCave()
 	dm.player = dm.level.Player
+	dm.player.Name = "The Ben"
 
 	//UI stuff
-	dm.view = ui.NewTileView(80, 38, 1, 1, 0, true)
+	dm.view = ui.NewTileView(78, 38, 0, 0, 0, false)
 
-	dm.logbox = ui.NewTextbox(80, 8, 1, 41, 1, true, "TEST TEXT whatever blah blah blahxxx")
+	dm.logbox = ui.NewTextbox(76, 8, 1, 45, 1, true, false, "The Cave Feels Like It's Full of Mansters!!")
 	dm.logbox.SetTitle("LOG")
 
 	dm.gamelog = NewLog(dm.logbox)
 
-	dm.sidebar = ui.NewContainer(16, 48, 83, 1, 0, true)
-	dm.sidebar.SetTitle("GOOD STATS")
-	dm.hp = ui.NewTextbox(16, 1, 0, 0, 0, false, "HP: "+strconv.Itoa(dm.player.Health))
-	dm.tickCounter = ui.NewTextbox(16, 1, 0, 1, 0, false, "Ticks: "+strconv.Itoa(dm.tick))
+	dm.sidebar = ui.NewContainer(16, 52, 79, 1, 0, true)
+	//dm.sidebar.SetTitle("HUD")
 
-	dm.sidebar.Add(dm.hp)
-	dm.sidebar.Add(dm.tickCounter)
+	dm.HUDname = ui.NewTextbox(16, 1, 0, 0, 0, false, true, dm.player.Name)
+	dm.HUDhp = ui.NewTextbox(16, 1, 0, 2, 0, false, false, "HP: "+strconv.Itoa(dm.player.Health))
+	dm.HUDattack = ui.NewTextbox(16, 1, 0, 3, 0, false, false, "Attack: "+strconv.Itoa(dm.player.BaseAttack))
 
-	dm.debug = ui.NewInputbox(80, 1, 1, 48, 2, true)
+	dm.sidebar.Add(dm.HUDname)
+	dm.sidebar.Add(dm.HUDhp)
+	dm.sidebar.Add(dm.HUDattack)
+
+	dm.debug = ui.NewInputbox(76, 1, 1, 1, 2, true)
 	dm.debug.SetTitle("Debugger")
 	dm.debug.ToggleVisible()
 	dm.activeElem = nil
@@ -144,8 +149,7 @@ func (dm *DelveMode) Update() modes.GameModer {
 	}
 
 	//update UI elements
-	dm.hp.ChangeText("HP: " + strconv.Itoa(dm.player.Health))
-	dm.tickCounter.ChangeText("Ticks: " + strconv.Itoa(dm.tick))
+	dm.HUDhp.ChangeText("HP: " + strconv.Itoa(dm.player.Health))
 	dm.tick++
 
 	//check for gamestate changes

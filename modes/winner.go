@@ -8,7 +8,7 @@ type WinnerMode struct {
 }
 
 func NewWinner() *WinnerMode {
-	win := ui.NewTextbox(40, 1, 15, 15, 0, true, "YOU DEFEATED THE RAVAGING HORDE!")
+	win := ui.NewTextbox(40, 1, 15, 15, 0, true, true, "YOU DEFEATED THE RAVAGING HORDE!")
 	return &WinnerMode{win}
 }
 

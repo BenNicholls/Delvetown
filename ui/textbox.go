@@ -7,14 +7,15 @@ type Textbox struct {
 	width, height int
 	x, y, z       int
 	bordered      bool
+	centered      bool
 	title         string
 	text          string
 	visible       bool
 }
 
 //TODO: sanity checks.
-func NewTextbox(w, h, x, y, z int, bord bool, txt string) *Textbox {
-	return &Textbox{w, h, x, y, z, bord, "", txt, true}
+func NewTextbox(w, h, x, y, z int, bord, cent bool, txt string) *Textbox {
+	return &Textbox{w, h, x, y, z, bord, cent, "", txt, true}
 }
 
 func (t *Textbox) SetTitle(s string) {
@@ -34,9 +35,18 @@ func (t *Textbox) Render(offset ...int) {
 	if t.visible {
 		offX, offY, offZ := processOffset(offset)
 
+		if t.bordered {
+			console.DrawBorder(offX+t.x, offY+t.y, t.z+offZ, t.width, t.height, t.title)
+		}
+
 		//fill textbox with background colour
 		for i := len(t.text); i < t.width*t.height; i++ {
 			console.ChangeGridPoint(offX+t.x+i%t.width, offY+t.y+i/t.width, t.z+offZ, 0, 0xFFFFFFFF, 0x000000)
+		}
+
+		//offset if centerred
+		if t.centered {
+			offX += t.width/2 - len(t.text)/2
 		}
 
 		//print text
@@ -45,10 +55,6 @@ func (t *Textbox) Render(offset ...int) {
 				break
 			}
 			console.ChangeGridPoint(offX+t.x+i%t.width, offY+t.y+i/t.width, t.z+offZ, int(r), 0xFFFFFFFF, 0x000000)
-		}
-
-		if t.bordered {
-			console.DrawBorder(offX+t.x, offY+t.y, t.z+offZ, t.width, t.height, t.title)
 		}
 	}
 }

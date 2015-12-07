@@ -8,7 +8,7 @@ type GameOverMode struct {
 }
 
 func NewGameOver() *GameOverMode {
-	toobad := ui.NewTextbox(20, 1, 15, 15, 0, true, "WAY TO GO, IDIOT")
+	toobad := ui.NewTextbox(20, 1, 15, 15, 0, true, true, "WAY TO GO, IDIOT")
 	return &GameOverMode{toobad}
 }
 

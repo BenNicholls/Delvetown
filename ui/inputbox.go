@@ -14,7 +14,7 @@ type Inputbox struct {
 }
 
 func NewInputbox(w, h, x, y, z int, bord bool) *Inputbox {
-	ib := &Inputbox{Textbox{w, h, x, y, z, bord, "", "", true}, 0, make([]Animator, 0, 20)}
+	ib := &Inputbox{Textbox{w, h, x, y, z, bord, false, "", "", true}, 0, make([]Animator, 0, 20)}
 	ib.anims = append(ib.anims, NewBlinkAnimation(0, 0, 30))
 
 	return ib
