@@ -1,7 +1,5 @@
 package data
 
-import "fmt"
-
 type Entity struct {
 	X, Y                   int
 	Name                   string
@@ -13,7 +11,9 @@ type Entity struct {
 	NextTurn               int
 	EType                  int
 	MoveSpeed, AttackSpeed int
-	Inventory              []*Item
+	BaseAttack             int
+
+	Inventory []*Item
 
 	ActionQueue chan Action
 }
@@ -34,6 +34,7 @@ func (e Entity) GetVisuals() Visuals {
 	return entitydata[e.EType].vis
 }
 
-func (e Entity) GetInfo() string {
-	return fmt.Sprint(e.Name, "- HP:", e.Health, ", (", e.X, ", ", e.Y, ")")
+//This is going to do some heavy lifting someday.
+func (e Entity) CalcAttack() int {
+	return e.BaseAttack
 }

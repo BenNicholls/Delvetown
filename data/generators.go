@@ -51,7 +51,7 @@ func (l *Level) GenerateCave() {
 	//place  more seeds, let 'em grow!
 	for i := 0; i < 5; i++ {
 		//keep seeds away from the edges (-10, +10)
-		l.seedBranch(rand.Intn(l.Width-10)+10, rand.Intn(l.Height-10)+10, 200, TILE_CAVEFLOOR)
+		l.seedBranch(rand.Intn(l.Width-10)+10, rand.Intn(l.Height-10)+10, 250, TILE_CAVEFLOOR)
 	}
 
 	//populate with random enemies

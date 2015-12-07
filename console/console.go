@@ -19,6 +19,7 @@ var masterDirty bool //is this necessary?
 var frameTime, ticks, fps uint32
 var frames int
 var ShowFPS bool
+var BorderColour uint32
 
 type GridCell struct {
 	Glyph      int
@@ -89,8 +90,9 @@ func Setup(w, h int) error {
 
 	frames = 0
 	frameTime, ticks = 0, 0
-	fps = 16 //17ms = 60 FPS approx
+	fps = 35 //17ms = 60 FPS approx
 	ShowFPS = false
+	BorderColour = 0xFF666666
 
 	return nil
 }
@@ -186,17 +188,17 @@ func ChangeGridPoint(x, y, z, glyph int, fore, back uint32) {
 //TODO: custom colouring, multiple styles
 func DrawBorder(x, y, z, w, h int, title string) {
 	for i := 0; i < w; i++ {
-		ChangeGridPoint(x+i, y-1, z, 0xc4, 0xFFFFFFFF, 0xFF000000)
-		ChangeGridPoint(x+i, y+h, z, 0xc4, 0xFFFFFFFF, 0xFF000000)
+		ChangeGridPoint(x+i, y-1, z, 0xc4, BorderColour, 0xFF000000)
+		ChangeGridPoint(x+i, y+h, z, 0xc4, BorderColour, 0xFF000000)
 	}
 	for i := 0; i < h; i++ {
-		ChangeGridPoint(x-1, y+i, z, 0xb3, 0xFFFFFFFF, 0xFF000000)
-		ChangeGridPoint(x+w, y+i, z, 0xb3, 0xFFFFFFFF, 0xFF000000)
+		ChangeGridPoint(x-1, y+i, z, 0xb3, BorderColour, 0xFF000000)
+		ChangeGridPoint(x+w, y+i, z, 0xb3, BorderColour, 0xFF000000)
 	}
-	ChangeGridPoint(x-1, y-1, z, 0xda, 0xFFFFFFFF, 0xFF000000)
-	ChangeGridPoint(x-1, y+h, z, 0xc0, 0xFFFFFFFF, 0xFF000000)
-	ChangeGridPoint(x+w, y+h, z, 0xd9, 0xFFFFFFFF, 0xFF000000)
-	ChangeGridPoint(x+w, y-1, z, 0xbf, 0xFFFFFFFF, 0xFF000000)
+	ChangeGridPoint(x-1, y-1, z, 0xda, BorderColour, 0xFF000000)
+	ChangeGridPoint(x-1, y+h, z, 0xc0, BorderColour, 0xFF000000)
+	ChangeGridPoint(x+w, y+h, z, 0xd9, BorderColour, 0xFF000000)
+	ChangeGridPoint(x+w, y-1, z, 0xbf, BorderColour, 0xFF000000)
 
 	if len(title) < w && title != "" {
 		for i, r := range title {

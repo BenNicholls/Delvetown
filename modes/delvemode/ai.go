@@ -44,9 +44,11 @@ func (dm *DelveMode) SeePlayerCast(seen *bool) data.Cast {
 func (dm *DelveMode) AttackMove(e *data.Entity, dx, dy int) data.Action {
 	t := dm.level.LevelMap.GetEntity(e.X+dx, e.Y+dy)
 
-	if t != nil && e.Enemy != t.Enemy {
+	if t == nil {
+		return dm.MoveAction(dx, dy)
+	} else if e.Enemy != t.Enemy {
 		return dm.AttackAction(dx, dy)
 	} else {
-		return dm.MoveAction(dx, dy)
+		return dm.RestAction()
 	}
 }
