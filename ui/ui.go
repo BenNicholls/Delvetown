@@ -27,6 +27,15 @@ func (c *Container) Add(elem UIElem) {
 	c.Elements = append(c.Elements, elem)
 }
 
+//TODO: implement this someday if I ever need it. Probably will.
+func (c *Container) Remove(elem UIElem) {
+
+}
+
+func (c *Container) ClearElements() {
+	c.Elements = make([]UIElem, 0, 20)
+}
+
 func (c *Container) SetTitle(s string) {
 	c.title = s
 }

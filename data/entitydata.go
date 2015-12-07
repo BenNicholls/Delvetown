@@ -32,7 +32,7 @@ func NewEntity(x, y, id, eType int) *Entity {
 	if eType < MAX_ENTITYTYPES {
 		e := entitydata[eType]
 		//Max Inventory space is 30 for now. POSSIBLE: dynamically sized inventory? (bags, stronger, whatever)
-		return &Entity{x, y, e.name, e.enemy, e.hp, id, e.lightStrength, e.sightRange, 1, eType, e.mv, e.av, e.at, make([]*Item, 30, 30), make(chan Action, 20)}
+		return &Entity{x, y, e.name, e.enemy, e.hp, id, e.lightStrength, e.sightRange, 1, eType, e.mv, e.av, e.at, make([]*Item, 0, 30), make(chan Action, 20)}
 	} else {
 		return nil
 	}

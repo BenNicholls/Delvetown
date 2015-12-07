@@ -8,9 +8,12 @@ func (dm *DelveMode) MoveAction(dx, dy int) data.Action {
 		dm.level.MoveEntity(dx, dy, e)
 
 		//item pickup check
-		if dm.level.LevelMap.GetItem(e.X, e.Y) != nil {
+		if item := dm.level.LevelMap.GetItem(e.X, e.Y); item != nil {
 			dm.level.LevelMap.RemoveItem(e.X, e.Y)
-			e.Health += 10
+			e.Inventory = append(e.Inventory, item)
+			if e == dm.player {
+				dm.UpdateHUDInventory()
+			}
 			dm.gamelog.AddMessage(e.Name + " picks up the health!")
 		}
 		e.NextTurn += e.MoveSpeed

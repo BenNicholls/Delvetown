@@ -1,5 +1,7 @@
 package data
 
+import "fmt"
+
 type Entity struct {
 	X, Y                   int
 	Name                   string
@@ -37,4 +39,11 @@ func (e Entity) GetVisuals() Visuals {
 //This is going to do some heavy lifting someday.
 func (e Entity) CalcAttack() int {
 	return e.BaseAttack
+}
+
+//TESTING:
+func (e Entity) PrintInventory() {
+	for _, item := range e.Inventory {
+		fmt.Println(item.Name)
+	}
 }

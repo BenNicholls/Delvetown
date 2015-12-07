@@ -19,19 +19,19 @@ type DelveMode struct {
 	HUDhp     *ui.Textbox
 	HUDattack *ui.Textbox
 
+	HUDinventory *ui.List
+
 	debug *ui.Inputbox
 
 	activeElem ui.UIElem
 
 	level   *data.Level
+	player  *data.Entity
 	gamelog Log
 
 	xCamera, yCamera int
 
-	player *data.Entity
-
-	tick int
-
+	tick          int
 	memBrightness int //brightness to show memory tiles
 }
 
@@ -54,11 +54,12 @@ func New() *DelveMode {
 	dm.gamelog = NewLog(dm.logbox)
 
 	dm.sidebar = ui.NewContainer(16, 52, 79, 1, 0, true)
-	//dm.sidebar.SetTitle("HUD")
-
 	dm.HUDname = ui.NewTextbox(16, 1, 0, 0, 0, false, true, dm.player.Name)
 	dm.HUDhp = ui.NewTextbox(16, 1, 0, 2, 0, false, false, "HP: "+strconv.Itoa(dm.player.Health))
 	dm.HUDattack = ui.NewTextbox(16, 1, 0, 3, 0, false, false, "Attack: "+strconv.Itoa(dm.player.BaseAttack))
+
+	dm.HUDinventory = ui.NewList(16, 15, 79, 38, 0, true)
+	dm.HUDinventory.SetTitle("Inventory")
 
 	dm.sidebar.Add(dm.HUDname)
 	dm.sidebar.Add(dm.HUDhp)
@@ -116,6 +117,10 @@ func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 			dm.player.ActionQueue <- dm.AttackMove(dm.player, 1, 1)
 		case sdl.K_SPACE:
 			dm.player.NextTurn += 1
+		case sdl.K_KP_PLUS:
+			dm.HUDinventory.Next()
+		case sdl.K_KP_MINUS:
+			dm.HUDinventory.Prev()
 		case sdl.K_ESCAPE:
 			dm.activeElem = dm.debug
 			dm.debug.ToggleVisible()
@@ -160,6 +165,14 @@ func (dm *DelveMode) Update() modes.GameModer {
 	}
 
 	return nil
+}
+
+func (dm *DelveMode) UpdateHUDInventory() {
+	dm.HUDinventory.ClearElements()
+	for i, item := range dm.player.Inventory {
+		invElem := ui.NewTextbox(16, 1, 0, i, 0, false, false, item.Name)
+		dm.HUDinventory.Add(invElem)
+	}
 }
 
 func (dm *DelveMode) Render() {
@@ -207,6 +220,7 @@ func (dm *DelveMode) Render() {
 	dm.logbox.Render()
 	dm.view.Render()
 	dm.sidebar.Render()
+	dm.HUDinventory.Render()
 	dm.debug.Render()
 }
 

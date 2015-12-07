@@ -1,7 +1,7 @@
 package data
 
 type Item struct {
-	name   string
+	Name   string
 	weight int
 	vis    Visuals
 }
