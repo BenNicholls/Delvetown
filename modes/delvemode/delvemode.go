@@ -60,6 +60,7 @@ func New() *DelveMode {
 
 	dm.HUDinventory = ui.NewList(16, 15, 79, 38, 0, true)
 	dm.HUDinventory.SetTitle("Inventory")
+	dm.UpdateHUDInventory()
 
 	dm.sidebar.Add(dm.HUDname)
 	dm.sidebar.Add(dm.HUDhp)
@@ -117,6 +118,12 @@ func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 			dm.player.ActionQueue <- dm.AttackMove(dm.player, 1, 1)
 		case sdl.K_SPACE:
 			dm.player.NextTurn += 1
+		case sdl.K_KP_ENTER:
+			if len(dm.player.Inventory) == 0 {
+				dm.gamelog.AddMessage("No item to use!")
+			} else {
+				dm.player.ActionQueue <- dm.UseItem(dm.player, dm.HUDinventory.GetSelection())
+			}
 		case sdl.K_KP_PLUS:
 			dm.HUDinventory.Next()
 		case sdl.K_KP_MINUS:
@@ -169,10 +176,20 @@ func (dm *DelveMode) Update() modes.GameModer {
 
 func (dm *DelveMode) UpdateHUDInventory() {
 	dm.HUDinventory.ClearElements()
-	for i, item := range dm.player.Inventory {
-		invElem := ui.NewTextbox(16, 1, 0, i, 0, false, false, item.Name)
+
+	if len(dm.player.Inventory) == 0 {
+		invElem := ui.NewTextbox(16, 1, 0, 6, 0, false, true, "No Items")
 		dm.HUDinventory.Add(invElem)
+		dm.HUDinventory.Highlight = false
+	} else {
+		for i, item := range dm.player.Inventory {
+			invElem := ui.NewTextbox(16, 1, 0, i, 0, false, false, item.Name)
+			dm.HUDinventory.Add(invElem)
+			dm.HUDinventory.Highlight = true
+		}
 	}
+	dm.HUDinventory.CheckSelection()
+
 }
 
 func (dm *DelveMode) Render() {

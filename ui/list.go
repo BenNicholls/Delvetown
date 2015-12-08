@@ -5,7 +5,7 @@ import "github.com/bennicholls/delvetown/console"
 type List struct {
 	Container
 	selected  int
-	highlight bool
+	Highlight bool
 }
 
 func NewList(w, h, x, y, z int, bord bool) *List {
@@ -52,7 +52,16 @@ func (l List) GetSelection() int {
 }
 
 func (l *List) ToggleHighlight() {
-	l.highlight = !l.highlight
+	l.Highlight = !l.Highlight
+}
+
+//Ensures Selected item is not out of bounds.
+func (l *List) CheckSelection() {
+	if l.selected < 0 {
+		l.selected = 0
+	} else if l.selected >= len(l.Elements) {
+		l.selected = len(l.Elements) - 1
+	}
 }
 
 func (l *List) Render(offset ...int) {
@@ -61,7 +70,7 @@ func (l *List) Render(offset ...int) {
 
 		l.Container.Render(offX, offY, offZ)
 
-		if len(l.Elements) > 0 && l.highlight {
+		if len(l.Elements) > 0 && l.Highlight {
 			w, _ := l.Elements[l.selected].GetDims()
 			for i := 0; i < w; i++ {
 				console.Invert(offX+l.x+i, offY+l.y+l.selected, offZ+l.z)

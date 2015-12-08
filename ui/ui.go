@@ -15,25 +15,27 @@ type Container struct {
 	bordered      bool
 	title         string
 	visible       bool
+	redraw        bool
 
 	Elements []UIElem
 }
 
 func NewContainer(w, h, x, y, z int, bord bool) *Container {
-	return &Container{w, h, x, y, z, bord, "", true, make([]UIElem, 0, 20)}
+	return &Container{w, h, x, y, z, bord, "", true, true, make([]UIElem, 0, 20)}
 }
 
 func (c *Container) Add(elem UIElem) {
 	c.Elements = append(c.Elements, elem)
 }
 
-//TODO: implement this someday if I ever need it. Probably will.
-func (c *Container) Remove(elem UIElem) {
+//TODO: Implement this later maybe.
+func (c *Container) Remove(i int) {
 
 }
 
 func (c *Container) ClearElements() {
 	c.Elements = make([]UIElem, 0, 20)
+	c.redraw = true
 }
 
 func (c *Container) SetTitle(s string) {
@@ -45,6 +47,11 @@ func (c *Container) SetTitle(s string) {
 func (c *Container) Render(offset ...int) {
 	if c.visible {
 		offX, offY, offZ := processOffset(offset)
+
+		if c.redraw {
+			console.Clear(c.x+offX, c.y+offY, c.width, c.height)
+			c.redraw = false
+		}
 		for i := 0; i < len(c.Elements); i++ {
 			c.Elements[i].Render(c.x+offX, c.y+offY, c.z+offZ)
 		}

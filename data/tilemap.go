@@ -70,7 +70,7 @@ func (m TileMap) GetEntity(x, y int) *Entity {
 }
 
 func (m *TileMap) AddItem(x, y int, i *Item) {
-	if util.CheckBounds(x, y, m.width, m.height) {
+	if util.CheckBounds(x, y, m.width, m.height) && i != nil {
 		m.tiles[x+y*m.width].Item = i
 	}
 }

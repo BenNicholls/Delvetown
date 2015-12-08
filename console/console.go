@@ -100,7 +100,7 @@ func Setup(w, h int) error {
 func Render() {
 
 	//render fps counter
-	if frames%50 == 0 && ShowFPS {
+	if ShowFPS {
 		fpsString := fmt.Sprintf("%d fps\n", frames*1000/int(sdl.GetTicks()))
 		for i, r := range fpsString {
 			ChangeGridPoint(i, 0, 10, int(r), 0xFF00FF00, 0xFFFF0000)
@@ -207,9 +207,19 @@ func DrawBorder(x, y, z, w, h int, title string) {
 	}
 }
 
-func Clear() {
-	for i := 0; i < width*height; i++ {
-		grid[i].Clear()
+//Optionally takes a rect so you can clear specific areas of the console
+func Clear(rect ...int) {
+
+	offX, offY, w, h := 0, 0, width, height
+
+	if len(rect) == 4 {
+		offX, offY, w, h = rect[0], rect[1], rect[2], rect[3]
+	}
+
+	for i := 0; i < w*h; i++ {
+		x := offX + i%w
+		y := offY + i/w
+		grid[y*width+x].Clear()
 	}
 }
 

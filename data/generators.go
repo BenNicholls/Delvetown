@@ -68,7 +68,7 @@ func (l *Level) GenerateCave() {
 	for i := 0; i < 10; i++ {
 		x, y := rand.Intn(l.Width), rand.Intn(l.Height)
 		if l.LevelMap.GetTile(x, y).Passable() && l.LevelMap.GetItem(x, y) == nil {
-			l.LevelMap.AddItem(x, y, &Item{"Item", 10, Visuals{50, 0xFF00FF00}})
+			l.LevelMap.AddItem(x, y, NewItem(ITEM_HEALTH))
 		} else {
 			i -= 1
 		}
