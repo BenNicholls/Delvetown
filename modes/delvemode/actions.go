@@ -10,11 +10,17 @@ func (dm *DelveMode) MoveAction(dx, dy int) data.Action {
 		//item pickup check
 		if item := dm.level.LevelMap.GetItem(e.X, e.Y); item != nil {
 			dm.level.LevelMap.RemoveItem(e.X, e.Y)
-			e.Inventory = append(e.Inventory, item)
-			if e == dm.player {
-				dm.UpdateHUDInventory()
+
+			if item.Flags.USE_ON_PICKUP {
+				action := dm.UseItem(e, item.ItemType)
+				action(e)
+			} else {
+				e.Inventory = append(e.Inventory, item)
+				if e == dm.player {
+					dm.UpdateHUDInventory()
+				}
+				dm.gamelog.AddMessage(e.Name + " picks up the " + item.Name + "!")
 			}
-			dm.gamelog.AddMessage(e.Name + " picks up the " + item.Name + "!")
 		}
 		e.NextTurn += e.MoveSpeed
 	}
@@ -47,18 +53,31 @@ func (dm *DelveMode) RestAction() data.Action {
 	}
 }
 
-func (dm *DelveMode) UseItem(e *data.Entity, selection int) data.Action {
-	switch e.Inventory[selection].ItemType {
+func (dm *DelveMode) UseInventory(e *data.Entity, selection int) data.Action {
+	item := e.Inventory[selection]
+
+	if item.Flags.CONSUMABLE {
+		e.RemoveItem(selection)
+		if e == dm.player {
+			dm.UpdateHUDInventory()
+		}
+	}
+
+	return dm.UseItem(e, item.ItemType)
+}
+
+func (dm *DelveMode) UseItem(e *data.Entity, itemType int) data.Action {
+	switch itemType {
 	case data.ITEM_HEALTH:
 		return func(e *data.Entity) {
 			dm.gamelog.AddMessage(e.Name + " uses the Health!")
 			e.Health += 10
-
-			e.RemoveItem(selection)
-			if e == dm.player {
-				dm.UpdateHUDInventory()
-			}
 			e.NextTurn += 5 //hardcoded speed for consuming this item. TODO: not hardcode
+		}
+	case data.ITEM_POWERUP:
+		return func(e *data.Entity) {
+			dm.gamelog.AddMessage(e.Name + " powers up!")
+			e.BaseAttack += 5
 		}
 	}
 

@@ -33,6 +33,7 @@ type DelveMode struct {
 
 	tick          int
 	memBrightness int //brightness to show memory tiles
+
 }
 
 func New() *DelveMode {
@@ -122,7 +123,7 @@ func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 			if len(dm.player.Inventory) == 0 {
 				dm.gamelog.AddMessage("No item to use!")
 			} else {
-				dm.player.ActionQueue <- dm.UseItem(dm.player, dm.HUDinventory.GetSelection())
+				dm.player.ActionQueue <- dm.UseInventory(dm.player, dm.HUDinventory.GetSelection())
 			}
 		case sdl.K_KP_PLUS:
 			dm.HUDinventory.Next()
@@ -162,6 +163,7 @@ func (dm *DelveMode) Update() modes.GameModer {
 
 	//update UI elements
 	dm.HUDhp.ChangeText("HP: " + strconv.Itoa(dm.player.Health))
+	dm.HUDattack.ChangeText("Attack: " + strconv.Itoa(dm.player.BaseAttack))
 	dm.tick++
 
 	//check for gamestate changes
@@ -174,6 +176,8 @@ func (dm *DelveMode) Update() modes.GameModer {
 	return nil
 }
 
+//Rebuilds the inventory UIElem whenever there is a change. Seemed easier than
+//fanagling with the list.
 func (dm *DelveMode) UpdateHUDInventory() {
 	dm.HUDinventory.ClearElements()
 
@@ -189,7 +193,6 @@ func (dm *DelveMode) UpdateHUDInventory() {
 		}
 	}
 	dm.HUDinventory.CheckSelection()
-
 }
 
 func (dm *DelveMode) Render() {
