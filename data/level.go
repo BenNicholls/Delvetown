@@ -22,6 +22,20 @@ func NewLevel(w, h int) *Level {
 	return &l
 }
 
+func (l *Level) ResetLevel() {
+	l.LevelMap = NewMap(l.Width, l.Height)
+	l.MemoryMap = NewMap(l.Width, l.Height)
+	l.MobList = make(map[int]*Entity)
+}
+
+//ensures the enemies' turn counters are synchronized with the player's
+func (l *Level) SyncClock() {
+	t := l.Player.NextTurn
+	for id := range l.MobList {
+		l.MobList[id].NextTurn = t
+	}
+}
+
 func (l *Level) MoveEntity(dx, dy int, e *Entity) {
 
 	if dx == 0 && dy == 0 {

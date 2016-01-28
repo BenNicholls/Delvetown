@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"N",
+				"NextTurn	int ν"
+			],
+			[
+				"Re",
+				"ResetLevel	 ƒ"
+			],
+			[
+				"Chan",
+				"ChangeTileType	 ƒ"
+			],
+			[
+				"item",
+				"itemdata	[]itemTypeData ν"
+			],
+			[
+				"Use",
+				"UseItem	data.Action ƒ"
+			],
+			[
 				"Cle",
 				"Clear	 ƒ"
 			],
@@ -46,10 +66,6 @@
 			[
 				"A",
 				"BaseAttack	int ν"
-			],
-			[
-				"Re",
-				"RestAction	data.Action ƒ"
 			],
 			[
 				"mo",
@@ -160,10 +176,6 @@
 				"SetBlendMode	error ƒ"
 			],
 			[
-				"Chan",
-				"ChangeColourAlpha	uint32 ƒ"
-			],
-			[
 				"Ch",
 				"ChangeForeColour	 ƒ"
 			],
@@ -259,7 +271,7 @@
 			"file": "modes/delvemode/delvemode.go",
 			"settings":
 			{
-				"buffer_size": 6682,
+				"buffer_size": 6762,
 				"line_ending": "Unix"
 			}
 		},
@@ -307,7 +319,7 @@
 			"file": "modes/delvemode/debug.go",
 			"settings":
 			{
-				"buffer_size": 582,
+				"buffer_size": 277,
 				"line_ending": "Unix"
 			}
 		},
@@ -323,7 +335,16 @@
 			"file": "data/item.go",
 			"settings":
 			{
-				"buffer_size": 324,
+				"buffer_size": 347,
+				"line_ending": "Unix",
+				"name": "package data"
+			}
+		},
+		{
+			"file": "data/itemdata.go",
+			"settings":
+			{
+				"buffer_size": 539,
 				"line_ending": "Unix",
 				"name": "package data"
 			}
@@ -332,8 +353,33 @@
 			"file": "modes/delvemode/actions.go",
 			"settings":
 			{
-				"buffer_size": 1889,
+				"buffer_size": 2288,
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "data/level.go",
+			"settings":
+			{
+				"buffer_size": 1626,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "data/tiledata.go",
+			"settings":
+			{
+				"buffer_size": 1302,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "TODO LIST",
+			"settings":
+			{
+				"buffer_size": 621,
+				"line_ending": "Unix",
+				"name": "TODO LIST:"
 			}
 		},
 		{
@@ -372,7 +418,7 @@
 			"file": "data/generators.go",
 			"settings":
 			{
-				"buffer_size": 2548,
+				"buffer_size": 2842,
 				"line_ending": "Unix"
 			}
 		},
@@ -380,7 +426,7 @@
 			"file": "data/tilemap.go",
 			"settings":
 			{
-				"buffer_size": 3336,
+				"buffer_size": 3409,
 				"line_ending": "Unix"
 			}
 		},
@@ -394,27 +440,10 @@
 			}
 		},
 		{
-			"file": "data/tiledata.go",
+			"file": "ui/tileview.go",
 			"settings":
 			{
-				"buffer_size": 1201,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "data/itemdata.go",
-			"settings":
-			{
-				"buffer_size": 313,
-				"line_ending": "Unix",
-				"name": "package data"
-			}
-		},
-		{
-			"file": "data/level.go",
-			"settings":
-			{
-				"buffer_size": 1286,
+				"buffer_size": 2130,
 				"line_ending": "Unix"
 			}
 		}
@@ -549,6 +578,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"}\n",
 			"Highlight",
 			"[",
 			"e.Inventory",
@@ -614,7 +644,7 @@
 	"groups":
 	[
 		{
-			"selected": 14,
+			"selected": 10,
 			"sheets":
 			[
 				{
@@ -643,7 +673,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 30,
+					"stack_index": 37,
 					"type": "text"
 				},
 				{
@@ -673,7 +703,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 28,
 					"type": "text"
 				},
 				{
@@ -703,7 +733,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 28,
+					"stack_index": 35,
 					"type": "text"
 				},
 				{
@@ -733,7 +763,7 @@
 						"translation.y": 108.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 24,
+					"stack_index": 32,
 					"type": "text"
 				},
 				{
@@ -742,15 +772,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6682,
+						"buffer_size": 6762,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4175,
-								4175
+								5380,
+								5380
 							]
 						],
 						"settings":
@@ -760,10 +790,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 3564.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
@@ -793,7 +823,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 25,
+					"stack_index": 33,
 					"type": "text"
 				},
 				{
@@ -822,7 +852,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 31,
+					"stack_index": 38,
 					"type": "text"
 				},
 				{
@@ -850,7 +880,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 23,
+					"stack_index": 31,
 					"type": "text"
 				},
 				{
@@ -879,7 +909,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 26,
+					"stack_index": 34,
 					"type": "text"
 				},
 				{
@@ -908,7 +938,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 27,
 					"type": "text"
 				},
 				{
@@ -917,15 +947,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 582,
+						"buffer_size": 277,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								269,
-								269
+								277,
+								277
 							]
 						],
 						"settings":
@@ -937,7 +967,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 21,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -967,7 +997,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 21,
 					"type": "text"
 				},
 				{
@@ -976,15 +1006,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 324,
+						"buffer_size": 347,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								324,
-								324
+								346,
+								274
 							]
 						],
 						"settings":
@@ -997,53 +1027,54 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 18,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
 					"buffer": 13,
-					"file": "modes/delvemode/actions.go",
+					"file": "data/itemdata.go",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1889,
+						"buffer_size": 539,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								653,
-								653
+								151,
+								151
 							]
 						],
 						"settings":
 						{
+							"auto_name": "package data",
 							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 270.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 19,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
 					"buffer": 14,
-					"file": "ui/textbox.go",
+					"file": "modes/delvemode/actions.go",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1668,
+						"buffer_size": 2288,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								633,
-								633
+								2025,
+								2025
 							]
 						],
 						"settings":
@@ -1055,11 +1086,128 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
 					"buffer": 15,
+					"file": "data/level.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1626,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								278,
+								278
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 16,
+					"file": "data/tiledata.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1302,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								406,
+								406
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 17,
+					"file": "TODO LIST",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 621,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								569,
+								569
+							]
+						],
+						"settings":
+						{
+							"auto_name": "TODO LIST:",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 18,
+					"file": "ui/textbox.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1668,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								403,
+								403
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 19,
+					"type": "text"
+				},
+				{
+					"buffer": 19,
 					"file": "console/console.go",
 					"semi_transient": false,
 					"settings":
@@ -1084,11 +1232,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 25,
 					"type": "text"
 				},
 				{
-					"buffer": 16,
+					"buffer": 20,
 					"file": "data/entity.go",
 					"semi_transient": false,
 					"settings":
@@ -1113,11 +1261,11 @@
 						"translation.y": 108.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 17,
+					"stack_index": 29,
 					"type": "text"
 				},
 				{
-					"buffer": 17,
+					"buffer": 21,
 					"file": "modes/delvemode/log.go",
 					"semi_transient": false,
 					"settings":
@@ -1143,24 +1291,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 20,
 					"type": "text"
 				},
 				{
-					"buffer": 18,
+					"buffer": 22,
 					"file": "data/generators.go",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2548,
+						"buffer_size": 2842,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								896,
-								896
+								1701,
+								1701
 							]
 						],
 						"settings":
@@ -1168,17 +1316,17 @@
 							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
-						"translation.x": 0.0,
-						"translation.y": 378.0,
+						"translation.x": 30.0,
+						"translation.y": 756.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 32,
+					"stack_index": 18,
 					"type": "text"
 				}
 			]
 		},
 		{
-			"selected": 6,
+			"selected": 12,
 			"sheets":
 			[
 				{
@@ -1187,15 +1335,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 324,
+						"buffer_size": 347,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								318,
-								318
+								347,
+								347
 							]
 						],
 						"settings":
@@ -1208,24 +1356,54 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 15,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
-					"buffer": 19,
-					"file": "data/tilemap.go",
+					"buffer": 4,
+					"file": "modes/delvemode/delvemode.go",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3336,
+						"buffer_size": 6762,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2076,
-								2076
+								5218,
+								5218
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": -0.0,
+						"translation.y": 3294.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 23,
+					"file": "data/tilemap.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3409,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3288,
+								3288
 							]
 						],
 						"settings":
@@ -1234,14 +1412,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 972.0,
+						"translation.y": 1944.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 27,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 15,
+					"buffer": 19,
 					"file": "console/console.go",
 					"semi_transient": false,
 					"settings":
@@ -1266,7 +1444,7 @@
 						"translation.y": 2700.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 26,
 					"type": "text"
 				},
 				{
@@ -1295,11 +1473,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 24,
 					"type": "text"
 				},
 				{
-					"buffer": 14,
+					"buffer": 18,
 					"file": "ui/textbox.go",
 					"semi_transient": false,
 					"settings":
@@ -1324,7 +1502,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 23,
 					"type": "text"
 				},
 				{
@@ -1340,8 +1518,8 @@
 						"selection":
 						[
 							[
-								529,
-								529
+								317,
+								317
 							]
 						],
 						"settings":
@@ -1354,11 +1532,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
-					"buffer": 20,
+					"buffer": 24,
 					"file": "ui/list.go",
 					"semi_transient": false,
 					"settings":
@@ -1384,24 +1562,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 22,
 					"type": "text"
 				},
 				{
-					"buffer": 21,
+					"buffer": 16,
 					"file": "data/tiledata.go",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1201,
+						"buffer_size": 1302,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								334,
-								334
+								347,
+								347
 							]
 						],
 						"settings":
@@ -1413,24 +1591,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 20,
+					"stack_index": 30,
 					"type": "text"
 				},
 				{
-					"buffer": 22,
+					"buffer": 13,
 					"file": "data/itemdata.go",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 313,
+						"buffer_size": 539,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								313,
-								313
+								267,
+								267
 							]
 						],
 						"settings":
@@ -1443,7 +1621,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
@@ -1473,24 +1651,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 33,
+					"stack_index": 39,
 					"type": "text"
 				},
 				{
-					"buffer": 23,
+					"buffer": 15,
 					"file": "data/level.go",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1286,
+						"buffer_size": 1626,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								783,
-								783
+								875,
+								875
 							]
 						],
 						"settings":
@@ -1500,27 +1678,27 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 378.0,
+						"translation.y": 594.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 16,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 18,
+					"buffer": 22,
 					"file": "data/generators.go",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2548,
+						"buffer_size": 2842,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1287,
-								1287
+								1699,
+								1699
 							]
 						],
 						"settings":
@@ -1529,14 +1707,43 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 54.0,
+						"translation.y": 756.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 22,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 16,
+					"buffer": 25,
+					"file": "ui/tileview.go",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 2130,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								908,
+								908
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 324.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 20,
 					"file": "data/entity.go",
 					"semi_transient": false,
 					"settings":
@@ -1548,37 +1755,8 @@
 						"selection":
 						[
 							[
-								575,
-								575
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 270.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 11,
-					"type": "text"
-				},
-				{
-					"buffer": 13,
-					"file": "modes/delvemode/actions.go",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1889,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1074,
-								1074
+								394,
+								394
 							]
 						],
 						"settings":
@@ -1591,6 +1769,35 @@
 						"zoom_level": 1.0
 					},
 					"stack_index": 14,
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "modes/delvemode/actions.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2288,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2057,
+								2057
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/GoSublime/syntax/GoSublime-Go.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 720.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
@@ -1620,7 +1827,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 29,
+					"stack_index": 36,
 					"type": "text"
 				}
 			]
@@ -1654,7 +1861,7 @@
 		"cols":
 		[
 			0.0,
-			0.47439029455,
+			0.462279567906,
 			1.0
 		],
 		"rows":
@@ -1682,6 +1889,50 @@
 		"selected_items":
 		[
 			[
+				"debug",
+				"modes/delvemode/debug.go"
+			],
+			[
+				"gener",
+				"data/generators.go"
+			],
+			[
+				"tile",
+				"data/tilemap.go"
+			],
+			[
+				"genera",
+				"data/generators.go"
+			],
+			[
+				"tilemap",
+				"data/tilemap.go"
+			],
+			[
+				"level",
+				"data/level.go"
+			],
+			[
+				"delve",
+				"modes/delvemode/delvemode.go"
+			],
+			[
+				"actions",
+				"modes/delvemode/actions.go"
+			],
+			[
+				"item",
+				"data/itemdata.go"
+			],
+			[
+				"delvemo",
+				"modes/delvemode/delvemode.go"
+			],
+			[
+				"itemda",
+				"data/itemdata.go"
+			],
+			[
 				"enti",
 				"data/entitydata.go"
 			],
@@ -1694,10 +1945,6 @@
 				"ui/ui.go"
 			],
 			[
-				"delvemo",
-				"modes/delvemode/delvemode.go"
-			],
-			[
 				"list",
 				"ui/list.go"
 			],
@@ -1706,24 +1953,8 @@
 				"data/entity.go"
 			],
 			[
-				"item",
-				"data/itemdata.go"
-			],
-			[
 				"en",
 				"data/entities.go"
-			],
-			[
-				"actions",
-				"modes/delvemode/actions.go"
-			],
-			[
-				"tile",
-				"data/tiledata.go"
-			],
-			[
-				"delve",
-				"modes/delvemode/delvemode.go"
 			],
 			[
 				"entit",
@@ -1744,14 +1975,6 @@
 			[
 				"cos",
 				"console/console.go"
-			],
-			[
-				"gener",
-				"data/generators.go"
-			],
-			[
-				"level",
-				"data/level.go"
 			],
 			[
 				"delvem",
@@ -1828,10 +2051,6 @@
 			[
 				"tilev",
 				"ui/tileview.go"
-			],
-			[
-				"tilemap",
-				"data/tilemap.go"
 			],
 			[
 				"view",
@@ -1916,10 +2135,6 @@
 			[
 				"delvmo",
 				"modes/delvemode/delvemode.go"
-			],
-			[
-				"debug",
-				"modes/delvemode/debug.go"
 			],
 			[
 				"dmo",

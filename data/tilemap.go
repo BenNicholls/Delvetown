@@ -141,6 +141,10 @@ func (t Tile) Transparent() bool {
 	return IsTransparent(t.tileType)
 }
 
+func (t Tile) Empty() bool {
+	return t.Entity == nil && t.Item == nil
+}
+
 //Light characteristics for each tile.
 type TileLight struct {
 	Colour uint32

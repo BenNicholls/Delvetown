@@ -29,7 +29,7 @@ func (l *Level) GenerateArena(w, h int) {
 
 func (l *Level) GenerateCave() {
 
-	l.LevelMap.RemoveEntity(l.Player.X, l.Player.Y)
+	l.ResetLevel()
 
 	//fill with walls
 	for i := 0; i < l.Width*l.Height; i++ {
@@ -55,31 +55,36 @@ func (l *Level) GenerateCave() {
 	}
 
 	//populate with random enemies
-	for i := 0; i < 20; i++ {
+	for i := 0; i < 20; {
 		x, y := rand.Intn(l.Width), rand.Intn(l.Height)
 		if l.LevelMap.GetTile(x, y).Passable() {
 			l.AddMob(x, y)
-		} else {
-			i -= 1
+			i++
 		}
 	}
 
-	//plop down some "items"
-	for i := 0; i < 10; i++ {
+	l.PlaceItems(10, ITEM_HEALTH)
+	l.PlaceItems(5, ITEM_POWERUP)
+
+	//place the stairs
+	for {
 		x, y := rand.Intn(l.Width), rand.Intn(l.Height)
 		if l.LevelMap.GetTile(x, y).Passable() && l.LevelMap.GetItem(x, y) == nil {
-			l.LevelMap.AddItem(x, y, NewItem(ITEM_HEALTH))
-		} else {
-			i -= 1
+			l.LevelMap.ChangeTileType(x, y, TILE_STAIRS)
+			break
 		}
 	}
 
-	for i := 0; i < 20; i++ {
+	l.SyncClock()
+}
+
+//Randomly places num copies of item in the level
+func (l *Level) PlaceItems(num, item int) {
+	for i := 0; i < num; {
 		x, y := rand.Intn(l.Width), rand.Intn(l.Height)
 		if l.LevelMap.GetTile(x, y).Passable() && l.LevelMap.GetItem(x, y) == nil {
-			l.LevelMap.AddItem(x, y, NewItem(ITEM_POWERUP))
-		} else {
-			i -= 1
+			l.LevelMap.AddItem(x, y, NewItem(item))
+			i++
 		}
 	}
 }
