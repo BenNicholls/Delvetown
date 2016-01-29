@@ -48,7 +48,7 @@ func (l *Level) GenerateCave() {
 		l.seedBranch(rand.Intn(l.Width-10)+10, rand.Intn(l.Height-10)+10, 40, TILE_WATER)
 	}
 
-	//place  more seeds, let 'em grow!
+	//place more seeds, let 'em grow!
 	for i := 0; i < 5; i++ {
 		//keep seeds away from the edges (-10, +10)
 		l.seedBranch(rand.Intn(l.Width-10)+10, rand.Intn(l.Height-10)+10, 250, TILE_CAVEFLOOR)
@@ -66,6 +66,9 @@ func (l *Level) GenerateCave() {
 	l.PlaceItems(10, ITEM_HEALTH)
 	l.PlaceItems(5, ITEM_POWERUP)
 
+	l.PlaceItems(10, ITEM_SWORD)
+	l.PlaceItems(10, ITEM_AXE)
+
 	//place the stairs
 	for {
 		x, y := rand.Intn(l.Width), rand.Intn(l.Height)
@@ -73,6 +76,11 @@ func (l *Level) GenerateCave() {
 			l.LevelMap.ChangeTileType(x, y, TILE_STAIRS)
 			break
 		}
+	}
+
+	for i := 0; i < 10; i++ {
+		l.Player.Inventory = append(l.Player.Inventory, NewItem(ITEM_SWORD))
+		l.Player.Inventory = append(l.Player.Inventory, NewItem(ITEM_HEALTH))
 	}
 
 	l.SyncClock()

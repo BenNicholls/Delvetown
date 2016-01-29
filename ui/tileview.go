@@ -23,16 +23,7 @@ func (tv *TileView) SetTitle(s string) {
 	tv.title = s
 }
 
-//takes (x,y) and a tile
-func (tv *TileView) DrawTile(x, y int, t data.Tile) {
-
-	if util.CheckBounds(x, y, tv.Width, tv.Height) {
-		v := data.GetTileVisuals(t.TileType())
-		tv.grid[y*tv.Width+x].Set(v.Glyph, v.ForeColour, 0x000000, tv.z)
-	}
-}
-
-func (tv *TileView) DrawEntity(x, y int, v data.Visuals) {
+func (tv *TileView) DrawVisuals(x, y int, v data.Visuals) {
 
 	if util.CheckBounds(x, y, tv.Width, tv.Height) {
 		tv.grid[y*tv.Width+x].Set(v.Glyph, v.ForeColour, 0x000000, tv.z)
@@ -79,5 +70,10 @@ func (tv *TileView) Clear() {
 
 func (tv *TileView) ToggleVisible() {
 	tv.visible = !tv.visible
+	console.Clear()
+}
+
+func (tv *TileView) SetVisibility(v bool) {
+	tv.visible = v
 	console.Clear()
 }

@@ -67,3 +67,8 @@ func (t *Textbox) ToggleVisible() {
 	t.visible = !t.visible
 	console.Clear()
 }
+
+func (t *Textbox) SetVisibility(v bool) {
+	t.visible = v
+	console.Clear()
+}

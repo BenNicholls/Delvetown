@@ -56,6 +56,7 @@ func (dm *DelveMode) RestAction() data.Action {
 func (dm *DelveMode) UseInventory(e *data.Entity, selection int) data.Action {
 	item := e.Inventory[selection]
 
+	//consume the item
 	if item.Flags.CONSUMABLE {
 		e.RemoveItem(selection)
 		if e == dm.player {
@@ -63,7 +64,11 @@ func (dm *DelveMode) UseInventory(e *data.Entity, selection int) data.Action {
 		}
 	}
 
-	return dm.UseItem(e, item.ItemType)
+	if item.Flags.EQUIP == data.NOT_EQUIPPABLE {
+		return dm.UseItem(e, item.ItemType)
+	} else {
+		return dm.UseEquip(e, selection)
+	}
 }
 
 func (dm *DelveMode) UseItem(e *data.Entity, itemType int) data.Action {
@@ -85,4 +90,14 @@ func (dm *DelveMode) UseItem(e *data.Entity, itemType int) data.Action {
 	//This should never happen, but if it does I guess you get penalized a turn for
 	//screwing up so damn bad.
 	return dm.RestAction()
+}
+
+func (dm *DelveMode) UseEquip(e *data.Entity, selection int) data.Action {
+	return func(e *data.Entity) {
+		dm.gamelog.AddMessage(e.Name + " equips the " + e.Inventory[selection].Name + "!")
+		e.EquipItem(selection)
+		if e == dm.player {
+			dm.UpdateHUDInventory()
+		}
+	}
 }

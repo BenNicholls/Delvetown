@@ -7,6 +7,7 @@ type UIElem interface {
 	GetDims() (w int, h int)
 	SetTitle(title string)
 	ToggleVisible()
+	SetVisibility(v bool)
 }
 
 type Container struct {
@@ -68,6 +69,10 @@ func (c Container) GetDims() (int, int) {
 
 func (c *Container) ToggleVisible() {
 	c.visible = !c.visible
+}
+
+func (c *Container) SetVisibility(v bool) {
+	c.visible = v
 }
 
 func processOffset(offset []int) (x, y, z int) {

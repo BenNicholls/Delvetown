@@ -21,6 +21,9 @@ type DelveMode struct {
 
 	HUDinventory *ui.List
 
+	HUDweapon *ui.Textbox
+	HUDarmour *ui.Textbox
+
 	debug *ui.Inputbox
 
 	activeElem ui.UIElem
@@ -59,13 +62,18 @@ func New() *DelveMode {
 	dm.HUDhp = ui.NewTextbox(16, 1, 0, 2, 0, false, false, "HP: "+strconv.Itoa(dm.player.Health))
 	dm.HUDattack = ui.NewTextbox(16, 1, 0, 3, 0, false, false, "Attack: "+strconv.Itoa(dm.player.BaseAttack))
 
-	dm.HUDinventory = ui.NewList(16, 15, 79, 38, 0, true)
-	dm.HUDinventory.SetTitle("Inventory")
-	dm.UpdateHUDInventory()
+	dm.HUDweapon = ui.NewTextbox(16, 1, 0, 5, 0, false, false, "W: "+dm.player.GetEquipmentName(data.SLOT_WEAPON))
+	dm.HUDarmour = ui.NewTextbox(16, 1, 0, 6, 0, false, false, "A: "+dm.player.GetEquipmentName(data.SLOT_ARMOUR))
 
 	dm.sidebar.Add(dm.HUDname)
 	dm.sidebar.Add(dm.HUDhp)
 	dm.sidebar.Add(dm.HUDattack)
+	dm.sidebar.Add(dm.HUDweapon)
+	dm.sidebar.Add(dm.HUDarmour)
+
+	dm.HUDinventory = ui.NewList(16, 15, 79, 38, 0, true)
+	dm.HUDinventory.SetTitle("Inventory")
+	dm.UpdateHUDInventory()
 
 	dm.debug = ui.NewInputbox(76, 1, 1, 1, 2, true)
 	dm.debug.SetTitle("Debugger")
@@ -164,6 +172,9 @@ func (dm *DelveMode) Update() modes.GameModer {
 	//update UI elements
 	dm.HUDhp.ChangeText("HP: " + strconv.Itoa(dm.player.Health))
 	dm.HUDattack.ChangeText("Attack: " + strconv.Itoa(dm.player.BaseAttack))
+	dm.HUDweapon.ChangeText("W: " + dm.player.GetEquipmentName(data.SLOT_WEAPON))
+	dm.HUDarmour.ChangeText("A: " + dm.player.GetEquipmentName(data.SLOT_ARMOUR))
+
 	dm.tick++
 
 	//check for gamestate changes
@@ -219,12 +230,12 @@ func (dm *DelveMode) Render() {
 			e := dm.level.MemoryMap.GetEntity(x, y)
 			item := dm.level.MemoryMap.GetItem(x, y)
 			if e != nil {
-				dm.view.DrawEntity(i%w, i/w, e.GetVisuals())
+				dm.view.DrawVisuals(i%w, i/w, e.GetVisuals())
 			} else if item != nil {
-				dm.view.DrawEntity(i%w, i/w, item.GetVisuals())
+				dm.view.DrawVisuals(i%w, i/w, item.GetVisuals())
 			} else {
 				t := dm.level.MemoryMap.GetTile(x, y)
-				dm.view.DrawTile(i%w, i/w, t)
+				dm.view.DrawVisuals(i%w, i/w, t.GetVisuals())
 			}
 
 			if dm.level.MemoryMap.LastVisible(x, y) != dm.tick {

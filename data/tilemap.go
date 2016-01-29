@@ -145,6 +145,10 @@ func (t Tile) Empty() bool {
 	return t.Entity == nil && t.Item == nil
 }
 
+func (t Tile) GetVisuals() Visuals {
+	return tiledata[t.tileType].vis
+}
+
 //Light characteristics for each tile.
 type TileLight struct {
 	Colour uint32
