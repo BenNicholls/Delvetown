@@ -90,3 +90,13 @@ func Darken(m *TileMap, x, y, d, r int) {
 		m.tiles[x+y*m.width].Light.Bright = 0
 	}
 }
+
+//gets a list of the position of all empty tiles
+//TODO: would this be better returning a list of *Tile?
+func GetEmptySpacesCast(spaces *[]coord) Cast {
+	return func(m *TileMap, x, y, d, r int) {
+		if m.GetTile(x, y).Empty() {
+			*spaces = append(*spaces, coord{x, y})
+		}
+	}
+}

@@ -101,13 +101,3 @@ func (l *Level) DropItem(x, y int, i *Item) bool {
 		return true
 	}
 }
-
-//gets a list of the position of all empty tiles
-//TODO: would this be better returning a list of *Tile?
-func GetEmptySpacesCast(spaces *[]coord) Cast {
-	return func(m *TileMap, x, y, d, r int) {
-		if m.GetTile(x, y).Empty() {
-			*spaces = append(*spaces, coord{x, y})
-		}
-	}
-}
