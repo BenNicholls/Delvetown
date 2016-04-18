@@ -1,6 +1,7 @@
 package data
 
 import "math/rand"
+import "github.com/bennicholls/delvetown/util"
 
 type Level struct {
 	LevelMap      *TileMap
@@ -69,4 +70,44 @@ func (l *Level) AddMob(x, y int) {
 	e := NewEntity(x, y, id, BUTTS)
 	l.MobList[id] = e
 	l.LevelMap.AddEntity(x, y, e)
+}
+
+type coord struct {
+	x, y int
+}
+
+//finds the closest empty, visible spot within 5 squares and drops the item.
+//returns false if there is no empty space
+func (l *Level) DropItem(x, y int, i *Item) bool {
+
+	spaces := make([]coord, 0, 68) //dropradius is 5, 68 possible locations
+	l.LevelMap.ShadowCast(x, y, 5, GetEmptySpacesCast(&spaces))
+
+	if len(spaces) == 0 {
+		return false
+	} else {
+
+		d := 25 //util.distance returns d^2, so 25 is max
+		best := 0
+		//find closest open space
+		for i, c := range spaces {
+			if util.Distance(c.x, x, c.y, y) < d {
+				d = util.Distance(c.x, x, c.y, y)
+				best = i
+			}
+		}
+
+		l.LevelMap.AddItem(spaces[best].x, spaces[best].y, i)
+		return true
+	}
+}
+
+//gets a list of the position of all empty tiles
+//TODO: would this be better returning a list of *Tile?
+func GetEmptySpacesCast(spaces *[]coord) Cast {
+	return func(m *TileMap, x, y, d, r int) {
+		if m.GetTile(x, y).Empty() {
+			*spaces = append(*spaces, coord{x, y})
+		}
+	}
 }

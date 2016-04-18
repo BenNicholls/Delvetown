@@ -140,6 +140,12 @@ func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 		case sdl.K_ESCAPE:
 			dm.activeElem = dm.debug
 			dm.debug.ToggleVisible()
+		case sdl.K_d:
+			if len(dm.player.Inventory) == 0 {
+				dm.gamelog.AddMessage("No item to drop!")
+			} else {
+				dm.player.ActionQueue <- dm.DropInventoryItem(dm.player, dm.HUDinventory.GetSelection())
+			}
 		}
 	}
 }

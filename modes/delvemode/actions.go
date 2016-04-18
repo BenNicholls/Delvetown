@@ -101,3 +101,18 @@ func (dm *DelveMode) UseEquip(e *data.Entity, selection int) data.Action {
 		}
 	}
 }
+
+func (dm *DelveMode) DropInventoryItem(e *data.Entity, selection int) data.Action {
+	return func(e *data.Entity) {
+		item := e.Inventory[selection]
+
+		if item != nil {
+			if dm.level.DropItem(e.X, e.Y, item) {
+				e.RemoveItem(selection)
+				dm.UpdateHUDInventory()
+			} else {
+				dm.gamelog.AddMessage(item.Name + " could not be dropped!")
+			}
+		}
+	}
+}

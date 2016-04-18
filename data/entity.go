@@ -69,6 +69,13 @@ func (e *Entity) RemoveItem(i int) {
 	}
 }
 
+//TODO: throw error or drop or something if inventory limit reached
+func (e *Entity) AddItem(i *Item) {
+	if len(e.Inventory) < cap(e.Inventory) {
+		e.Inventory = append(e.Inventory, i)
+	}
+}
+
 //equip item at index i. TODO: throw errors or something if equip fails
 //For now, only call this if you've checked if the item is equippable first
 func (e *Entity) EquipItem(i int) {
@@ -85,7 +92,7 @@ func (e *Entity) EquipItem(i int) {
 	if e.Equipment[targetSlot] != nil {
 		e.Inventory[i] = e.Equipment[targetSlot]
 	} else {
-		e.RemoveItem(i)
+		return
 	}
 
 	e.Equipment[targetSlot] = equipItem

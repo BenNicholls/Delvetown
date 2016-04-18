@@ -142,7 +142,7 @@ func (t Tile) Transparent() bool {
 }
 
 func (t Tile) Empty() bool {
-	return t.Entity == nil && t.Item == nil
+	return t.Entity == nil && t.Item == nil && IsPassable(t.tileType)
 }
 
 func (t Tile) GetVisuals() Visuals {
