@@ -72,7 +72,7 @@ func (l *List) Render(offset ...int) {
 		//calc scrollOffset
 		if l.selected < l.scrollOffset {
 			l.scrollOffset = l.selected
-		} else if l.scrollOffset < l.selected-l.height {
+		} else if l.scrollOffset < l.selected-l.height+1 {
 			l.scrollOffset = l.selected - l.height + 1
 		}
 
