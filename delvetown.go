@@ -20,7 +20,7 @@ func main() {
 	var event sdl.Event
 	var mode modes.GameModer
 
-	err := console.Setup(96, 54)
+	err := console.Setup(96, 54, "res/curses.bmp", "Delvetown")
 	if err != nil {
 		fmt.Println(err)
 		return

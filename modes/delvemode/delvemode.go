@@ -188,7 +188,7 @@ func (dm *DelveMode) Update() modes.GameModer {
 }
 
 //Rebuilds the inventory UIElem whenever there is a change. Seemed easier than
-//fanagling with the list.
+//fanagling with the list. TODO: fanagle with the list.
 func (dm *DelveMode) UpdateHUDInventory() {
 	dm.HUDinventory.ClearElements()
 

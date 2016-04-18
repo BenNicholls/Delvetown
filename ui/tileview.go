@@ -25,8 +25,12 @@ func (tv *TileView) SetTitle(s string) {
 
 func (tv *TileView) DrawVisuals(x, y int, v data.Visuals) {
 
+	tv.Draw(x, y, v.Glyph, v.ForeColour, 0x00000000)
+}
+
+func (tv *TileView) Draw(x, y, glyph int, f, b uint32) {
 	if util.CheckBounds(x, y, tv.Width, tv.Height) {
-		tv.grid[y*tv.Width+x].Set(v.Glyph, v.ForeColour, 0x000000, tv.z)
+		tv.grid[y*tv.Width+x].Set(glyph, f, b, tv.z)
 	}
 }
 

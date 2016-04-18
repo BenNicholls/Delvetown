@@ -30,9 +30,8 @@ func (l *Level) ResetLevel() {
 
 //ensures the enemies' turn counters are synchronized with the player's
 func (l *Level) SyncClock() {
-	t := l.Player.NextTurn
 	for id := range l.MobList {
-		l.MobList[id].NextTurn = t
+		l.MobList[id].NextTurn = l.Player.NextTurn
 	}
 }
 
@@ -41,6 +40,7 @@ func (l *Level) MoveEntity(dx, dy int, e *Entity) {
 	if dx == 0 && dy == 0 {
 		return
 	}
+
 	//move entity if tile is passable
 	if l.LevelMap.GetTile(e.X+dx, e.Y+dy).Passable() {
 		l.LevelMap.MoveEntity(e.X, e.Y, dx, dy)

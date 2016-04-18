@@ -44,14 +44,14 @@ func (g *GridCell) Clear() {
 }
 
 //Setup the game window, renderer, etc
-func Setup(w, h int) error {
+func Setup(w, h int, spritesheet, title string) error {
 
 	width = w
 	height = h
 	var err error
 
 	//load spritesheet first so we can infer tileSize
-	image, err := sdl.LoadBMP("res/curses.bmp")
+	image, err := sdl.LoadBMP(spritesheet)
 	if err != nil {
 		return errors.New("Failed to load image: " + fmt.Sprint(sdl.GetError()))
 	}
@@ -59,7 +59,7 @@ func Setup(w, h int) error {
 	image.SetColorKey(1, 0xFF00FF)
 	tileSize = int(image.W / 16)
 
-	window, err = sdl.CreateWindow("Delvetown", sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED, width*tileSize, height*tileSize, sdl.WINDOW_OPENGL)
+	window, err = sdl.CreateWindow(title, sdl.WINDOWPOS_CENTERED, sdl.WINDOWPOS_CENTERED, width*tileSize, height*tileSize, sdl.WINDOW_OPENGL)
 	if err != nil {
 		return errors.New("Failed to create window: " + fmt.Sprint(sdl.GetError()))
 	}
@@ -139,6 +139,10 @@ func Render() {
 	}
 	frameTime = sdl.GetTicks()
 	frames++
+}
+
+func SetFramerate(f uint32) {
+	fps = f
 }
 
 //int32 for rect arguments. what a world.

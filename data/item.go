@@ -22,5 +22,5 @@ func (i *Item) GetVisuals() Visuals {
 
 //returns whether item can be equipped
 func (i Item) Equippable() bool {
-	return !(i.Flags.EQUIP == NOT_EQUIPPABLE)
+	return i.Flags.EQUIP != NOT_EQUIPPABLE
 }

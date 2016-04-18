@@ -78,11 +78,6 @@ func (l *Level) GenerateCave() {
 		}
 	}
 
-	for i := 0; i < 10; i++ {
-		l.Player.Inventory = append(l.Player.Inventory, NewItem(ITEM_SWORD))
-		l.Player.Inventory = append(l.Player.Inventory, NewItem(ITEM_HEALTH))
-	}
-
 	l.SyncClock()
 }
 
