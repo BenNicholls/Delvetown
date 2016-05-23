@@ -9,7 +9,7 @@ func (dm *DelveMode) Execute(command string) {
 		dm.level.GenerateCave()
 		dm.gamelog.AddMessage("Level Regenerated!")
 	case "fps":
-		console.ShowFPS = !console.ShowFPS
+		console.ToggleFPS()
 	case "items":
 		dm.player.AddItem(data.NewItem(data.ITEM_SWORD))
 		dm.player.AddItem(data.NewItem(data.ITEM_AXE))

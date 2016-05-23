@@ -18,7 +18,7 @@ var masterDirty bool //is this necessary?
 
 var frameTime, ticks, fps uint32
 var frames int
-var ShowFPS bool
+var showFPS bool
 var BorderColour uint32
 
 type GridCell struct {
@@ -91,7 +91,7 @@ func Setup(w, h int, spritesheet, title string) error {
 	frames = 0
 	frameTime, ticks = 0, 0
 	fps = 35 //17ms = 60 FPS approx
-	ShowFPS = false
+	showFPS = false
 	BorderColour = 0xFF666666
 
 	return nil
@@ -100,7 +100,7 @@ func Setup(w, h int, spritesheet, title string) error {
 func Render() {
 
 	//render fps counter
-	if ShowFPS {
+	if showFPS {
 		fpsString := fmt.Sprintf("%d fps\n", frames*1000/int(sdl.GetTicks()))
 		for i, r := range fpsString {
 			ChangeGridPoint(i, 0, 10, int(r), 0xFF00FF00, 0xFFFF0000)
@@ -179,6 +179,10 @@ func ChangeBackColour(x, y int, back uint32) {
 		grid[y*width+x].Dirty = true
 		masterDirty = true
 	}
+}
+
+func ToggleFPS() {
+	showFPS = !showFPS
 }
 
 func ChangeGridPoint(x, y, z, glyph int, fore, back uint32) {
