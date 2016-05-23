@@ -21,7 +21,7 @@ func (l *Level) GenerateArena(w, h int) {
 		} else {
 			l.LevelMap.ChangeTileType(x, y, TILE_GRASS)
 			if rand.Intn(40) == 0 {
-				l.AddMob(x, y)
+				l.AddMob(x, y, BUTTS)
 			}
 		}
 	}
@@ -55,19 +55,14 @@ func (l *Level) GenerateCave() {
 	}
 
 	//populate with random enemies
-	for i := 0; i < 20; {
-		x, y := rand.Intn(l.Width), rand.Intn(l.Height)
-		if l.LevelMap.GetTile(x, y).Passable() {
-			l.AddMob(x, y)
-			i++
-		}
-	}
+	l.RandomPlaceMobs(20, BUTTS)
+	l.RandomPlaceMobs(1, SUPER_BUTTS)
+	l.RandomPlaceMobs(2, BUTT_SWARM)
 
-	l.PlaceItems(10, ITEM_HEALTH)
-	l.PlaceItems(5, ITEM_POWERUP)
-
-	l.PlaceItems(10, ITEM_SWORD)
-	l.PlaceItems(10, ITEM_AXE)
+	l.PlaceItems(5, ITEM_HEALTH)
+	l.PlaceItems(2, ITEM_POWERUP)
+	l.PlaceItems(2, ITEM_SWORD)
+	l.PlaceItems(2, ITEM_AXE)
 
 	//place the stairs
 	for {
@@ -92,6 +87,36 @@ func (l *Level) PlaceItems(num, item int) {
 	}
 }
 
+func (l *Level) RandomPlaceMobs(num, eType int) {
+	for i := 0; i < num; {
+		x, y := rand.Intn(l.Width), rand.Intn(l.Height)
+		if l.LevelMap.GetTile(x, y).Passable() {
+			
+			if eType == BUTT_SWARM {
+				l.PlaceSwarm(x, y, 10)
+			} else {			
+				l.AddMob(x, y, eType)
+			}			
+			i++
+		}
+	}
+}
+
+func (l *Level) PlaceSwarm(x, y, num int) {
+	l.AddMob(x, y, BUTT_SWARM)
+	
+	spaces := make([]coord, 0, 150)
+	l.LevelMap.ShadowCast(x, y, 7, GetEmptySpacesCast(&spaces))
+	
+	for i := 0; i < num; i++ {
+		if i == len(spaces) {
+			break
+		}
+		l.AddMob(spaces[i].x, spaces[i].y, BUTT_SWARM)
+	}
+	
+}
+
 //tile is a data.TILETYPE indicating what we're putting down
 func (l *Level) seedBranch(x, y, branch, tile int) {
 
@@ -101,7 +126,7 @@ func (l *Level) seedBranch(x, y, branch, tile int) {
 	}
 
 	//decide num of branches, then branch that many times
-	branches := 5
+	branches := 2 + rand.Intn(5)
 	for i := 0; i < branches; i++ {
 		dx, dy := util.GenerateDirection()
 		//ensure branch doesn't reach edge of map (ugly)

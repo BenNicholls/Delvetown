@@ -7,6 +7,11 @@ func (dm *DelveMode) MoveAction(dx, dy int) data.Action {
 	return func(e *data.Entity) {
 		dm.level.MoveEntity(dx, dy, e)
 
+		if dm.level.LevelMap.GetTileType(e.X, e.Y) == data.TILE_STAIRS {
+			dm.level.GenerateCave()
+			return
+		}
+
 		//item pickup check
 		if item := dm.level.LevelMap.GetItem(e.X, e.Y); item != nil {
 			dm.level.LevelMap.RemoveItem(e.X, e.Y)

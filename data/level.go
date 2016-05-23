@@ -9,7 +9,9 @@ type Level struct {
 	Width, Height int
 
 	Player *Entity
-
+	
+	Floor int
+	
 	//Map referencing all enemies in the level. indexed by ID  (found in Entity.ID)
 	MobList map[int]*Entity
 }
@@ -58,7 +60,7 @@ func (l *Level) RemoveEntity(id int) {
 }
 
 //Creates a new entity and add it to the list. Generates id as well.
-func (l *Level) AddMob(x, y int) {
+func (l *Level) AddMob(x, y, eType int) {
 
 	//generate new unique id. loop checks for previous entity with that id.
 	id := rand.Int()
@@ -67,7 +69,7 @@ func (l *Level) AddMob(x, y int) {
 		_, ok = l.MobList[id]
 	}
 
-	e := NewEntity(x, y, id, BUTTS)
+	e := NewEntity(x, y, id, eType)
 	l.MobList[id] = e
 	l.LevelMap.AddEntity(x, y, e)
 }
