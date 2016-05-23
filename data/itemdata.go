@@ -2,7 +2,6 @@ package data
 
 var itemdata []itemTypeData
 
-//
 const (
 	ITEM_HEALTH int = iota
 	ITEM_POWERUP
