@@ -71,9 +71,8 @@ func New() *DelveMode {
 	dm.sidebar.Add(dm.HUDweapon)
 	dm.sidebar.Add(dm.HUDarmour)
 
-	dm.HUDinventory = ui.NewList(16, 15, 79, 38, 0, true)
+	dm.HUDinventory = ui.NewList(16, 15, 79, 38, 0, true, "No Items")
 	dm.HUDinventory.SetTitle("Inventory")
-	dm.UpdateHUDInventory()
 
 	dm.debug = ui.NewInputbox(76, 1, 1, 1, 2, true)
 	dm.debug.SetTitle("Debugger")
@@ -83,6 +82,17 @@ func New() *DelveMode {
 	dm.memBrightness = 80
 
 	return dm
+}
+
+func (dm *DelveMode) BuildHUDInventory() {
+	dm.HUDinventory.ClearElements()
+	w, _ := dm.HUDinventory.GetDims()
+	
+	for i, item := range dm.player.Inventory {
+		dm.HUDinventory.Add(ui.NewTextbox(w, 1, 0, i, 0, false, false, item.Name))
+	}
+	
+	dm.HUDinventory.CheckSelection()
 }
 
 func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
@@ -191,25 +201,6 @@ func (dm *DelveMode) Update() modes.GameModer {
 	}
 
 	return nil
-}
-
-//Rebuilds the inventory UIElem whenever there is a change. Seemed easier than
-//fanagling with the list. TODO: fanagle with the list.
-func (dm *DelveMode) UpdateHUDInventory() {
-	dm.HUDinventory.ClearElements()
-
-	if len(dm.player.Inventory) == 0 {
-		invElem := ui.NewTextbox(16, 1, 0, 6, 0, false, true, "No Items")
-		dm.HUDinventory.Add(invElem)
-		dm.HUDinventory.Highlight = false
-	} else {
-		for i, item := range dm.player.Inventory {
-			invElem := ui.NewTextbox(16, 1, 0, i, 0, false, false, item.Name)
-			dm.HUDinventory.Add(invElem)
-			dm.HUDinventory.Highlight = true
-		}
-	}
-	dm.HUDinventory.CheckSelection()
 }
 
 func (dm *DelveMode) Render() {

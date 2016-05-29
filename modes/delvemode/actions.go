@@ -22,7 +22,7 @@ func (dm *DelveMode) MoveAction(dx, dy int) data.Action {
 			} else {
 				e.Inventory = append(e.Inventory, item)
 				if e == dm.player {
-					dm.UpdateHUDInventory()
+					dm.HUDinventory.Append(item.Name)
 				}
 				dm.gamelog.AddMessage(e.Name + " picks up the " + item.Name + "!")
 			}
@@ -65,14 +65,14 @@ func (dm *DelveMode) UseInventory(e *data.Entity, selection int) data.Action {
 	if item.Flags.CONSUMABLE {
 		e.RemoveItem(selection)
 		if e == dm.player {
-			dm.UpdateHUDInventory()
+			dm.HUDinventory.Remove(selection)
 		}
 	}
 
-	if item.Flags.EQUIP == data.NOT_EQUIPPABLE {
-		return dm.UseItem(e, item.ItemType)
-	} else {
+	if item.Flags.EQUIP != data.NOT_EQUIPPABLE {
 		return dm.UseEquip(e, selection)
+	} else {
+		return dm.UseItem(e, item.ItemType)
 	}
 }
 
@@ -102,7 +102,7 @@ func (dm *DelveMode) UseEquip(e *data.Entity, selection int) data.Action {
 		dm.gamelog.AddMessage(e.Name + " equips the " + e.Inventory[selection].Name + "!")
 		e.EquipItem(selection)
 		if e == dm.player {
-			dm.UpdateHUDInventory()
+			dm.BuildHUDInventory()
 		}
 	}
 }
@@ -114,7 +114,7 @@ func (dm *DelveMode) DropInventoryItem(e *data.Entity, selection int) data.Actio
 		if item != nil {
 			if dm.level.DropItem(e.X, e.Y, item) {
 				e.RemoveItem(selection)
-				dm.UpdateHUDInventory()
+				dm.HUDinventory.Remove(selection)
 			} else {
 				dm.gamelog.AddMessage(item.Name + " could not be dropped!")
 			}

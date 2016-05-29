@@ -29,11 +29,6 @@ func (c *Container) Add(elem UIElem) {
 	c.Elements = append(c.Elements, elem)
 }
 
-//TODO: Implement this later maybe.
-func (c *Container) Remove(i int) {
-
-}
-
 func (c *Container) ClearElements() {
 	c.Elements = make([]UIElem, 0, 20)
 	c.redraw = true
