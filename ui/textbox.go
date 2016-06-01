@@ -72,3 +72,9 @@ func (t *Textbox) SetVisibility(v bool) {
 	t.visible = v
 	console.Clear()
 }
+
+func (t *Textbox) MoveTo(x, y, z int) {
+	t.x = x
+	t.y = y
+	t.z = z
+}

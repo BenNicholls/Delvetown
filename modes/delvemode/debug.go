@@ -15,6 +15,6 @@ func (dm *DelveMode) Execute(command string) {
 		dm.player.AddItem(data.NewItem(data.ITEM_AXE))
 		dm.player.AddItem(data.NewItem(data.ITEM_HEALTH))
 		dm.player.AddItem(data.NewItem(data.ITEM_HEALTH))
-		dm.UpdateHUDInventory()
+		dm.BuildHUDInventory()
 	}
 }

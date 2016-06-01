@@ -81,3 +81,9 @@ func (tv *TileView) SetVisibility(v bool) {
 	tv.visible = v
 	console.Clear()
 }
+
+func (tv *TileView) MoveTo(x, y, z int) {
+	tv.x = x
+	tv.y = y
+	tv.z = z
+}

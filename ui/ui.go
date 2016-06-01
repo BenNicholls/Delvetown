@@ -8,6 +8,7 @@ type UIElem interface {
 	SetTitle(title string)
 	ToggleVisible()
 	SetVisibility(v bool)
+	MoveTo(x, y, z int)
 }
 
 type Container struct {
@@ -68,6 +69,12 @@ func (c *Container) ToggleVisible() {
 
 func (c *Container) SetVisibility(v bool) {
 	c.visible = v
+}
+
+func (c *Container) MoveTo(x, y, z int) {
+	c.x = x
+	c.y = y
+	c.z = z
 }
 
 func processOffset(offset []int) (x, y, z int) {

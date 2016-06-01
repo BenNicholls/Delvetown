@@ -77,7 +77,16 @@ func (l *List) Append(item string) {
 func (l *List) Remove(i int) {
 	if i < len(l.Elements) && len(l.Elements) != 0 {
 		l.Elements = append(l.Elements[:i], l.Elements[i+1:]...)
+		l.redraw = true
+		l.Calibrate()
 		l.CheckSelection()
+	}
+}
+
+//Ensures list element y values are correct after the list has been tampered with
+func (l *List) Calibrate() {
+	for i := range l.Elements {
+		l.Elements[i].MoveTo(0, i, 0)
 	}
 }
 
@@ -121,6 +130,18 @@ func (l *List) Render(offset ...int) {
 		
 		if l.bordered {
 			console.DrawBorder(l.x+offX, l.y+offY, l.z+offZ, l.width, l.height, l.title)
+		}
+		
+		//draw scrollbar
+		if len(l.Elements) > l.height {
+			console.ChangeGridPoint(offX + l.x + l.width, offY + l.y, offZ + l.z, 0x1e, 0xFFFFFFFF, 0xFF000000)
+			console.ChangeGridPoint(offX + l.x + l.width, offY + l.y + l.height - 1, offZ + l.z, 0x1f, 0xFFFFFFFF, 0xFF000000)
+				
+			sliderHeight := l.height - 2 - (len(l.Elements) - l.height)
+			
+			for i:= 0; i < sliderHeight; i ++ {
+				console.ChangeGridPoint(offX + l.x + l.width, offY + l.y + i + 1 + l.scrollOffset, offZ + l.z, 0xb1, 0xFFFFFFFF, 0xFF000000)
+			}				
 		}
 	}
 }
