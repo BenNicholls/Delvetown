@@ -18,8 +18,11 @@ type DelveMode struct {
 	HUDname   *ui.Textbox
 	HUDhp     *ui.Textbox
 	HUDattack *ui.Textbox
+	HUDtestvalue *ui.Textbox
 
 	HUDinventory *ui.List
+	
+	HUDenemylist *ui.List
 
 	HUDweapon *ui.Textbox
 	HUDarmour *ui.Textbox
@@ -61,18 +64,23 @@ func New() *DelveMode {
 	dm.HUDname = ui.NewTextbox(16, 1, 0, 0, 0, false, true, dm.player.Name)
 	dm.HUDhp = ui.NewTextbox(16, 1, 0, 2, 0, false, false, "HP: "+strconv.Itoa(dm.player.Health))
 	dm.HUDattack = ui.NewTextbox(16, 1, 0, 3, 0, false, false, "Attack: "+strconv.Itoa(dm.player.BaseAttack))
-
 	dm.HUDweapon = ui.NewTextbox(16, 1, 0, 5, 0, false, false, "W: "+dm.player.GetEquipmentName(data.SLOT_WEAPON))
 	dm.HUDarmour = ui.NewTextbox(16, 1, 0, 6, 0, false, false, "A: "+dm.player.GetEquipmentName(data.SLOT_ARMOUR))
+	dm.HUDtestvalue = ui.NewTextbox(16, 1, 0, 8, 0, false, false, "MonNum :" + strconv.Itoa(len(dm.level.MobList)))
 
 	dm.sidebar.Add(dm.HUDname)
 	dm.sidebar.Add(dm.HUDhp)
 	dm.sidebar.Add(dm.HUDattack)
 	dm.sidebar.Add(dm.HUDweapon)
 	dm.sidebar.Add(dm.HUDarmour)
+	dm.sidebar.Add(dm.HUDtestvalue)
 
 	dm.HUDinventory = ui.NewList(16, 15, 79, 38, 0, true, "No Items")
 	dm.HUDinventory.SetTitle("Inventory")
+	
+	dm.HUDenemylist = ui.NewList(16, 15, 79, 21, 0, true, "No Enemies")
+	dm.HUDenemylist.SetTitle("Enemies")
+	dm.HUDenemylist.Highlight = false
 
 	dm.debug = ui.NewInputbox(76, 1, 1, 1, 2, true)
 	dm.debug.SetTitle("Debugger")
@@ -80,6 +88,7 @@ func New() *DelveMode {
 	dm.activeElem = nil
 
 	dm.memBrightness = 80
+	dm.level.LevelMap.ShadowCast(dm.player.X, dm.player.Y, dm.player.SightRange, dm.MemoryCast())
 
 	return dm
 }
@@ -93,6 +102,15 @@ func (dm *DelveMode) BuildHUDInventory() {
 	}
 	
 	dm.HUDinventory.CheckSelection()
+}
+
+func (dm *DelveMode) BuildHUDenemylist() {
+	dm.HUDenemylist.ClearElements()
+	w, _ := dm.HUDenemylist.GetDims()
+	
+	for i, enemy := range dm.player.VisibleEntities {
+		dm.HUDenemylist.Add(ui.NewTextbox(w, 1, 0, i, 0, false, false, enemy.Name))
+	}
 }
 
 func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
@@ -164,8 +182,6 @@ func (dm *DelveMode) Update() modes.GameModer {
 
 	if dm.player.NextTurn <= dm.tick {
 		if len(dm.player.ActionQueue) == 0 {
-			//x, y := util.GenerateDirection()
-			//dm.player.ActionQueue <- dm.MoveAction(x, y, 5)
 			return nil // block update, waiting on player move
 		} else {
 			action := <-dm.player.ActionQueue
@@ -173,25 +189,30 @@ func (dm *DelveMode) Update() modes.GameModer {
 		}
 	}
 
-	for k, e := range dm.level.MobList {
+	for _, e := range dm.level.MobList {
 		if e.NextTurn <= dm.tick {
 			if len(e.ActionQueue) > 0 {
 				action := <-e.ActionQueue
-				action(dm.level.MobList[k])
+				action(e)
 			} else {
 				action := dm.HuntBehaviour(e) //TODO: replace with context-specific AI
-				action(dm.level.MobList[k])
+				action(e)
 			}
 		}
 	}
+	
+	dm.tick++
+	
+	//update player memory (has to be after tick++, uses tick to mark when space was last seen)
+	dm.level.LevelMap.ShadowCast(dm.player.X, dm.player.Y, dm.player.SightRange, dm.MemoryCast())
+	dm.BuildHUDenemylist()
 
 	//update UI elements
 	dm.HUDhp.ChangeText("HP: " + strconv.Itoa(dm.player.Health))
 	dm.HUDattack.ChangeText("Attack: " + strconv.Itoa(dm.player.BaseAttack))
 	dm.HUDweapon.ChangeText("W: " + dm.player.GetEquipmentName(data.SLOT_WEAPON))
 	dm.HUDarmour.ChangeText("A: " + dm.player.GetEquipmentName(data.SLOT_ARMOUR))
-
-	dm.tick++
+	dm.HUDtestvalue.ChangeText("MonNum :" + strconv.Itoa(len(dm.level.MobList)))
 
 	//check for gamestate changes
 	if dm.player.Health <= 0 {
@@ -209,10 +230,7 @@ func (dm *DelveMode) Render() {
 	w, h := dm.view.Width, dm.view.Height
 	dm.xCamera, dm.yCamera = dm.player.X-w/2, dm.player.Y-h/2
 
-	dm.view.Clear()
-
-	//update player memory
-	dm.level.LevelMap.ShadowCast(dm.player.X, dm.player.Y, dm.player.SightRange, dm.MemoryCast())
+	dm.view.Clear()	
 
 	//Draw the world.
 	for i := 0; i < w*h; i++ {
@@ -227,7 +245,11 @@ func (dm *DelveMode) Render() {
 			e := dm.level.MemoryMap.GetEntity(x, y)
 			item := dm.level.MemoryMap.GetItem(x, y)
 			if e != nil {
-				dm.view.DrawVisuals(i%w, i/w, e.GetVisuals())
+				if dm.player.CanSee(e.ID) && !(e.X == x && e.Y == y) {
+					//dm.level.MemoryMap.RemoveEntity(x, y)
+				} else {
+					dm.view.DrawVisuals(i%w, i/w, e.GetVisuals())
+				}
 			} else if item != nil {
 				dm.view.DrawVisuals(i%w, i/w, item.GetVisuals())
 			} else {
@@ -249,6 +271,7 @@ func (dm *DelveMode) Render() {
 	dm.view.Render()
 	dm.sidebar.Render()
 	dm.HUDinventory.Render()
+	dm.HUDenemylist.Render()
 	dm.debug.Render()
 }
 
@@ -256,10 +279,14 @@ func (dm *DelveMode) Render() {
 //Pass this into the shadowcaster to copy the visible portion
 //of the map into the player's memory.
 func (dm *DelveMode) MemoryCast() data.Cast {
+	dm.player.ClearVisible()
 	return func(m *data.TileMap, x, y, d, r int) {
 		if m.GetTile(x, y).Light.Bright > 0 {
 			m.SetVisible(x, y, dm.tick)
 			dm.level.MemoryMap.SetTile(x, y, m.GetTile(x, y))
+			if m.GetTile(x, y).Entity != nil {
+				dm.player.AddVisibleEntity(m.GetTile(x, y).Entity)
+			}
 		}
 	}
 }

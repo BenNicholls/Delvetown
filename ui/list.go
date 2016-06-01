@@ -69,6 +69,9 @@ func (l *List) CheckSelection() {
 
 //appends an item to the internal list of items
 func (l *List) Append(item string) {
+	if len(l.Elements) == 0 {
+		l.redraw = true
+	}
 	l.Add(NewTextbox(l.width, 1, 0, len(l.Elements), 0, false, false, item))
 	l.CheckSelection()
 }
@@ -76,9 +79,13 @@ func (l *List) Append(item string) {
 //removes the ith item from the internal list of items
 func (l *List) Remove(i int) {
 	if i < len(l.Elements) && len(l.Elements) != 0 {
-		l.Elements = append(l.Elements[:i], l.Elements[i+1:]...)
+		if len(l.Elements) == 1 {
+			l.ClearElements()
+		} else {
+			l.Elements = append(l.Elements[:i], l.Elements[i+1:]...)
+			l.Calibrate()
+		}
 		l.redraw = true
-		l.Calibrate()
 		l.CheckSelection()
 	}
 }
@@ -99,6 +106,11 @@ func (l *List) Render(offset ...int) {
 	if l.visible {
 		offX, offY, offZ := processOffset(offset)
 		
+		if l.redraw {
+			console.Clear(l.x+offX, l.y+offY, l.width, l.height)
+			l.redraw = false
+		}
+		
 		if len(l.Elements) <= 0 {
 			l.emptyElem.Render(l.x+offX, l.y+offY, l.z+offZ)
 		} else {
@@ -109,10 +121,6 @@ func (l *List) Render(offset ...int) {
 				l.scrollOffset = l.selected - l.height + 1
 			}
 
-			if l.redraw {
-				console.Clear(l.x+offX, l.y+offY, l.width, l.height)
-				l.redraw = false
-			}
 			for i := l.scrollOffset; i < l.scrollOffset+l.height; i++ {
 				if i >= len(l.Elements) {
 					break

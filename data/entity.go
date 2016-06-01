@@ -22,6 +22,8 @@ type Entity struct {
 
 	Inventory []*Item
 	Equipment []*Item //indexed by the SLOT enum above
+	
+	VisibleEntities []*Entity
 
 	ActionQueue chan Action
 }
@@ -33,7 +35,7 @@ func NewEntity(x, y, id, eType int) *Entity {
 	if eType < MAX_ENTITYTYPES {
 		e := entitydata[eType]
 		//Max Inventory space is 30 for now. POSSIBLE: dynamically sized inventory? (bags, stronger, whatever)
-		return &Entity{x, y, e.name, e.enemy, e.hp, id, e.lightStrength, e.sightRange, 1, eType, e.mv, e.av, e.at, make([]*Item, 0, 30), make([]*Item, MAX_SLOTS), make(chan Action, 20)}
+		return &Entity{x, y, e.name, e.enemy, e.hp, id, e.lightStrength, e.sightRange, 1, eType, e.mv, e.av, e.at, make([]*Item, 0, 30), make([]*Item, MAX_SLOTS), make([]*Entity, 0, 10), make(chan Action, 20)}
 	}
 
 	return nil
@@ -105,4 +107,26 @@ func (e Entity) GetEquipmentName(slot int) string {
 	} else {
 		return "empty"
 	}
+}
+
+func (e *Entity) ClearVisible() {
+	if len(e.VisibleEntities) > 0 {
+		e.VisibleEntities = make([]*Entity, 0, 10)
+	}
+}
+
+func (e *Entity) AddVisibleEntity(v *Entity) {
+	//keep entity from looking at itself like a dummy.
+	if v.ID != e.ID {
+		e.VisibleEntities = append(e.VisibleEntities, v)
+	}
+}
+
+func (e Entity) CanSee(id int) bool {
+	for _, e := range e.VisibleEntities {
+		if e.ID == id {
+			return true
+		}
+	}	
+	return false
 }
