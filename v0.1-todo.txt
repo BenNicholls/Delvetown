@@ -1,0 +1,78 @@
+V0.1 TODO LIST
+
+This will be the first functional little packaging of what delvetown is so far. The idea: one complete dungeon, however
+simple. After this we can begin work on the town mode.
+
+GOALS:
+    1) Start screen, menu.
+        - Some kind of title image [UI - bitmap drawing]
+        - Menu items (New Game, High Scores, Quit)
+    1) Make a dude.
+        - Need to flesh out character stats
+            - DnD stats? (STR AGI DEX INT WIS LCK)
+            - PoE stats? (STR DEX INT)
+            - Make up your own crap??? (COOL, AWE, DUDE)
+        - Character creation screen 
+    2) Enter the dungeon
+        - Level Generator work
+            - Need to reduce cases where significant parts are inaccessible [flood fill? A*?]
+            - nicer looking... no more straight lines at the edges
+            - intelligent placing of entrance/stairs
+            - item generation + placing
+        - Cave Entrance
+            - light spilling in from outside... entrance closes behind you (maybe forcing you to light a torch??? coool)
+    4) Fight some crap
+        - More Enemies
+            - Abandon the Butts and make some actual enemies. Standard rpg crap (rats, spiders, whatever)
+                - Rats can be the BUTT SWARM:
+                    - small semi-coordinated groups. follow the RAT KING  [ai - follow behaviour], [ai - choose targets, order subordinates]
+                    - tiny on their own, easy to beat. introduce the swarms on level 2, 3, whatever for extra challenge
+                - BUTTS can be like a gnoll or something:
+                    - use weapons, pickup items, maybe use them??? [ai - item use] [ai - equipping stuff]
+                    - drop stuff on death [game - inventory dropping]
+                    - later levels: more gnolls? stronger? mmm
+                - SUPER BUTTS:
+                    - some kind of troll??
+                    - huge, lots of health, big stick, but slow
+                    - can throw allies at player (haha cool)
+                - SOME KIND OF BOSS:
+                    - I'm thinking some kind of.... magic user. get a spell in the game.
+        - Make combat feel nicer!
+            - Combat animations. [renderer/engine - animations]
+            - Nicer log
+                - Proper scrolling log
+                - fading text as it gets older
+                - colour coded log messages (white = mundane stuff, red = combat, green = item pickups??)
+        - Ranged combat!
+            - bow/sling/throwing combat
+            - aiming [ui - glowing aiming line] [engine - multi-key actions]
+            - projectile [ui - projectile animation along path] [engine - line drawing to calculate hit/miss]
+    5) Buff out your dude
+        - Lever Upparu!
+            - experience for murdering helpless cave dwellers who were only minidng their own business
+            - need to come up with levelling system:
+                - on level, get +HP, +stat points, +ability points??
+                    - ability points are conferred naturally, but bonus ones are given out for doing cool stuff
+                        - ex: kill with a crit, one hit kill, pacifist for a whole level, stuff like that
+                        - maybe different kinds of ability points? (offensive, defensive, stealth, etc)
+                        - put ability points into special stats (gunmanship, quiet step, armoursmithing, whatever)
+            - levels determine what kind of items you can use?? or stats??
+        - items!
+            - items have bases with a small range of stats (damage, attack speed, etc)
+            - items can be magical somehow, i think with some kind of socket system
+                - socket some magic crap in to add effects (fire, ice stone, make up some elements)
+        - Powerups!
+            - use-on-pickup powerups affect player (and enemies??) for short time. [engine - temporary effects]
+                - speedup
+                - attackup
+                - other stuff?
+            - make the user glow or something [ui - cool glowing]      
+    6) Beat some kind of end boss
+        - Like it sounds. 
+        - Boss talks to you maybe? [engine - cutscene support? scripting??]
+    7) High Score screen
+        - Simple high scores, based on.... number of turns I guess??
+        - Loading/saving of high scores
+    8) End screen.
+        - I'm thinking a big picture of a skull that laughs at you
+        - hahaha skull
