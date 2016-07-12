@@ -3,7 +3,6 @@ package main
 import "github.com/veandco/go-sdl2/sdl"
 import "github.com/bennicholls/delvetown/console"
 import "github.com/bennicholls/delvetown/modes"
-import "github.com/bennicholls/delvetown/modes/delvemode"
 import "math/rand"
 import "time"
 import "fmt"
@@ -20,14 +19,14 @@ func main() {
 	var event sdl.Event
 	var mode modes.GameModer
 
-	err := console.Setup(96, 54, "res/curses.bmp", "Delvetown")
+	err := console.Setup(96, 54, "res/curses.bmp", "Delvertown")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	defer console.Cleanup()
 
-	mode = delvemode.New()
+	mode = modes.NewMainMenu()
 
 	running := true
 

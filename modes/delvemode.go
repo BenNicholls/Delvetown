@@ -1,8 +1,7 @@
-package delvemode
+package modes
 
 import "github.com/bennicholls/delvetown/ui"
 import "github.com/bennicholls/delvetown/data"
-import "github.com/bennicholls/delvetown/modes"
 import "github.com/bennicholls/delvetown/util"
 import "github.com/veandco/go-sdl2/sdl"
 import "strconv"
@@ -42,7 +41,7 @@ type DelveMode struct {
 
 }
 
-func New() *DelveMode {
+func NewDelvemode() *DelveMode {
 	dm := new(DelveMode)
 	dm.tick = 1
 
@@ -178,7 +177,7 @@ func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 	}
 }
 
-func (dm *DelveMode) Update() modes.GameModer {
+func (dm *DelveMode) Update() GameModer {
 
 	if dm.player.NextTurn <= dm.tick {
 		if len(dm.player.ActionQueue) == 0 {
@@ -216,9 +215,9 @@ func (dm *DelveMode) Update() modes.GameModer {
 
 	//check for gamestate changes
 	if dm.player.Health <= 0 {
-		return modes.NewGameOver()
+		return NewGameOver()
 	} else if len(dm.level.MobList) == 0 {
-		return modes.NewWinner()
+		return NewWinner()
 	}
 
 	return nil

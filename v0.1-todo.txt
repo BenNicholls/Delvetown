@@ -6,7 +6,7 @@ simple. After this we can begin work on the town mode.
 GOALS:
     1) Start screen, menu.
         - Some kind of title image [UI - bitmap drawing]
-        - Menu items (New Game, High Scores, Quit)
+        X Menu items (New Game, High Scores, Quit)
     1) Make a dude.
         - Need to flesh out character stats
             - DnD stats? (STR AGI DEX INT WIS LCK)

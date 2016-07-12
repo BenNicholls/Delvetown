@@ -1,4 +1,4 @@
-package delvemode
+package modes
 
 import "strconv"
 import "github.com/bennicholls/delvetown/data"

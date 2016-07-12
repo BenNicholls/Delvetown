@@ -1,4 +1,4 @@
-package delvemode
+package modes
 
 import "github.com/bennicholls/delvetown/ui"
 
