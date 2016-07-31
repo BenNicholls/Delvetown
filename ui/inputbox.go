@@ -82,6 +82,10 @@ func (ib Inputbox) GetText() string {
 	return ib.text
 }
 
+func (ib *Inputbox) ToggleCursor() {
+	ib.anims[0].Toggle()
+}
+
 func (ib *Inputbox) Render(offset ...int) {
 	if ib.visible {
 		offX, offY, offZ := processOffset(offset)

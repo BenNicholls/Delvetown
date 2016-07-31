@@ -2,6 +2,7 @@ package modes
 
 import "github.com/veandco/go-sdl2/sdl"
 import "github.com/bennicholls/delvetown/ui"
+import "github.com/bennicholls/delvetown/util"
 
 //TODO - this is a stupid name, change it
 type CharMode struct {
@@ -21,6 +22,8 @@ type CharMode struct {
 	mind   *ui.Textbox
 	body   *ui.Textbox
 	spirit *ui.Textbox
+
+	activeElem ui.UIElem
 }
 
 func NewChar() *CharMode {
@@ -43,6 +46,7 @@ func NewChar() *CharMode {
 	cm.description.Add(cm.flavourtext, cm.mainstat)
 
 	cm.stats = ui.NewContainer(22, 16, 25, 26, 0, true)
+	cm.stats.SetTitle("Stats")
 	cm.hp = ui.NewTextbox(22, 1, 0, 1, 0, false, false, "HP: ")
 	cm.att = ui.NewTextbox(22, 1, 0, 2, 0, false, false, "ATT: ")
 	cm.weapon = ui.NewTextbox(22, 1, 0, 4, 0, false, false, "WEAPON: ")
@@ -54,25 +58,57 @@ func NewChar() *CharMode {
 
 	cm.screen.Add(cm.description, cm.stats, cm.name, cm.class)
 
+	cm.activeElem = cm.name
+
 	return cm
 }
 
-func (mm *CharMode) Update() (error, GameModer) {
+func (cm *CharMode) Update() (error, GameModer) {
 
 	return nil, nil
 }
 
-func (mm *CharMode) Render() {
-	mm.screen.Render()
+func (cm *CharMode) Render() {
+	cm.screen.Render()
 }
 
-func (mm *CharMode) HandleKeypress(key sdl.Keycode) error {
-	switch key {
-	case sdl.K_DOWN, sdl.K_KP_2:
-		mm.class.Next()
-	case sdl.K_UP, sdl.K_KP_8:
-		mm.class.Prev()
+func (cm *CharMode) HandleKeypress(key sdl.Keycode) error {
+
+	if key == sdl.K_TAB {
+		cm.CycleUI()
+		return nil
+	}
+
+	if cm.activeElem == cm.name {
+		if util.ValidText(rune(key)) {
+			cm.name.InsertText(rune(key))
+		} else {
+			switch key {
+				case sdl.K_BACKSPACE:
+					cm.name.Delete()
+				case sdl.K_SPACE:
+					cm.name.Insert(" ")
+			}
+		}
+	} else if cm.activeElem == cm.class {
+		switch key {
+		case sdl.K_DOWN, sdl.K_KP_2:
+			cm.class.Next()
+		case sdl.K_UP, sdl.K_KP_8:
+			cm.class.Prev()
+		}
 	}
 
 	return nil
+}
+
+func (cm *CharMode) CycleUI() {
+	switch cm.activeElem {
+	case cm.name:
+		cm.activeElem = cm.class
+		cm.name.ToggleCursor()
+	case cm.class:
+		cm.activeElem = cm.name
+		cm.name.ToggleCursor()
+	}
 }
