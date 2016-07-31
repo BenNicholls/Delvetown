@@ -19,7 +19,7 @@ func main() {
 	var event sdl.Event
 	var mode modes.GameModer
 
-	err := console.Setup(96, 54, "res/curses.bmp", "Delvertown")
+	err := console.Setup(96, 54, "res/curses.bmp", "Delvetown")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -47,16 +47,24 @@ func main() {
 			case *sdl.KeyUpEvent:
 				//fmt.Printf("[%d ms] Keyboard\ttype:%d\tsym:%c\tmodifiers:%d\tstate:%d\trepeat:%d\n",
 				//	t.Timestamp, t.Type, t.Keysym.Sym, t.Keysym.Mod, t.State, t.Repeat)
-				mode.HandleKeypress(t.Keysym.Sym)
+				err = mode.HandleKeypress(t.Keysym.Sym)
+				if err != nil {
+					if err.Error() == "quit" {
+						running = false
+					}
+				}
 			}
 		}
 
 		//Tick the game
-		m := mode.Update()
-		if m != nil {
-			console.Clear()
-			mode = m
+		err, m := mode.Update()
+		if err != nil {
+			if m != nil {
+				console.Clear()
+				mode = m
+			}
 		}
+		
 		//Push changes to console
 		mode.Render()
 

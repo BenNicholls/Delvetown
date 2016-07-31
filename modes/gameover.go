@@ -2,6 +2,7 @@ package modes
 
 import "github.com/veandco/go-sdl2/sdl"
 import "github.com/bennicholls/delvetown/ui"
+import "errors"
 
 type GameOverMode struct {
 	toobad *ui.Textbox
@@ -12,15 +13,15 @@ func NewGameOver() *GameOverMode {
 	return &GameOverMode{toobad}
 }
 
-func (g *GameOverMode) Update() GameModer {
+func (g *GameOverMode) Update() (error, GameModer) {
 	sdl.Delay(10)
-	return nil
+	return nil, nil
 }
 
 func (g *GameOverMode) Render() {
 	g.toobad.Render()
 }
 
-func (g *GameOverMode) HandleKeypress(key sdl.Keycode) {
-
+func (g *GameOverMode) HandleKeypress(key sdl.Keycode) error {
+	return errors.New("quit")
 }

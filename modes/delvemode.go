@@ -5,6 +5,7 @@ import "github.com/bennicholls/delvetown/data"
 import "github.com/bennicholls/delvetown/util"
 import "github.com/veandco/go-sdl2/sdl"
 import "strconv"
+import "errors"
 
 type DelveMode struct {
 
@@ -112,7 +113,7 @@ func (dm *DelveMode) BuildHUDenemylist() {
 	}
 }
 
-func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
+func (dm *DelveMode) HandleKeypress(key sdl.Keycode) error {
 
 	if dm.activeElem == dm.debug {
 		if util.ValidText(rune(key)) {
@@ -175,13 +176,15 @@ func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 			}
 		}
 	}
+
+	return nil
 }
 
-func (dm *DelveMode) Update() GameModer {
+func (dm *DelveMode) Update() (error, GameModer) {
 
 	if dm.player.NextTurn <= dm.tick {
 		if len(dm.player.ActionQueue) == 0 {
-			return nil // block update, waiting on player move
+			return nil, nil // block update, waiting on player move
 		} else {
 			action := <-dm.player.ActionQueue
 			action(dm.player)
@@ -215,12 +218,12 @@ func (dm *DelveMode) Update() GameModer {
 
 	//check for gamestate changes
 	if dm.player.Health <= 0 {
-		return NewGameOver()
+		return errors.New("Mode Change"), NewGameOver()
 	} else if len(dm.level.MobList) == 0 {
-		return NewWinner()
+		return errors.New("Mode Change"), NewWinner()
 	}
 
-	return nil
+	return nil, nil
 }
 
 func (dm *DelveMode) Render() {

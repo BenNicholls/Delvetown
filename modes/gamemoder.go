@@ -3,7 +3,7 @@ package modes
 import "github.com/veandco/go-sdl2/sdl"
 
 type GameModer interface {
-	Update() GameModer
+	Update() (error, GameModer)
 	Render()
-	HandleKeypress(sdl.Keycode)
+	HandleKeypress(sdl.Keycode) error
 }
