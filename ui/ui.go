@@ -26,8 +26,10 @@ func NewContainer(w, h, x, y, z int, bord bool) *Container {
 	return &Container{w, h, x, y, z, bord, "", true, true, make([]UIElem, 0, 20)}
 }
 
-func (c *Container) Add(elem UIElem) {
-	c.Elements = append(c.Elements, elem)
+func (c *Container) Add(elems ...UIElem) {
+	for _, e := range elems {
+		c.Elements = append(c.Elements, e)
+	}
 }
 
 func (c *Container) ClearElements() {

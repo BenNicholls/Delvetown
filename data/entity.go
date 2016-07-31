@@ -19,11 +19,11 @@ type Entity struct {
 	EType                  int
 	MoveSpeed, AttackSpeed int
 	BaseAttack             int
-	Stats	MBSdata
+	Stats                  MBSdata
 
 	Inventory []*Item
 	Equipment []*Item //indexed by the SLOT enum above
-	
+
 	VisibleEntities []*Entity
 
 	ActionQueue chan Action
@@ -41,7 +41,7 @@ func NewEntity(x, y, id, eType int) *Entity {
 	if eType < MAX_ENTITYTYPES {
 		e := entitydata[eType]
 		//Max Inventory space is 30 for now. POSSIBLE: dynamically sized inventory? (bags, stronger, whatever)
-		return &Entity{x, y, e.name, e.enemy, e.hp, id, e.lightStrength, e.sightRange, 1, eType, e.mv, e.av, e.at, MBSdata{0,0,0}, make([]*Item, 0, 30), make([]*Item, MAX_SLOTS), make([]*Entity, 0, 10), make(chan Action, 20)}
+		return &Entity{x, y, e.name, e.enemy, e.hp, id, e.lightStrength, e.sightRange, 1, eType, e.mv, e.av, e.at, MBSdata{0, 0, 0}, make([]*Item, 0, 30), make([]*Item, MAX_SLOTS), make([]*Entity, 0, 10), make(chan Action, 20)}
 	}
 	return nil
 }
@@ -132,6 +132,6 @@ func (e Entity) CanSee(id int) bool {
 		if e.ID == id {
 			return true
 		}
-	}	
+	}
 	return false
 }

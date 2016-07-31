@@ -91,12 +91,12 @@ func (l *Level) RandomPlaceMobs(num, eType int) {
 	for i := 0; i < num; {
 		x, y := rand.Intn(l.Width), rand.Intn(l.Height)
 		if l.LevelMap.GetTile(x, y).Passable() {
-			
+
 			if eType == BUTT_SWARM {
 				l.PlaceSwarm(x, y, 10)
-			} else {			
+			} else {
 				l.AddMob(x, y, eType)
-			}			
+			}
 			i++
 		}
 	}
@@ -104,17 +104,17 @@ func (l *Level) RandomPlaceMobs(num, eType int) {
 
 func (l *Level) PlaceSwarm(x, y, num int) {
 	l.AddMob(x, y, BUTT_SWARM)
-	
+
 	spaces := make([]coord, 0, 150)
 	l.LevelMap.ShadowCast(x, y, 7, GetEmptySpacesCast(&spaces))
-	
+
 	for i := 0; i < num; i++ {
 		if i == len(spaces) {
 			break
 		}
 		l.AddMob(spaces[i].x, spaces[i].y, BUTT_SWARM)
 	}
-	
+
 }
 
 //tile is a data.TILETYPE indicating what we're putting down

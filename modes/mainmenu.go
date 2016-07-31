@@ -5,16 +5,14 @@ import "github.com/bennicholls/delvetown/ui"
 import "errors"
 
 type MainMenuMode struct {
-	menu *ui.List
+	menu  *ui.List
 	enter bool
 }
 
 func NewMainMenu() *MainMenuMode {
 	menu := ui.NewList(20, 3, 25, 20, 0, true, "WAY TO GO, IDIOT")
 	menu.SetTitle("Menu")
-	menu.Append("New Game")
-	menu.Append("High Scores")
-	menu.Append("Quit")
+	menu.Append("New Game", "High Scores", "Quit")
 	return &MainMenuMode{menu, false}
 }
 
@@ -22,8 +20,8 @@ func (mm *MainMenuMode) Update() (error, GameModer) {
 	if mm.enter {
 		mm.enter = false
 		switch mm.menu.GetSelection() {
-			case 0:
-				return errors.New("Mode Change"), NewDelvemode()
+		case 0:
+			return errors.New("Mode Change"), NewDelvemode()
 		}
 	}
 
@@ -36,9 +34,9 @@ func (mm *MainMenuMode) Render() {
 
 func (mm *MainMenuMode) HandleKeypress(key sdl.Keycode) error {
 	switch key {
-    case sdl.K_DOWN, sdl.K_KP_2:
-    	mm.menu.Next()
-    case sdl.K_UP, sdl.K_KP_8:
+	case sdl.K_DOWN, sdl.K_KP_2:
+		mm.menu.Next()
+	case sdl.K_UP, sdl.K_KP_8:
 		mm.menu.Prev()
 	case sdl.K_RETURN, sdl.K_KP_ENTER:
 		if mm.menu.GetSelection() == 2 {
@@ -46,7 +44,7 @@ func (mm *MainMenuMode) HandleKeypress(key sdl.Keycode) error {
 		} else {
 			mm.enter = true
 		}
-    }
+	}
 
 	return nil
 }

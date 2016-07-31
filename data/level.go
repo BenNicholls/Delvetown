@@ -9,9 +9,9 @@ type Level struct {
 	Width, Height int
 
 	Player *Entity
-	
+
 	Floor int
-	
+
 	//Map referencing all enemies in the level. indexed by ID  (found in Entity.ID)
 	MobList map[int]*Entity
 }

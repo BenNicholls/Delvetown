@@ -7,8 +7,8 @@ type List struct {
 	selected     int
 	Highlight    bool
 	scrollOffset int
-	empty bool
-	emptyElem UIElem	
+	empty        bool
+	emptyElem    UIElem
 }
 
 func NewList(w, h, x, y, z int, bord bool, empty string) *List {
@@ -67,13 +67,16 @@ func (l *List) CheckSelection() {
 	}
 }
 
-//appends an item to the internal list of items
-func (l *List) Append(item string) {
+//appends an item (or items) to the internal list of items
+func (l *List) Append(items ...string) {
 	if len(l.Elements) == 0 {
 		l.redraw = true
 	}
-	l.Add(NewTextbox(l.width, 1, 0, len(l.Elements), 0, false, false, item))
-	l.CheckSelection()
+
+	for _, i := range items {
+		l.Add(NewTextbox(l.width, 1, 0, len(l.Elements), 0, false, false, i))
+		l.CheckSelection()
+	}
 }
 
 //removes the ith item from the internal list of items
@@ -105,12 +108,12 @@ func (l *List) Change(i int, item string) {
 func (l *List) Render(offset ...int) {
 	if l.visible {
 		offX, offY, offZ := processOffset(offset)
-		
+
 		if l.redraw {
 			console.Clear(l.x+offX, l.y+offY, l.width, l.height)
 			l.redraw = false
 		}
-		
+
 		if len(l.Elements) <= 0 {
 			l.emptyElem.Render(l.x+offX, l.y+offY, l.z+offZ)
 		} else {
@@ -135,21 +138,21 @@ func (l *List) Render(offset ...int) {
 				}
 			}
 		}
-		
+
 		if l.bordered {
 			console.DrawBorder(l.x+offX, l.y+offY, l.z+offZ, l.width, l.height, l.title)
 		}
-		
+
 		//draw scrollbar
 		if len(l.Elements) > l.height {
-			console.ChangeGridPoint(offX + l.x + l.width, offY + l.y, offZ + l.z, 0x1e, 0xFFFFFFFF, 0xFF000000)
-			console.ChangeGridPoint(offX + l.x + l.width, offY + l.y + l.height - 1, offZ + l.z, 0x1f, 0xFFFFFFFF, 0xFF000000)
-				
+			console.ChangeGridPoint(offX+l.x+l.width, offY+l.y, offZ+l.z, 0x1e, 0xFFFFFFFF, 0xFF000000)
+			console.ChangeGridPoint(offX+l.x+l.width, offY+l.y+l.height-1, offZ+l.z, 0x1f, 0xFFFFFFFF, 0xFF000000)
+
 			sliderHeight := l.height - 2 - (len(l.Elements) - l.height)
-			
-			for i:= 0; i < sliderHeight; i ++ {
-				console.ChangeGridPoint(offX + l.x + l.width, offY + l.y + i + 1 + l.scrollOffset, offZ + l.z, 0xb1, 0xFFFFFFFF, 0xFF000000)
-			}				
+
+			for i := 0; i < sliderHeight; i++ {
+				console.ChangeGridPoint(offX+l.x+l.width, offY+l.y+i+1+l.scrollOffset, offZ+l.z, 0xb1, 0xFFFFFFFF, 0xFF000000)
+			}
 		}
 	}
 }

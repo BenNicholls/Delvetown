@@ -8,11 +8,9 @@ GOALS:
         - Some kind of title image [UI - bitmap drawing]
         X Menu items (New Game, High Scores, Quit)
     1) Make a dude.
-        - Need to flesh out character stats
-            - DnD stats? (STR AGI DEX INT WIS LCK)
-            - PoE stats? (STR DEX INT)
-            - Make up your own crap??? (COOL, AWE, DUDE)
-        - Character creation screen 
+        X Need to flesh out character stats
+            X Make up your own crap??? (MIND, BODY, SPIRIT)
+        o Character creation screen 
     2) Enter the dungeon
         - Level Generator work
             - Need to reduce cases where significant parts are inaccessible [flood fill? A*?]

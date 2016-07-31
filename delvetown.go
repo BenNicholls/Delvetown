@@ -26,7 +26,7 @@ func main() {
 	}
 	defer console.Cleanup()
 
-	mode = modes.NewMainMenu()
+	mode = modes.NewChar()
 
 	running := true
 
@@ -64,7 +64,7 @@ func main() {
 				mode = m
 			}
 		}
-		
+
 		//Push changes to console
 		mode.Render()
 

@@ -15,13 +15,13 @@ type DelveMode struct {
 	sidebar *ui.Container //holds the various ui elements for the player's info display.
 
 	//sidebar ui elements
-	HUDname   *ui.Textbox
-	HUDhp     *ui.Textbox
-	HUDattack *ui.Textbox
+	HUDname      *ui.Textbox
+	HUDhp        *ui.Textbox
+	HUDattack    *ui.Textbox
 	HUDtestvalue *ui.Textbox
 
 	HUDinventory *ui.List
-	
+
 	HUDenemylist *ui.List
 
 	HUDweapon *ui.Textbox
@@ -66,18 +66,13 @@ func NewDelvemode() *DelveMode {
 	dm.HUDattack = ui.NewTextbox(16, 1, 0, 3, 0, false, false, "Attack: "+strconv.Itoa(dm.player.BaseAttack))
 	dm.HUDweapon = ui.NewTextbox(16, 1, 0, 5, 0, false, false, "W: "+dm.player.GetEquipmentName(data.SLOT_WEAPON))
 	dm.HUDarmour = ui.NewTextbox(16, 1, 0, 6, 0, false, false, "A: "+dm.player.GetEquipmentName(data.SLOT_ARMOUR))
-	dm.HUDtestvalue = ui.NewTextbox(16, 1, 0, 8, 0, false, false, "MonNum :" + strconv.Itoa(len(dm.level.MobList)))
+	dm.HUDtestvalue = ui.NewTextbox(16, 1, 0, 8, 0, false, false, "MonNum :"+strconv.Itoa(len(dm.level.MobList)))
 
-	dm.sidebar.Add(dm.HUDname)
-	dm.sidebar.Add(dm.HUDhp)
-	dm.sidebar.Add(dm.HUDattack)
-	dm.sidebar.Add(dm.HUDweapon)
-	dm.sidebar.Add(dm.HUDarmour)
-	dm.sidebar.Add(dm.HUDtestvalue)
+	dm.sidebar.Add(dm.HUDname, dm.HUDhp, dm.HUDattack, dm.HUDweapon, dm.HUDarmour, dm.HUDtestvalue)
 
 	dm.HUDinventory = ui.NewList(16, 15, 79, 38, 0, true, "No Items")
 	dm.HUDinventory.SetTitle("Inventory")
-	
+
 	dm.HUDenemylist = ui.NewList(16, 15, 79, 21, 0, true, "No Enemies")
 	dm.HUDenemylist.SetTitle("Enemies")
 	dm.HUDenemylist.Highlight = false
@@ -96,18 +91,18 @@ func NewDelvemode() *DelveMode {
 func (dm *DelveMode) BuildHUDInventory() {
 	dm.HUDinventory.ClearElements()
 	w, _ := dm.HUDinventory.GetDims()
-	
+
 	for i, item := range dm.player.Inventory {
 		dm.HUDinventory.Add(ui.NewTextbox(w, 1, 0, i, 0, false, false, item.Name))
 	}
-	
+
 	dm.HUDinventory.CheckSelection()
 }
 
 func (dm *DelveMode) BuildHUDenemylist() {
 	dm.HUDenemylist.ClearElements()
 	w, _ := dm.HUDenemylist.GetDims()
-	
+
 	for i, enemy := range dm.player.VisibleEntities {
 		dm.HUDenemylist.Add(ui.NewTextbox(w, 1, 0, i, 0, false, false, enemy.Name))
 	}
@@ -202,9 +197,9 @@ func (dm *DelveMode) Update() (error, GameModer) {
 			}
 		}
 	}
-	
+
 	dm.tick++
-	
+
 	//update player memory (has to be after tick++, uses tick to mark when space was last seen)
 	dm.level.LevelMap.ShadowCast(dm.player.X, dm.player.Y, dm.player.SightRange, dm.MemoryCast())
 	dm.BuildHUDenemylist()
@@ -232,7 +227,7 @@ func (dm *DelveMode) Render() {
 	w, h := dm.view.Width, dm.view.Height
 	dm.xCamera, dm.yCamera = dm.player.X-w/2, dm.player.Y-h/2
 
-	dm.view.Clear()	
+	dm.view.Clear()
 
 	//Draw the world.
 	for i := 0; i < w*h; i++ {
