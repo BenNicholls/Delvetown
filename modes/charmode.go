@@ -41,7 +41,7 @@ func NewChar() *CharMode {
 	cm.class.Append("Fightman", "Book Nerd", "Bald Man")
 
 	cm.description = ui.NewContainer(16, 26, 50, 16, 0, true)
-	cm.flavourtext = ui.NewTextbox(16, 8, 0, 0, 0, false, false, "Fightman stuff")
+	cm.flavourtext = ui.NewTextbox(16, 8, 0, 0, 0, false, false, "The fightman is a muscley man who goes from town to town picking fights. He loves to battle, it gives him a big boner.")
 	cm.mainstat = ui.NewTextbox(16, 1, 0, 9, 0, false, false, "MAIN STAT: Body")
 	cm.description.Add(cm.flavourtext, cm.mainstat)
 
