@@ -1,8 +1,11 @@
 package modes
 
+import "math/rand"
+import "strconv"
 import "github.com/veandco/go-sdl2/sdl"
 import "github.com/bennicholls/delvetown/ui"
 import "github.com/bennicholls/delvetown/util"
+import "github.com/bennicholls/delvetown/data"
 
 //TODO - this is a stupid name, change it
 type CharMode struct {
@@ -24,12 +27,17 @@ type CharMode struct {
 	spirit *ui.Textbox
 
 	activeElem ui.UIElem
+
+	character *data.Entity
+
+	uiEvents chan ui.Event
 }
 
 func NewChar() *CharMode {
 
 	cm := new(CharMode)
 
+	//BEGIN UI STUFF
 	cm.screen = ui.NewContainer(94, 52, 1, 1, 0, true)
 	cm.screen.SetTitle("CHOOSE YOUR CHOICE, DELVEMAN.")
 
@@ -40,9 +48,9 @@ func NewChar() *CharMode {
 	cm.class.SetTitle("Class")
 	cm.class.Append("Fightman", "Book Nerd", "Bald Man")
 
-	cm.description = ui.NewContainer(16, 26, 50, 16, 0, true)
-	cm.flavourtext = ui.NewTextbox(16, 8, 0, 0, 0, false, false, "The fightman is a muscley man who goes from town to town picking fights. He loves to battle, it gives him a big boner.")
-	cm.mainstat = ui.NewTextbox(16, 1, 0, 9, 0, false, false, "MAIN STAT: Body")
+	cm.description = ui.NewContainer(18, 26, 50, 16, 0, true)
+	cm.flavourtext = ui.NewTextbox(18, 10, 0, 0, 0, false, false, "FLAVOUR")
+	cm.mainstat = ui.NewTextbox(18, 1, 0, 11, 0, false, false, "MAIN STAT: Body")
 	cm.description.Add(cm.flavourtext, cm.mainstat)
 
 	cm.stats = ui.NewContainer(22, 16, 25, 26, 0, true)
@@ -57,15 +65,68 @@ func NewChar() *CharMode {
 	cm.stats.Add(cm.hp, cm.att, cm.weapon, cm.armour, cm.mind, cm.body, cm.spirit)
 
 	cm.screen.Add(cm.description, cm.stats, cm.name, cm.class)
+	//END UI STUFF
 
 	cm.activeElem = cm.name
+
+	cm.uiEvents = make(chan ui.Event, 20)
+
+	cm.GenerateCharacter()
 
 	return cm
 }
 
 func (cm *CharMode) Update() (error, GameModer) {
 
+	if len(cm.uiEvents) != 0 {
+		e := <- cm.uiEvents
+		switch e.ID {
+		case ui.CHANGE:
+			if e.Caller == cm.class {
+				cm.GenerateCharacter()
+			}
+		}
+	}
+
 	return nil, nil
+}
+
+func (cm *CharMode) GenerateCharacter() {
+	cm.character = data.NewEntity(0, 0, 0, data.PLAYER)
+	cm.character.Name = cm.name.GetText()
+	switch cm.class.GetSelection() {
+	case 0:
+		cm.character.Stats.Body = 10 + rand.Intn(5) - 2
+		cm.character.Stats.Mind = 3 + rand.Intn(5) - 2
+		cm.character.Stats.Spirit = 5 + rand.Intn(5) - 2
+	case 1:
+		cm.character.Stats.Body = 5 + rand.Intn(5) - 2
+		cm.character.Stats.Mind = 10 + rand.Intn(5) - 2
+		cm.character.Stats.Spirit = 3 + rand.Intn(5) - 2
+	case 2:
+		cm.character.Stats.Body = 3 + rand.Intn(5) - 2
+		cm.character.Stats.Mind = 5 + rand.Intn(5) - 2
+		cm.character.Stats.Spirit = 10 + rand.Intn(5) - 2
+	}
+
+	switch cm.class.GetSelection() {
+	case 0:
+		cm.flavourtext.ChangeText("The fightman is a muscley man who goes from town to town picking fights. He loves to battle, it gives him a big boner.")
+		cm.mainstat.ChangeText("MAIN STAT: Body")
+	case 1:
+		cm.flavourtext.ChangeText("The Book Nerd has spent most of his Friday nights cuddled around a nice tome, learning how to vaporize his friends who went to the club.")
+		cm.mainstat.ChangeText("MAIN STAT: Mind")
+	case 2:
+		cm.flavourtext.ChangeText("Not to be underestimated, the bald man is a formidable foe. His fervour is fueled by a deep longing for his old hair.")
+		cm.mainstat.ChangeText("MAIN STAT: Spirit")
+	}
+
+	//update ui elements
+	cm.hp.ChangeText("HP: " + strconv.Itoa(cm.character.Health))
+	cm.att.ChangeText("ATT: " + strconv.Itoa(cm.character.BaseAttack))
+	cm.mind.ChangeText("MIND: " + strconv.Itoa(cm.character.Stats.Mind))
+	cm.body.ChangeText("BODY: " + strconv.Itoa(cm.character.Stats.Body))
+	cm.spirit.ChangeText("SPIRIT: " + strconv.Itoa(cm.character.Stats.Spirit))
 }
 
 func (cm *CharMode) Render() {
@@ -90,6 +151,7 @@ func (cm *CharMode) HandleKeypress(key sdl.Keycode) error {
 					cm.name.Insert(" ")
 			}
 		}
+		cm.character.Name = cm.name.GetText()
 	} else if cm.activeElem == cm.class {
 		switch key {
 		case sdl.K_DOWN, sdl.K_KP_2:
@@ -97,6 +159,7 @@ func (cm *CharMode) HandleKeypress(key sdl.Keycode) error {
 		case sdl.K_UP, sdl.K_KP_8:
 			cm.class.Prev()
 		}
+		cm.uiEvents <- ui.Event{cm.class, ui.CHANGE}
 	}
 
 	return nil

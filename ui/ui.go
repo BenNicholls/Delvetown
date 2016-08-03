@@ -89,3 +89,15 @@ func processOffset(offset []int) (x, y, z int) {
 	}
 	return
 }
+
+//event IDs
+const (
+	NONE int = iota
+	ACTIVATE //used for buttons I guess?
+	CHANGE   //used when a UIelem is changed
+)
+
+type Event struct {
+	Caller UIElem
+	ID int
+}
