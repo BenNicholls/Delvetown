@@ -12,7 +12,7 @@ type Textbox struct {
 	title         string
 	text          string
 	visible       bool
-	anims	[]Animator
+	anims         []Animator
 }
 
 //TODO: sanity checks.
@@ -51,7 +51,7 @@ func (t *Textbox) Render(offset ...int) {
 				continue
 			}
 
-			if len(lines[n]) + len(s) > t.width {
+			if len(lines[n])+len(s) > t.width {
 				//make sure we don't overflow the textbox
 				if n < len(lines)-1 {
 					n++

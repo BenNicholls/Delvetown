@@ -24,14 +24,14 @@ func processOffset(offset []int) (x, y, z int) {
 
 //event IDs
 const (
-	NONE int = iota
-	ACTIVATE //used for buttons I guess?
-	CHANGE   //used when a UIelem is changed
+	NONE     int = iota
+	ACTIVATE     //used for buttons I guess?
+	CHANGE       //used when a UIelem is changed
 )
 
 type Event struct {
-	Caller UIElem
-	ID int
+	Caller  UIElem
+	ID      int
 	Message string
 }
 
@@ -55,8 +55,8 @@ func ClearEvents() {
 }
 
 func PopEvent() *Event {
-	if len(EventStream) > 0 { 
-		e := <- EventStream
+	if len(EventStream) > 0 {
+		e := <-EventStream
 		return e
 	} else {
 		return nil

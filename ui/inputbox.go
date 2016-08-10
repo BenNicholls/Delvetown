@@ -9,12 +9,12 @@ import "strconv"
 //Inputbox is based on textbox.
 type Inputbox struct {
 	Textbox
-	cursor int
+	cursor          int
 	cursorAnimation *BlinkAnimation
 }
 
 func NewInputbox(w, h, x, y, z int, bord bool) *Inputbox {
-	ib := &Inputbox{*NewTextbox(w, h, x, y, z, bord, false, ""), 0, NewBlinkAnimation(0,0,20)}
+	ib := &Inputbox{*NewTextbox(w, h, x, y, z, bord, false, ""), 0, NewBlinkAnimation(0, 0, 20)}
 	return ib
 }
 

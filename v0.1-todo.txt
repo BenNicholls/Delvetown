@@ -36,7 +36,7 @@ GOALS:
                 - SOME KIND OF BOSS:
                     - I'm thinking some kind of.... magic user. get a spell in the game.
         - Make combat feel nicer!
-            - Combat animations. [renderer/engine - animations]
+            - Combat animations. [renderer/engine - animations (work has started, need to rethink a bit)]
             - Nicer log
                 - Proper scrolling log
                 - fading text as it gets older
@@ -64,7 +64,7 @@ GOALS:
                 - speedup
                 - attackup
                 - other stuff?
-            - make the user glow or something [ui - cool glowing]      
+            - make the user glow or something [ui - cool glowing (pulseannimation in.... might be sufficient)]      
     6) Beat some kind of end boss
         - Like it sounds. 
         - Boss talks to you maybe? [engine - cutscene support? scripting??]

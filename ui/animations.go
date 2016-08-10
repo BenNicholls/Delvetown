@@ -9,9 +9,9 @@ type Animator interface {
 }
 
 type BlinkAnimation struct {
-	tick  int
-	speed int //number of frames between blinks
-	x, y  int //position (possibly relative to element or container)
+	tick    int
+	speed   int //number of frames between blinks
+	x, y    int //position (possibly relative to element or container)
 	enabled bool
 }
 
@@ -42,17 +42,17 @@ func (ba *BlinkAnimation) Render(offset ...int) {
 //PulseAnimation make a rectangular area pulse with colour.
 //TODO: Support for fun colours!!!!!!!!!!YES!!!!
 type PulseAnimation struct {
-	tick int
-	dur int //duration of a pulse
-	num int //number of pulses to do
-	x,y,w,h int
-	enabled bool
-	repeat bool
-	done bool
+	tick       int
+	dur        int //duration of a pulse
+	num        int //number of pulses to do
+	x, y, w, h int
+	enabled    bool
+	repeat     bool
+	done       bool
 }
 
-func NewPulseAnimation(x,y,w,h, dur, num int, repeat bool) *PulseAnimation {
-	return &PulseAnimation{0, dur,num, x,y,w,h, true, repeat, false}
+func NewPulseAnimation(x, y, w, h, dur, num int, repeat bool) *PulseAnimation {
+	return &PulseAnimation{0, dur, num, x, y, w, h, true, repeat, false}
 }
 
 func (pa *PulseAnimation) Toggle() {
@@ -81,7 +81,7 @@ func (pa *PulseAnimation) Render(offset ...int) {
 		if n > pa.dur/2 {
 			n = pa.dur - n
 		}
-		c := int(255*(float32(n)/float32((pa.dur/2))))
+		c := int(255 * (float32(n) / float32((pa.dur / 2))))
 
 		offX, offY, _ := processOffset(offset)
 

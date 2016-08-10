@@ -148,10 +148,10 @@ func (cm *CharGenMode) HandleKeypress(key sdl.Keycode) error {
 			cm.name.InsertText(rune(key))
 		} else {
 			switch key {
-				case sdl.K_BACKSPACE:
-					cm.name.Delete()
-				case sdl.K_SPACE:
-					cm.name.Insert(" ")
+			case sdl.K_BACKSPACE:
+				cm.name.Delete()
+			case sdl.K_SPACE:
+				cm.name.Insert(" ")
 			}
 		}
 		cm.character.Name = cm.name.GetText()
