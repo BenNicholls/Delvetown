@@ -86,6 +86,7 @@ func (ib *Inputbox) ToggleCursor() {
 	ib.anims[0].Toggle()
 }
 
+//TODO: Fix cursor for if inputbox has centered text. For now, just don't do that (looks silly anyways)
 func (ib *Inputbox) Render(offset ...int) {
 	if ib.visible {
 		offX, offY, offZ := processOffset(offset)

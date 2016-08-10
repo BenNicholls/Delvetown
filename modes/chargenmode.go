@@ -8,7 +8,7 @@ import "github.com/bennicholls/delvetown/util"
 import "github.com/bennicholls/delvetown/data"
 
 //TODO - this is a stupid name, change it
-type CharMode struct {
+type CharGenMode struct {
 	screen *ui.Container
 	name   *ui.Inputbox
 	class  *ui.List
@@ -31,9 +31,9 @@ type CharMode struct {
 	character *data.Entity
 }
 
-func NewChar() *CharMode {
+func NewCharGen() *CharGenMode {
 
-	cm := new(CharMode)
+	cm := new(CharGenMode)
 
 	//BEGIN UI STUFF
 	cm.screen = ui.NewContainer(94, 52, 1, 1, 0, true)
@@ -72,7 +72,7 @@ func NewChar() *CharMode {
 	return cm
 }
 
-func (cm *CharMode) Update() (error, GameModer) {
+func (cm *CharGenMode) Update() (error, GameModer) {
 
 	for e := ui.PopEvent(); e != nil; e = ui.PopEvent() {
 		switch e.ID {
@@ -86,7 +86,7 @@ func (cm *CharMode) Update() (error, GameModer) {
 	return nil, nil
 }
 
-func (cm *CharMode) GenerateCharacter() {
+func (cm *CharGenMode) GenerateCharacter() {
 	cm.character = data.NewEntity(0, 0, 0, data.PLAYER)
 	cm.character.Name = cm.name.GetText()
 	switch cm.class.GetSelection() {
@@ -124,11 +124,11 @@ func (cm *CharMode) GenerateCharacter() {
 	cm.spirit.ChangeText("SPIRIT: " + strconv.Itoa(cm.character.Stats.Spirit))
 }
 
-func (cm *CharMode) Render() {
+func (cm *CharGenMode) Render() {
 	cm.screen.Render()
 }
 
-func (cm *CharMode) HandleKeypress(key sdl.Keycode) error {
+func (cm *CharGenMode) HandleKeypress(key sdl.Keycode) error {
 
 	if key == sdl.K_TAB {
 		cm.CycleUI()
@@ -159,7 +159,7 @@ func (cm *CharMode) HandleKeypress(key sdl.Keycode) error {
 	return nil
 }
 
-func (cm *CharMode) CycleUI() {
+func (cm *CharGenMode) CycleUI() {
 	switch cm.activeElem {
 	case cm.name:
 		cm.activeElem = cm.class

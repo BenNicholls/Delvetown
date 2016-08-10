@@ -65,6 +65,7 @@ func (t *Textbox) Render(offset ...int) {
 		}
 
 		for l := 0; l < len(lines); l++ {
+			offX := offX //so we can modify the offset separately for each line
 
 			//fill textbox with background colour
 			for i := len(t.text); i < t.width*t.height; i++ {
@@ -99,6 +100,10 @@ func (t *Textbox) ToggleVisible() {
 func (t *Textbox) SetVisibility(v bool) {
 	t.visible = v
 	console.Clear()
+}
+
+func (t *Textbox) SetCentered(c bool) {
+	t.centered = c
 }
 
 func (t *Textbox) MoveTo(x, y, z int) {

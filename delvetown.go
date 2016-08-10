@@ -26,7 +26,7 @@ func main() {
 	}
 	defer console.Cleanup()
 
-	mode = modes.NewChar()
+	mode = modes.NewCharGen()
 
 	running := true
 

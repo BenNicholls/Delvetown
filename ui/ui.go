@@ -1,5 +1,7 @@
 package ui
 
+import "github.com/bennicholls/delvetown/util"
+
 type UIElem interface {
 	Render(offset ...int)
 	GetDims() (w int, h int)
@@ -42,8 +44,9 @@ func init() {
 func PushEvent(c UIElem, id int, m string) {
 	if len(EventStream) == cap(EventStream) {
 		ClearEvents()
+		util.LogError("UI Eventstream limit reached! FLUSHY FLUSHY.")
 	}
-	
+
 	EventStream <- &Event{c, id, m}
 }
 
