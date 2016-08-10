@@ -29,8 +29,6 @@ type CharMode struct {
 	activeElem ui.UIElem
 
 	character *data.Entity
-
-	uiEvents chan ui.Event
 }
 
 func NewChar() *CharMode {
@@ -69,8 +67,6 @@ func NewChar() *CharMode {
 
 	cm.activeElem = cm.name
 
-	cm.uiEvents = make(chan ui.Event, 20)
-
 	cm.GenerateCharacter()
 
 	return cm
@@ -78,8 +74,7 @@ func NewChar() *CharMode {
 
 func (cm *CharMode) Update() (error, GameModer) {
 
-	if len(cm.uiEvents) != 0 {
-		e := <- cm.uiEvents
+	for e := ui.NextEvent(); e != nil; e = ui.NextEvent() {
 		switch e.ID {
 		case ui.CHANGE:
 			if e.Caller == cm.class {
@@ -159,7 +154,7 @@ func (cm *CharMode) HandleKeypress(key sdl.Keycode) error {
 		case sdl.K_UP, sdl.K_KP_8:
 			cm.class.Prev()
 		}
-		cm.uiEvents <- ui.Event{cm.class, ui.CHANGE}
+		ui.EventStream <- ui.NewEvent(cm.class, ui.CHANGE)
 	}
 
 	return nil
