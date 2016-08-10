@@ -10,13 +10,11 @@ import "strconv"
 type Inputbox struct {
 	Textbox
 	cursor int
-	anims  []Animator
+	cursorAnimation *BlinkAnimation
 }
 
 func NewInputbox(w, h, x, y, z int, bord bool) *Inputbox {
-	ib := &Inputbox{Textbox{w, h, x, y, z, bord, false, "", "", true}, 0, make([]Animator, 0, 20)}
-	ib.anims = append(ib.anims, NewBlinkAnimation(0, 0, 30))
-
+	ib := &Inputbox{*NewTextbox(w, h, x, y, z, bord, false, ""), 0, NewBlinkAnimation(0,0,20)}
 	return ib
 }
 
@@ -83,7 +81,7 @@ func (ib Inputbox) GetText() string {
 }
 
 func (ib *Inputbox) ToggleCursor() {
-	ib.anims[0].Toggle()
+	ib.cursorAnimation.Toggle()
 }
 
 //TODO: Fix cursor for if inputbox has centered text. For now, just don't do that (looks silly anyways)
@@ -92,10 +90,7 @@ func (ib *Inputbox) Render(offset ...int) {
 		offX, offY, offZ := processOffset(offset)
 
 		ib.Textbox.Render(offX, offY, offZ)
-
-		for i, _ := range ib.anims {
-			ib.anims[i].Tick()
-			ib.anims[i].Render(ib.x+offX+ib.cursor, ib.y+offY, ib.z+offZ)
-		}
+		ib.cursorAnimation.Tick()
+		ib.cursorAnimation.Render(ib.x+ib.cursor+offX, ib.y+offY, ib.z+offZ)
 	}
 }

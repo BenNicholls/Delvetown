@@ -7,7 +7,6 @@ import "github.com/bennicholls/delvetown/ui"
 import "github.com/bennicholls/delvetown/util"
 import "github.com/bennicholls/delvetown/data"
 
-//TODO - this is a stupid name, change it
 type CharGenMode struct {
 	screen *ui.Container
 	name   *ui.Inputbox
@@ -26,6 +25,8 @@ type CharGenMode struct {
 	body   *ui.Textbox
 	spirit *ui.Textbox
 
+	confirm *ui.Button
+
 	activeElem ui.UIElem
 
 	character *data.Entity
@@ -39,19 +40,19 @@ func NewCharGen() *CharGenMode {
 	cm.screen = ui.NewContainer(94, 52, 1, 1, 0, true)
 	cm.screen.SetTitle("CHOOSE YOUR CHOICE, DELVEMAN.")
 
-	cm.name = ui.NewInputbox(22, 1, 25, 16, 0, true)
+	cm.name = ui.NewInputbox(22, 1, 25, 10, 0, true)
 	cm.name.SetTitle("Player Name")
 
-	cm.class = ui.NewList(22, 3, 25, 20, 0, true, "")
+	cm.class = ui.NewList(22, 3, 25, 14, 0, true, "")
 	cm.class.SetTitle("Class")
 	cm.class.Append("Fightman", "Book Nerd", "Bald Man")
 
-	cm.description = ui.NewContainer(18, 26, 50, 16, 0, true)
+	cm.description = ui.NewContainer(18, 26, 50, 10, 0, true)
 	cm.flavourtext = ui.NewTextbox(18, 10, 0, 0, 0, false, false, "FLAVOUR")
 	cm.mainstat = ui.NewTextbox(18, 1, 0, 11, 0, false, false, "MAIN STAT: Body")
 	cm.description.Add(cm.flavourtext, cm.mainstat)
 
-	cm.stats = ui.NewContainer(22, 16, 25, 26, 0, true)
+	cm.stats = ui.NewContainer(22, 16, 25, 20, 0, true)
 	cm.stats.SetTitle("Stats")
 	cm.hp = ui.NewTextbox(22, 1, 0, 1, 0, false, false, "HP: ")
 	cm.att = ui.NewTextbox(22, 1, 0, 2, 0, false, false, "ATT: ")
@@ -62,7 +63,10 @@ func NewCharGen() *CharGenMode {
 	cm.spirit = ui.NewTextbox(22, 1, 0, 10, 0, false, false, "SPIRIT: ")
 	cm.stats.Add(cm.hp, cm.att, cm.weapon, cm.armour, cm.mind, cm.body, cm.spirit)
 
-	cm.screen.Add(cm.description, cm.stats, cm.name, cm.class)
+	cm.confirm = ui.NewButton(30, 1, 32, 40, 2, true, true, "Press Enter to Get Delvin!")
+	cm.confirm.Register(&ui.Event{cm.confirm, ui.ACTIVATE, "Create Character!"})
+
+	cm.screen.Add(cm.description, cm.stats, cm.name, cm.class, cm.confirm)
 	//END UI STUFF
 
 	cm.activeElem = cm.name
@@ -79,6 +83,10 @@ func (cm *CharGenMode) Update() (error, GameModer) {
 		case ui.CHANGE:
 			if e.Caller == cm.class {
 				cm.GenerateCharacter()
+			}
+		case ui.ACTIVATE:
+			if e.Caller == cm.confirm {
+				//CODE TO ENTER DELVEMODE!!!
 			}
 		}
 	}
@@ -154,6 +162,10 @@ func (cm *CharGenMode) HandleKeypress(key sdl.Keycode) error {
 		case sdl.K_UP, sdl.K_KP_8:
 			cm.class.Prev()
 		}
+	} else if cm.activeElem == cm.confirm {
+		if key == sdl.K_RETURN {
+			cm.confirm.Press()
+		}
 	}
 
 	return nil
@@ -162,9 +174,13 @@ func (cm *CharGenMode) HandleKeypress(key sdl.Keycode) error {
 func (cm *CharGenMode) CycleUI() {
 	switch cm.activeElem {
 	case cm.name:
-		cm.activeElem = cm.class
 		cm.name.ToggleCursor()
+		cm.activeElem = cm.class
 	case cm.class:
+		cm.activeElem = cm.confirm
+		cm.confirm.ToggleFocus()
+	case cm.confirm:
+		cm.confirm.ToggleFocus()
 		cm.activeElem = cm.name
 		cm.name.ToggleCursor()
 	}

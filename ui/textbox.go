@@ -12,11 +12,12 @@ type Textbox struct {
 	title         string
 	text          string
 	visible       bool
+	anims	[]Animator
 }
 
 //TODO: sanity checks.
 func NewTextbox(w, h, x, y, z int, bord, cent bool, txt string) *Textbox {
-	return &Textbox{w, h, x, y, z, bord, cent, "", txt, true}
+	return &Textbox{w, h, x, y, z, bord, cent, "", txt, true, make([]Animator, 0, 20)}
 }
 
 func (t *Textbox) SetTitle(s string) {
@@ -68,7 +69,7 @@ func (t *Textbox) Render(offset ...int) {
 			offX := offX //so we can modify the offset separately for each line
 
 			//fill textbox with background colour
-			for i := len(t.text); i < t.width*t.height; i++ {
+			for i := 0; i < t.width*t.height; i++ {
 				console.ChangeGridPoint(offX+t.x+i%t.width, offY+t.y+l, t.z+offZ, 0, 0xFFFFFFFF, 0xFF000000)
 			}
 
@@ -85,6 +86,12 @@ func (t *Textbox) Render(offset ...int) {
 				console.ChangeGridPoint(offX+t.x+i%t.width, offY+t.y+l, t.z+offZ, int(r), 0xFFFFFFFF, 0xFF000000)
 			}
 		}
+
+		for i, _ := range t.anims {
+			t.anims[i].Tick()
+			t.anims[i].Render(t.x+offX, t.y+offY, t.z+offZ)
+		}
+
 	}
 }
 
