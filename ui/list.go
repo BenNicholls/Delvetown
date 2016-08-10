@@ -34,6 +34,8 @@ func (l *List) Next() {
 	} else {
 		l.selected++
 	}
+
+	PushEvent(l, CHANGE, "List Cycled +")
 }
 
 func (l *List) Prev() {
@@ -48,6 +50,8 @@ func (l *List) Prev() {
 	} else {
 		l.selected--
 	}
+
+	PushEvent(l, CHANGE, "List Cycled -")
 }
 
 func (l List) GetSelection() int {

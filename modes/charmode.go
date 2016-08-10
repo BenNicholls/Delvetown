@@ -74,7 +74,7 @@ func NewChar() *CharMode {
 
 func (cm *CharMode) Update() (error, GameModer) {
 
-	for e := ui.NextEvent(); e != nil; e = ui.NextEvent() {
+	for e := ui.PopEvent(); e != nil; e = ui.PopEvent() {
 		switch e.ID {
 		case ui.CHANGE:
 			if e.Caller == cm.class {
@@ -154,7 +154,6 @@ func (cm *CharMode) HandleKeypress(key sdl.Keycode) error {
 		case sdl.K_UP, sdl.K_KP_8:
 			cm.class.Prev()
 		}
-		ui.EventStream <- ui.NewEvent(cm.class, ui.CHANGE)
 	}
 
 	return nil

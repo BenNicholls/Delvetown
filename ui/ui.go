@@ -30,20 +30,28 @@ const (
 type Event struct {
 	Caller UIElem
 	ID int
+	Message string
 }
 
 var EventStream chan *Event
 
 func init() {
-	//TODO: 50 event limit... is that a problem??
-	EventStream = make(chan *Event, 50)
+	EventStream = make(chan *Event, 100)
 }
 
-func NewEvent(c UIElem, id int) *Event {
-	return &Event{c, id}
+func PushEvent(c UIElem, id int, m string) {
+	if len(EventStream) == cap(EventStream) {
+		ClearEvents()
+	}
+	
+	EventStream <- &Event{c, id, m}
 }
 
-func NextEvent() *Event {
+func ClearEvents() {
+	EventStream = make(chan *Event, 100)
+}
+
+func PopEvent() *Event {
 	if len(EventStream) > 0 { 
 		e := <- EventStream
 		return e
