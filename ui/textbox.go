@@ -31,7 +31,7 @@ func (t *Textbox) ChangeText(txt string) {
 	}
 }
 
-//TODO: word wrap. scroll bar? (maybe a "MORE" prompt might be easier), separate dirty flag for the border?
+//TODO: scroll bar? (maybe a "MORE" prompt might be easier), separate dirty flag for the border?
 //Render function optionally takes an offset (for containering), 2 or 3 ints.
 func (t *Textbox) Render(offset ...int) {
 	if t.visible {
