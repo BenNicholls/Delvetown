@@ -2,7 +2,6 @@ package modes
 
 import "github.com/veandco/go-sdl2/sdl"
 import "github.com/bennicholls/delvetown/ui"
-import "errors"
 
 type GameOverMode struct {
 	toobad *ui.Textbox
@@ -22,6 +21,5 @@ func (g *GameOverMode) Render() {
 	g.toobad.Render()
 }
 
-func (g *GameOverMode) HandleKeypress(key sdl.Keycode) error {
-	return errors.New("quit")
+func (g *GameOverMode) HandleKeypress(key sdl.Keycode) {
 }

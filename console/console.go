@@ -30,7 +30,7 @@ type GridCell struct {
 }
 
 func (g *GridCell) Set(gl int, fore, back uint32, z int) {
-	if g.Glyph != gl || g.ForeColour != fore || g.BackColour != back {
+	if g.Glyph != gl || g.ForeColour != fore || g.BackColour != back || g.Z != z {
 		g.Glyph = gl
 		g.ForeColour = fore
 		g.BackColour = back

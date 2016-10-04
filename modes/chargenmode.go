@@ -2,6 +2,7 @@ package modes
 
 import "math/rand"
 import "strconv"
+import "errors"
 import "github.com/veandco/go-sdl2/sdl"
 import "github.com/bennicholls/delvetown/ui"
 import "github.com/bennicholls/delvetown/util"
@@ -86,7 +87,8 @@ func (cm *CharGenMode) Update() (error, GameModer) {
 			}
 		case ui.ACTIVATE:
 			if e.Caller == cm.confirm {
-				//CODE TO ENTER DELVEMODE!!!
+				dm := NewDelvemode(cm.character)
+				return errors.New("Mode Change") , dm
 			}
 		}
 	}
@@ -136,11 +138,10 @@ func (cm *CharGenMode) Render() {
 	cm.screen.Render()
 }
 
-func (cm *CharGenMode) HandleKeypress(key sdl.Keycode) error {
+func (cm *CharGenMode) HandleKeypress(key sdl.Keycode) {
 
 	if key == sdl.K_TAB {
 		cm.CycleUI()
-		return nil
 	}
 
 	if cm.activeElem == cm.name {
@@ -167,8 +168,6 @@ func (cm *CharGenMode) HandleKeypress(key sdl.Keycode) error {
 			cm.confirm.Press()
 		}
 	}
-
-	return nil
 }
 
 func (cm *CharGenMode) CycleUI() {

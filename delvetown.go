@@ -26,7 +26,7 @@ func main() {
 	}
 	defer console.Cleanup()
 
-	mode = modes.NewCharGen()
+	mode = modes.NewMainMenu()
 
 	running := true
 
@@ -47,21 +47,22 @@ func main() {
 			case *sdl.KeyUpEvent:
 				//fmt.Printf("[%d ms] Keyboard\ttype:%d\tsym:%c\tmodifiers:%d\tstate:%d\trepeat:%d\n",
 				//	t.Timestamp, t.Type, t.Keysym.Sym, t.Keysym.Mod, t.State, t.Repeat)
-				err = mode.HandleKeypress(t.Keysym.Sym)
-				if err != nil {
-					if err.Error() == "quit" {
-						running = false
-					}
-				}
+				mode.HandleKeypress(t.Keysym.Sym)
 			}
 		}
 
 		//Tick the game
 		err, m := mode.Update()
 		if err != nil {
-			if m != nil {
-				console.Clear()
-				mode = m
+			switch err.Error() {
+				case "Mode Change":
+					if m != nil {
+						console.Clear()
+						mode = m
+					}
+
+				case "Quit":
+					return
 			}
 		}
 
@@ -72,5 +73,4 @@ func main() {
 		//reconsider when animations and UI effects go in.
 		console.Render()
 	}
-
 }

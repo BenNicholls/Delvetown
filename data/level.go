@@ -19,9 +19,7 @@ type Level struct {
 //sets up a bare level object.
 func NewLevel(w, h int) *Level {
 	l := Level{LevelMap: NewMap(w, h), MemoryMap: NewMap(w, h), Width: w, Height: h}
-	l.Player = NewEntity(w/2, h/2, 0, PLAYER)
 	l.MobList = make(map[int]*Entity)
-	l.LevelMap.AddEntity(l.Player.X, l.Player.Y, l.Player)
 	return &l
 }
 
@@ -29,6 +27,20 @@ func (l *Level) ResetLevel() {
 	l.LevelMap = NewMap(l.Width, l.Height)
 	l.MemoryMap = NewMap(l.Width, l.Height)
 	l.MobList = make(map[int]*Entity)
+}
+
+func (l *Level) SetPlayer(p *Entity) {
+
+	//remove current player and reset memory if necessary
+	if l.Player != nil {
+		l.LevelMap.RemoveEntity(l.Player.X, l.Player.Y)
+		l.MemoryMap = NewMap(l.Width, l.Height)
+	}
+	
+	l.Player = p
+	l.Player.X, l.Player.Y = l.Width/2, l.Height/2 //until we get starting location code in
+	l.LevelMap.AddEntity(l.Player.X, l.Player.Y, l.Player)
+
 }
 
 //ensures the enemies' turn counters are synchronized with the player's

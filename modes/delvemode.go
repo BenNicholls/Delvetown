@@ -42,16 +42,17 @@ type DelveMode struct {
 
 }
 
-func NewDelvemode() *DelveMode {
+func NewDelvemode(p *data.Entity) *DelveMode {
 	dm := new(DelveMode)
 	dm.tick = 1
 
 	//Level Up!
 	dm.level = data.NewLevel(100, 100)
-	dm.level.GenerateCave()
-	dm.player = dm.level.Player
-	dm.player.Name = "The Ben"
+	dm.player = p
+	dm.level.SetPlayer(dm.player)
 
+	dm.level.GenerateCave()
+	
 	//UI stuff
 	dm.view = ui.NewTileView(78, 38, 0, 0, 0, false)
 
@@ -108,7 +109,7 @@ func (dm *DelveMode) BuildHUDenemylist() {
 	}
 }
 
-func (dm *DelveMode) HandleKeypress(key sdl.Keycode) error {
+func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 
 	if dm.activeElem == dm.debug {
 		if util.ValidText(rune(key)) {
@@ -171,8 +172,6 @@ func (dm *DelveMode) HandleKeypress(key sdl.Keycode) error {
 			}
 		}
 	}
-
-	return nil
 }
 
 func (dm *DelveMode) Update() (error, GameModer) {
@@ -201,8 +200,7 @@ func (dm *DelveMode) Update() (error, GameModer) {
 	dm.tick++
 
 	//update player memory (has to be after tick++, uses tick to mark when space was last seen)
-	dm.level.LevelMap.ShadowCast(dm.player.X, dm.player.Y, dm.player.SightRange, dm.MemoryCast())
-	dm.BuildHUDenemylist()
+	dm.UpdatePlayerVision()
 
 	//update UI elements
 	dm.HUDhp.ChangeText("HP: " + strconv.Itoa(dm.player.Health))
@@ -270,6 +268,11 @@ func (dm *DelveMode) Render() {
 	dm.HUDinventory.Render()
 	dm.HUDenemylist.Render()
 	dm.debug.Render()
+}
+
+func (dm *DelveMode) UpdatePlayerVision() {
+	dm.level.LevelMap.ShadowCast(dm.player.X, dm.player.Y, dm.player.SightRange, dm.MemoryCast())
+	dm.BuildHUDenemylist()
 }
 
 //Baby's first closure. Holy crap I am so proud of this.

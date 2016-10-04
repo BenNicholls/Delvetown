@@ -2,7 +2,6 @@ package modes
 
 import "github.com/veandco/go-sdl2/sdl"
 import "github.com/bennicholls/delvetown/ui"
-import "errors"
 
 type WinnerMode struct {
 	winner *ui.Textbox
@@ -22,6 +21,5 @@ func (g *WinnerMode) Render() {
 	g.winner.Render()
 }
 
-func (g *WinnerMode) HandleKeypress(key sdl.Keycode) error {
-	return errors.New("quit")
+func (g *WinnerMode) HandleKeypress(key sdl.Keycode) {
 }
