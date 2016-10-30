@@ -9,7 +9,7 @@ func (dm *DelveMode) HuntBehaviour(e *data.Entity) data.Action {
 	seen := false
 	dx, dy := 0, 0
 
-	dm.level.LevelMap.ShadowCast(e.X, e.Y, e.SightRange, dm.SeePlayerCast(&seen))
+	dm.level.LevelMap.ShadowCast(e.X, e.Y, e.CurStats.SightRange, dm.SeePlayerCast(&seen))
 
 	if seen {
 		dx, dy = dm.player.X-e.X, dm.player.Y-e.Y

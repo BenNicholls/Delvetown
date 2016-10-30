@@ -12,12 +12,8 @@ const (
 
 type entityTypeData struct {
 	name          string
-	hp            int
 	enemy         bool
-	lightStrength int
-	sightRange    int
-	mv, av        int //movespeed and attackspeed
-	at            int
+	baseStats Stats
 	vis           Visuals
 }
 
@@ -25,8 +21,8 @@ func init() {
 
 	entitydata = make([]entityTypeData, MAX_ENTITYTYPES)
 
-	entitydata[PLAYER] = entityTypeData{"Player", 100, false, 15, 40, 3, 5, 5, Visuals{0x02, 0xFFFFFFFF}}
-	entitydata[BUTTS] = entityTypeData{"Butts", 15, true, 7, 10, 5, 7, 3, Visuals{0x42, 0xFFFF0000}}
-	entitydata[SUPER_BUTTS] = entityTypeData{"Super Butts", 40, true, 10, 10, 10, 8, 10, Visuals{0xE1, 0xFFFF0000}}
-	entitydata[BUTT_SWARM] = entityTypeData{"Butt Swarmer", 5, true, 4, 7, 1, 1, 1, Visuals{0x62, 0xFFFF0000}}
+	entitydata[PLAYER] = entityTypeData{"Player", false, Stats{100, 10, 5, 5, 5, 3, 40, 15, 1, 1, 1}, Visuals{0x02, 0xFFFFFFFF}}
+	entitydata[BUTTS] = entityTypeData{"Butts", true, Stats{15, 10, 3, 5, 7, 5, 10, 7, 1, 1, 1}, Visuals{0x42, 0xFFFF0000}}
+	entitydata[SUPER_BUTTS] = entityTypeData{"Super Butts", true, Stats{40, 10, 10, 10, 8, 10, 10, 10, 1, 1, 1}, Visuals{0xE1, 0xFFFF0000}}
+	entitydata[BUTT_SWARM] = entityTypeData{"Butt Swarmer", true, Stats{5, 10, 1, 1, 1, 1, 7, 4, 1, 1, 1}, Visuals{0x62, 0xFFFF0000}}
 }

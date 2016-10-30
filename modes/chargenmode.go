@@ -102,17 +102,17 @@ func (cm *CharGenMode) GenerateCharacter() {
 	cm.character.Name = cm.name.GetText()
 	switch cm.class.GetSelection() {
 	case 0:
-		cm.character.Stats.Body = 10 + rand.Intn(5) - 2
-		cm.character.Stats.Mind = 3 + rand.Intn(5) - 2
-		cm.character.Stats.Spirit = 5 + rand.Intn(5) - 2
+		cm.character.BaseStats.Body = 10 + rand.Intn(5) - 2
+		cm.character.BaseStats.Mind = 3 + rand.Intn(5) - 2
+		cm.character.BaseStats.Spirit = 5 + rand.Intn(5) - 2
 	case 1:
-		cm.character.Stats.Body = 5 + rand.Intn(5) - 2
-		cm.character.Stats.Mind = 10 + rand.Intn(5) - 2
-		cm.character.Stats.Spirit = 3 + rand.Intn(5) - 2
+		cm.character.BaseStats.Body = 5 + rand.Intn(5) - 2
+		cm.character.BaseStats.Mind = 10 + rand.Intn(5) - 2
+		cm.character.BaseStats.Spirit = 3 + rand.Intn(5) - 2
 	case 2:
-		cm.character.Stats.Body = 3 + rand.Intn(5) - 2
-		cm.character.Stats.Mind = 5 + rand.Intn(5) - 2
-		cm.character.Stats.Spirit = 10 + rand.Intn(5) - 2
+		cm.character.BaseStats.Body = 3 + rand.Intn(5) - 2
+		cm.character.BaseStats.Mind = 5 + rand.Intn(5) - 2
+		cm.character.BaseStats.Spirit = 10 + rand.Intn(5) - 2
 	}
 
 	switch cm.class.GetSelection() {
@@ -128,11 +128,11 @@ func (cm *CharGenMode) GenerateCharacter() {
 	}
 
 	//update ui elements
-	cm.hp.ChangeText("HP: " + strconv.Itoa(cm.character.Health))
-	cm.att.ChangeText("ATT: " + strconv.Itoa(cm.character.BaseAttack))
-	cm.mind.ChangeText("MIND: " + strconv.Itoa(cm.character.Stats.Mind))
-	cm.body.ChangeText("BODY: " + strconv.Itoa(cm.character.Stats.Body))
-	cm.spirit.ChangeText("SPIRIT: " + strconv.Itoa(cm.character.Stats.Spirit))
+	cm.hp.ChangeText("HP: " + strconv.Itoa(cm.character.BaseStats.HP))
+	cm.att.ChangeText("ATT: " + strconv.Itoa(cm.character.BaseStats.Attack))
+	cm.mind.ChangeText("MIND: " + strconv.Itoa(cm.character.BaseStats.Mind))
+	cm.body.ChangeText("BODY: " + strconv.Itoa(cm.character.BaseStats.Body))
+	cm.spirit.ChangeText("SPIRIT: " + strconv.Itoa(cm.character.BaseStats.Spirit))
 }
 
 func (cm *CharGenMode) Render() {
