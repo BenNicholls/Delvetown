@@ -56,8 +56,9 @@ func (m *TileMap) RemoveEntity(x, y int) {
 func (m *TileMap) MoveEntity(x, y, dx, dy int) {
 	e := m.tiles[x+y*m.width].Entity
 	if e != nil {
-		m.AddEntity(x+dx, y+dy, e)
 		m.RemoveEntity(x, y)
+		m.AddEntity(x+dx, y+dy, e)
+		
 	}
 }
 
