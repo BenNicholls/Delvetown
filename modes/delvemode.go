@@ -84,7 +84,7 @@ func NewDelvemode(p *data.Entity) *DelveMode {
 	dm.activeElem = nil
 
 	dm.memBrightness = 80
-	dm.level.LevelMap.ShadowCast(dm.player.X, dm.player.Y, dm.player.SightRange, dm.MemoryCast())
+	dm.UpdatePlayerVision()
 
 	return dm
 }

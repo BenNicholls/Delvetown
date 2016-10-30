@@ -4,12 +4,12 @@ type Button struct {
 	Textbox
 	press      *Event
 	focusPulse *PulseAnimation
+	
 }
 
 //Creates a new button. Defaults to non-focussed state.
 func NewButton(w, h, x, y, z int, bord, cent bool, txt string) *Button {
 	p := NewPulseAnimation(0, 0, w, h, 20, 0, true)
-	p.Toggle()
 	return &Button{*NewTextbox(w, h, x, y, z, bord, cent, txt), nil, p}
 }
 
@@ -26,6 +26,7 @@ func (b Button) Press() {
 }
 
 func (b *Button) ToggleFocus() {
+	b.focused = !b.focused
 	b.focusPulse.Toggle()
 }
 

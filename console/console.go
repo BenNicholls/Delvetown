@@ -19,7 +19,11 @@ var masterDirty bool //is this necessary?
 var frameTime, ticks, fps uint32
 var frames int
 var showFPS bool
-var BorderColour uint32
+
+//Border colours are defined here so we can change them program-wide,
+//for reasons that I hope will come in handy later.
+var BorderColour1 uint32 //focused element colour
+var BorderColour2 uint32 //unfocused element colour
 
 type GridCell struct {
 	Glyph      int
@@ -92,7 +96,8 @@ func Setup(w, h int, spritesheet, title string) error {
 	frameTime, ticks = 0, 0
 	fps = 35 //17ms = 60 FPS approx
 	showFPS = false
-	BorderColour = 0xFF666666
+	BorderColour1 = 0xFFE28F00
+	BorderColour2 = 0xFF555555
 
 	return nil
 }
@@ -194,19 +199,23 @@ func ChangeGridPoint(x, y, z, glyph int, fore, back uint32) {
 }
 
 //TODO: custom colouring, multiple styles
-func DrawBorder(x, y, z, w, h int, title string) {
+func DrawBorder(x, y, z, w, h int, title string, focused bool) {
+	bc := BorderColour1
+	if !focused {
+		bc = BorderColour2
+	}
 	for i := 0; i < w; i++ {
-		ChangeGridPoint(x+i, y-1, z, 0xc4, BorderColour, 0xFF000000)
-		ChangeGridPoint(x+i, y+h, z, 0xc4, BorderColour, 0xFF000000)
+		ChangeGridPoint(x+i, y-1, z, 0xc4, bc, 0xFF000000)
+		ChangeGridPoint(x+i, y+h, z, 0xc4, bc, 0xFF000000)
 	}
 	for i := 0; i < h; i++ {
-		ChangeGridPoint(x-1, y+i, z, 0xb3, BorderColour, 0xFF000000)
-		ChangeGridPoint(x+w, y+i, z, 0xb3, BorderColour, 0xFF000000)
+		ChangeGridPoint(x-1, y+i, z, 0xb3, bc, 0xFF000000)
+		ChangeGridPoint(x+w, y+i, z, 0xb3, bc, 0xFF000000)
 	}
-	ChangeGridPoint(x-1, y-1, z, 0xda, BorderColour, 0xFF000000)
-	ChangeGridPoint(x-1, y+h, z, 0xc0, BorderColour, 0xFF000000)
-	ChangeGridPoint(x+w, y+h, z, 0xd9, BorderColour, 0xFF000000)
-	ChangeGridPoint(x+w, y-1, z, 0xbf, BorderColour, 0xFF000000)
+	ChangeGridPoint(x-1, y-1, z, 0xda, bc, 0xFF000000)
+	ChangeGridPoint(x-1, y+h, z, 0xc0, bc, 0xFF000000)
+	ChangeGridPoint(x+w, y+h, z, 0xd9, bc, 0xFF000000)
+	ChangeGridPoint(x+w, y-1, z, 0xbf, bc, 0xFF000000)
 
 	if len(title) < w && title != "" {
 		for i, r := range title {

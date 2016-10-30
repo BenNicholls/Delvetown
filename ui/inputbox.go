@@ -80,7 +80,8 @@ func (ib Inputbox) GetText() string {
 	return ib.text
 }
 
-func (ib *Inputbox) ToggleCursor() {
+func (ib *Inputbox) ToggleFocus() {
+	ib.focused = !ib.focused
 	ib.cursorAnimation.Toggle()
 }
 

@@ -10,13 +10,13 @@ GOALS:
     1) Make a dude.
         X Need to flesh out character stats
             X Make up your own crap??? (MIND, BODY, SPIRIT)
-        o Character creation screen 
+        X Character creation screen 
     2) Enter the dungeon
         - Level Generator work
             - Need to reduce cases where significant parts are inaccessible [flood fill? A*?]
             - nicer looking... no more straight lines at the edges
             - intelligent placing of entrance/stairs
-            - item generation + placing
+            o item generation + placing
         - Cave Entrance
             - light spilling in from outside... entrance closes behind you (maybe forcing you to light a torch??? coool)
     4) Fight some crap

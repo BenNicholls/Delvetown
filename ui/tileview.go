@@ -11,12 +11,13 @@ type TileView struct {
 	bordered      bool
 	title         string
 	visible       bool
+	focused bool
 
 	grid []console.GridCell
 }
 
 func NewTileView(w, h, x, y, z int, bord bool) *TileView {
-	return &TileView{w, h, x, y, z, bord, "", true, make([]console.GridCell, w*h)}
+	return &TileView{w, h, x, y, z, bord, "", true, false, make([]console.GridCell, w*h)}
 }
 
 func (tv *TileView) SetTitle(s string) {
@@ -57,7 +58,7 @@ func (tv TileView) Render(offset ...int) {
 			}
 		}
 		if tv.bordered {
-			console.DrawBorder(tv.x+offX, tv.y+offY, tv.z+offZ, tv.Width, tv.Height, tv.title)
+			console.DrawBorder(tv.x+offX, tv.y+offY, tv.z+offZ, tv.Width, tv.Height, tv.title, tv.focused)
 		}
 	}
 }
@@ -80,6 +81,10 @@ func (tv *TileView) ToggleVisible() {
 func (tv *TileView) SetVisibility(v bool) {
 	tv.visible = v
 	console.Clear()
+}
+
+func (tv *TileView) ToggleFocus() {
+	tv.focused = !tv.focused
 }
 
 func (tv *TileView) MoveTo(x, y, z int) {

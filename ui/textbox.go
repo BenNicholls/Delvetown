@@ -13,11 +13,12 @@ type Textbox struct {
 	text          string
 	visible       bool
 	anims         []Animator
+	focused bool
 }
 
 //TODO: sanity checks.
 func NewTextbox(w, h, x, y, z int, bord, cent bool, txt string) *Textbox {
-	return &Textbox{w, h, x, y, z, bord, cent, "", txt, true, make([]Animator, 0, 20)}
+	return &Textbox{w, h, x, y, z, bord, cent, "", txt, true, make([]Animator, 0, 20), false}
 }
 
 func (t *Textbox) SetTitle(s string) {
@@ -38,7 +39,7 @@ func (t *Textbox) Render(offset ...int) {
 		offX, offY, offZ := processOffset(offset)
 
 		if t.bordered {
-			console.DrawBorder(offX+t.x, offY+t.y, t.z+offZ, t.width, t.height, t.title)
+			console.DrawBorder(offX+t.x, offY+t.y, t.z+offZ, t.width, t.height, t.title, t.focused)
 		}
 
 		//word wrap calculatrix. a mighty sinful thing.
@@ -107,6 +108,10 @@ func (t *Textbox) ToggleVisible() {
 func (t *Textbox) SetVisibility(v bool) {
 	t.visible = v
 	console.Clear()
+}
+
+func (t *Textbox) ToggleFocus() {
+	t.focused = !t.focused
 }
 
 func (t *Textbox) SetCentered(c bool) {

@@ -8,13 +8,14 @@ type Container struct {
 	bordered      bool
 	title         string
 	visible       bool
+	focused bool
 	redraw        bool
 
 	Elements []UIElem
 }
 
 func NewContainer(w, h, x, y, z int, bord bool) *Container {
-	return &Container{w, h, x, y, z, bord, "", true, true, make([]UIElem, 0, 20)}
+	return &Container{w, h, x, y, z, bord, "", true, false, true, make([]UIElem, 0, 20)}
 }
 
 func (c *Container) Add(elems ...UIElem) {
@@ -47,7 +48,7 @@ func (c *Container) Render(offset ...int) {
 		}
 
 		if c.bordered {
-			console.DrawBorder(c.x+offX, c.y+offY, c.z+offZ, c.width, c.height, c.title)
+			console.DrawBorder(c.x+offX, c.y+offY, c.z+offZ, c.width, c.height, c.title, c.focused)
 		}
 	}
 }
@@ -62,6 +63,10 @@ func (c *Container) ToggleVisible() {
 
 func (c *Container) SetVisibility(v bool) {
 	c.visible = v
+}
+
+func (c *Container) ToggleFocus() {
+	c.focused = !c.focused
 }
 
 func (c *Container) MoveTo(x, y, z int) {

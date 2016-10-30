@@ -2,6 +2,9 @@ package ui
 
 import "github.com/bennicholls/delvetown/console"
 
+//Animations!!! Remember that animations always start DISABLED (enabled = false)
+//and should be activated manually. 
+
 type Animator interface {
 	Tick()
 	Render(offset ...int)
@@ -16,7 +19,7 @@ type BlinkAnimation struct {
 }
 
 func NewBlinkAnimation(x, y, speed int) *BlinkAnimation {
-	return &BlinkAnimation{0, speed, x, y, true}
+	return &BlinkAnimation{0, speed, x, y, false}
 }
 
 func (ba *BlinkAnimation) Toggle() {
@@ -52,7 +55,7 @@ type PulseAnimation struct {
 }
 
 func NewPulseAnimation(x, y, w, h, dur, num int, repeat bool) *PulseAnimation {
-	return &PulseAnimation{0, dur, num, x, y, w, h, true, repeat, false}
+	return &PulseAnimation{0, dur, num, x, y, w, h, false, repeat, false}
 }
 
 func (pa *PulseAnimation) Toggle() {

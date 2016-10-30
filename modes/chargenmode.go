@@ -71,6 +71,7 @@ func NewCharGen() *CharGenMode {
 	//END UI STUFF
 
 	cm.activeElem = cm.name
+	cm.name.ToggleFocus()
 
 	cm.GenerateCharacter()
 
@@ -173,14 +174,16 @@ func (cm *CharGenMode) HandleKeypress(key sdl.Keycode) {
 func (cm *CharGenMode) CycleUI() {
 	switch cm.activeElem {
 	case cm.name:
-		cm.name.ToggleCursor()
+		cm.name.ToggleFocus()
+		cm.class.ToggleFocus()
 		cm.activeElem = cm.class
 	case cm.class:
-		cm.activeElem = cm.confirm
+		cm.class.ToggleFocus()
 		cm.confirm.ToggleFocus()
+		cm.activeElem = cm.confirm
 	case cm.confirm:
 		cm.confirm.ToggleFocus()
 		cm.activeElem = cm.name
-		cm.name.ToggleCursor()
+		cm.name.ToggleFocus()
 	}
 }

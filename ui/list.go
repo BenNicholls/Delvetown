@@ -144,7 +144,7 @@ func (l *List) Render(offset ...int) {
 		}
 
 		if l.bordered {
-			console.DrawBorder(l.x+offX, l.y+offY, l.z+offZ, l.width, l.height, l.title)
+			console.DrawBorder(l.x+offX, l.y+offY, l.z+offZ, l.width, l.height, l.title, l.focused)
 		}
 
 		//draw scrollbar
