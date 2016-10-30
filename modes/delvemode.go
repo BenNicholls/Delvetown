@@ -2,7 +2,6 @@ package modes
 
 import "github.com/bennicholls/delvetown/ui"
 import "github.com/bennicholls/delvetown/data"
-import "github.com/bennicholls/delvetown/util"
 import "github.com/veandco/go-sdl2/sdl"
 import "strconv"
 import "errors"
@@ -112,26 +111,8 @@ func (dm *DelveMode) BuildHUDenemylist() {
 func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 
 	if dm.activeElem == dm.debug {
-		if util.ValidText(rune(key)) {
-			dm.debug.InsertText(rune(key))
-		} else {
-			switch key {
-			case sdl.K_BACKSPACE:
-				dm.debug.Delete()
-			case sdl.K_SPACE:
-				dm.debug.Insert(" ")
-			case sdl.K_ESCAPE:
-				dm.activeElem = nil
-				dm.debug.ToggleVisible()
-			case sdl.K_RETURN:
-				dm.Execute(dm.debug.GetText())
-				dm.debug.Reset()
-				dm.activeElem = nil
-				dm.debug.ToggleVisible()
-			}
-		}
+		dm.DebugKeypress(key) 
 	} else {
-
 		switch key {
 		case sdl.K_DOWN, sdl.K_KP_2:
 			dm.player.ActionQueue <- dm.AttackMove(dm.player, 0, 1)
@@ -164,6 +145,7 @@ func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 		case sdl.K_ESCAPE:
 			dm.activeElem = dm.debug
 			dm.debug.ToggleVisible()
+			dm.debug.ToggleFocus()
 		case sdl.K_d:
 			if len(dm.player.Inventory) == 0 {
 				dm.gamelog.AddMessage("No item to drop!")
@@ -203,11 +185,7 @@ func (dm *DelveMode) Update() (error, GameModer) {
 	dm.UpdatePlayerVision()
 
 	//update UI elements
-	dm.HUDhp.ChangeText("HP: " + strconv.Itoa(dm.player.Health))
-	dm.HUDattack.ChangeText("Attack: " + strconv.Itoa(dm.player.BaseAttack))
-	dm.HUDweapon.ChangeText("W: " + dm.player.GetEquipmentName(data.SLOT_WEAPON))
-	dm.HUDarmour.ChangeText("A: " + dm.player.GetEquipmentName(data.SLOT_ARMOUR))
-	dm.HUDtestvalue.ChangeText("MonNum :" + strconv.Itoa(len(dm.level.MobList)))
+	dm.UpdateUI()
 
 	//check for gamestate changes
 	if dm.player.Health <= 0 {
@@ -217,6 +195,14 @@ func (dm *DelveMode) Update() (error, GameModer) {
 	}
 
 	return nil, nil
+}
+
+func (dm *DelveMode) UpdateUI() {
+	dm.HUDhp.ChangeText("HP: " + strconv.Itoa(dm.player.Health))
+	dm.HUDattack.ChangeText("Attack: " + strconv.Itoa(dm.player.BaseAttack))
+	dm.HUDweapon.ChangeText("W: " + dm.player.GetEquipmentName(data.SLOT_WEAPON))
+	dm.HUDarmour.ChangeText("A: " + dm.player.GetEquipmentName(data.SLOT_ARMOUR))
+	dm.HUDtestvalue.ChangeText("MonNum :" + strconv.Itoa(len(dm.level.MobList)))
 }
 
 func (dm *DelveMode) Render() {
@@ -267,7 +253,10 @@ func (dm *DelveMode) Render() {
 	dm.sidebar.Render()
 	dm.HUDinventory.Render()
 	dm.HUDenemylist.Render()
-	dm.debug.Render()
+
+	if dm.activeElem != nil {
+		dm.activeElem.Render() 
+	}
 }
 
 func (dm *DelveMode) UpdatePlayerVision() {
