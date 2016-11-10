@@ -11,10 +11,10 @@ const (
 )
 
 type entityTypeData struct {
-	name          string
-	enemy         bool
+	name      string
+	enemy     bool
 	baseStats Stats
-	vis           Visuals
+	vis       Visuals
 }
 
 func init() {

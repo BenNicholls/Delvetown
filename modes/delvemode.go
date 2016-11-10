@@ -5,6 +5,7 @@ import "github.com/bennicholls/delvetown/data"
 import "github.com/veandco/go-sdl2/sdl"
 import "strconv"
 import "errors"
+
 //import "math/rand"
 
 type DelveMode struct {
@@ -39,7 +40,7 @@ type DelveMode struct {
 
 	tick          int
 	memBrightness int //brightness to show memory tiles
-	frame int //framecounter, for testing
+	frame         int //framecounter, for testing
 
 }
 
@@ -53,7 +54,7 @@ func NewDelvemode(p *data.Entity) *DelveMode {
 	dm.level.SetPlayer(dm.player)
 
 	dm.level.GenerateCave()
-	
+
 	//UI stuff
 	dm.view = ui.NewTileView(78, 38, 0, 0, 0, false)
 
@@ -115,7 +116,7 @@ func (dm *DelveMode) BuildHUDenemylist() {
 func (dm *DelveMode) HandleKeypress(key sdl.Keycode) {
 
 	if dm.activeElem == dm.debug {
-		dm.DebugKeypress(key) 
+		dm.DebugKeypress(key)
 	} else {
 		switch key {
 		case sdl.K_DOWN, sdl.K_KP_2:
@@ -202,7 +203,7 @@ func (dm *DelveMode) Update() (error, GameModer) {
 }
 
 func (dm *DelveMode) UpdateUI() {
-	dm.HUDhp.ChangeText("HP: "+strconv.Itoa(dm.player.CalcHP())+"/"+strconv.Itoa(dm.player.MaxStats.HP))
+	dm.HUDhp.ChangeText("HP: " + strconv.Itoa(dm.player.CalcHP()) + "/" + strconv.Itoa(dm.player.MaxStats.HP))
 	dm.HUDattack.ChangeText("Attack: " + strconv.Itoa(dm.player.CalcAttack()))
 	dm.HUDweapon.ChangeText("W: " + dm.player.GetEquipmentName(data.SLOT_WEAPON))
 	dm.HUDarmour.ChangeText("A: " + dm.player.GetEquipmentName(data.SLOT_ARMOUR))
@@ -259,14 +260,14 @@ func (dm *DelveMode) Render() {
 	dm.HUDenemylist.Render()
 
 	if dm.activeElem != nil {
-		dm.activeElem.Render() 
+		dm.activeElem.Render()
 	}
 
 	//flickering torch test... not ready for primetime.
 	// if dm.frame % 5 == 0 {
-	// 	dm.level.LevelMap.ShadowCast(dm.player.X, dm.player.Y, dm.player.LightStrength, data.Darken) 
+	// 	dm.level.LevelMap.ShadowCast(dm.player.X, dm.player.Y, dm.player.LightStrength, data.Darken)
 	// 	dm.level.LevelMap.ShadowCast(dm.player.X, dm.player.Y, dm.player.LightStrength + rand.Intn(3) -1, data.Lighten)
-	// 	dm.UpdatePlayerVision() 
+	// 	dm.UpdatePlayerVision()
 	// }
 
 	dm.frame++

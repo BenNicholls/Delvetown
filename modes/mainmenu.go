@@ -5,7 +5,7 @@ import "github.com/bennicholls/delvetown/ui"
 import "errors"
 
 type MainMenuMode struct {
-	menu  *ui.List
+	menu *ui.List
 }
 
 func NewMainMenu() *MainMenuMode {
@@ -18,14 +18,14 @@ func NewMainMenu() *MainMenuMode {
 func (mm *MainMenuMode) Update() (error, GameModer) {
 
 	for e := ui.PopEvent(); e != nil; e = ui.PopEvent() {
-		switch e.ID{
-			case ui.ACTIVATE:
-				switch mm.menu.GetSelection() {
-					case 0:
-						return errors.New("Mode Change"), NewCharGen()
-					case 2:
-						return errors.New("Quit"), nil
-				}
+		switch e.ID {
+		case ui.ACTIVATE:
+			switch mm.menu.GetSelection() {
+			case 0:
+				return errors.New("Mode Change"), NewCharGen()
+			case 2:
+				return errors.New("Quit"), nil
+			}
 		}
 	}
 

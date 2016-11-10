@@ -8,7 +8,7 @@ type Container struct {
 	bordered      bool
 	title         string
 	visible       bool
-	focused bool
+	focused       bool
 	redraw        bool
 
 	Elements []UIElem

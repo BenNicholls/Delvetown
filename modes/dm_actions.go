@@ -36,7 +36,7 @@ func (dm *DelveMode) AttackAction(dx, dy int) data.Action {
 		t := dm.level.LevelMap.GetEntity(e.X+dx, e.Y+dy)
 		if t != nil {
 			damage := e.CalcAttack()
-			t.ChangeHP(-1 * damage) 
+			t.ChangeHP(-1 * damage)
 			attackMessage := e.Name + " attacks " + t.Name + " for " + strconv.Itoa(damage) + " damage!"
 			if t.HP <= 0 {
 				dm.level.RemoveEntity(t.ID)
@@ -81,7 +81,7 @@ func (dm *DelveMode) UseItem(e *data.Entity, itemType int) data.Action {
 	case data.ITEM_HEALTH:
 		return func(e *data.Entity) {
 			dm.gamelog.AddMessage(e.Name + " uses the Health!")
-			e.ChangeHP(10) 
+			e.ChangeHP(10)
 			e.NextTurn += 5 //hardcoded speed for consuming this item. TODO: not hardcode
 		}
 	case data.ITEM_POWERUP:

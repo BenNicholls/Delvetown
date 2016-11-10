@@ -11,7 +11,7 @@ type TileView struct {
 	bordered      bool
 	title         string
 	visible       bool
-	focused bool
+	focused       bool
 
 	grid []console.GridCell
 }

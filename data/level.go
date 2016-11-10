@@ -36,7 +36,7 @@ func (l *Level) SetPlayer(p *Entity) {
 		l.LevelMap.RemoveEntity(l.Player.X, l.Player.Y)
 		l.MemoryMap = NewMap(l.Width, l.Height)
 	}
-	
+
 	l.Player = p
 	l.Player.X, l.Player.Y = l.Width/2, l.Height/2 //until we get starting location code in
 	l.LevelMap.AddEntity(l.Player.X, l.Player.Y, l.Player)

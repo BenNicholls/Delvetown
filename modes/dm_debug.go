@@ -21,29 +21,29 @@ func (dm *DelveMode) Execute(command string) {
 		dm.BuildHUDInventory()
 	case "heal":
 		dm.player.HP = 100
-		dm.UpdateUI() 
+		dm.UpdateUI()
 	}
 }
 
 func (dm *DelveMode) DebugKeypress(key sdl.Keycode) {
 	if util.ValidText(rune(key)) {
-			dm.debug.InsertText(rune(key))
-		} else {
-			switch key {
-			case sdl.K_BACKSPACE:
-				dm.debug.Delete()
-			case sdl.K_SPACE:
-				dm.debug.Insert(" ")
-			case sdl.K_ESCAPE:
-				dm.activeElem = nil
-				dm.debug.ToggleVisible()
-				dm.debug.ToggleFocus()
-			case sdl.K_RETURN:
-				dm.Execute(dm.debug.GetText())
-				dm.debug.Reset()
-				dm.activeElem = nil
-				dm.debug.ToggleVisible()
-				dm.debug.ToggleFocus()
-			}
+		dm.debug.InsertText(rune(key))
+	} else {
+		switch key {
+		case sdl.K_BACKSPACE:
+			dm.debug.Delete()
+		case sdl.K_SPACE:
+			dm.debug.Insert(" ")
+		case sdl.K_ESCAPE:
+			dm.activeElem = nil
+			dm.debug.ToggleVisible()
+			dm.debug.ToggleFocus()
+		case sdl.K_RETURN:
+			dm.Execute(dm.debug.GetText())
+			dm.debug.Reset()
+			dm.activeElem = nil
+			dm.debug.ToggleVisible()
+			dm.debug.ToggleFocus()
 		}
+	}
 }

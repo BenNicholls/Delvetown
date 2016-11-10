@@ -4,7 +4,6 @@ type Button struct {
 	Textbox
 	press      *Event
 	focusPulse *PulseAnimation
-	
 }
 
 //Creates a new button. Defaults to non-focussed state.

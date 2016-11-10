@@ -3,7 +3,7 @@ package ui
 import "github.com/bennicholls/delvetown/console"
 
 //Animations!!! Remember that animations always start DISABLED (enabled = false)
-//and should be activated manually. 
+//and should be activated manually.
 
 type Animator interface {
 	Tick()

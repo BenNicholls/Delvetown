@@ -13,7 +13,7 @@ type Textbox struct {
 	text          string
 	visible       bool
 	anims         []Animator
-	focused bool
+	focused       bool
 }
 
 //TODO: sanity checks.

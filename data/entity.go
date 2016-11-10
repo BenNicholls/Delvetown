@@ -8,19 +8,19 @@ const (
 )
 
 type Entity struct {
-	Name                   string
-	Enemy                  bool
-	EType                  int
-	ID                     int
-	NextTurn               int
-	X, Y                   int
-	HP, MP int //0-100, a percentage.
+	Name     string
+	Enemy    bool
+	EType    int
+	ID       int
+	NextTurn int
+	X, Y     int
+	HP, MP   int //0-100, a percentage.
 
 	//Baseline Stats that define creature, including permanent bonuses and effects.
-	BaseStats Stats 
+	BaseStats Stats
 	//Stats after gear, temporary effects, buffs, etc. BaseStats + Modifiers
 	MaxStats Stats
-	//Modifiers, both permanent (buffs) and duration-based (effects)  
+	//Modifiers, both permanent (buffs) and duration-based (effects)
 	Mods []*Modifier
 
 	Inventory []*Item
@@ -64,12 +64,12 @@ func (e Entity) CalcAttack() int {
 
 //Converts the percentage HP stored to a raw number
 func (e Entity) CalcHP() int {
-	return e.MaxStats.HP*e.HP/100
+	return e.MaxStats.HP * e.HP / 100
 }
 
 //can be used for heals (positive delta) or damage (negative delta)
 func (e *Entity) ChangeHP(delta int) {
-	hp := e.CalcHP()  + delta
+	hp := e.CalcHP() + delta
 	if hp < 0 {
 		hp = 0
 	} else if hp > e.MaxStats.HP {
@@ -77,7 +77,7 @@ func (e *Entity) ChangeHP(delta int) {
 	}
 
 	e.HP = hp * 100 / e.MaxStats.HP
-} 
+}
 
 //Removes item from inventory at index i
 func (e *Entity) RemoveItem(i int) {

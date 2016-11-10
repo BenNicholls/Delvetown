@@ -55,14 +55,14 @@ func main() {
 		err, m := mode.Update()
 		if err != nil {
 			switch err.Error() {
-				case "Mode Change":
-					if m != nil {
-						console.Clear()
-						mode = m
-					}
+			case "Mode Change":
+				if m != nil {
+					console.Clear()
+					mode = m
+				}
 
-				case "Quit":
-					return
+			case "Quit":
+				return
 			}
 		}
 
