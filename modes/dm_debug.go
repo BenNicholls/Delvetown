@@ -19,8 +19,8 @@ func (dm *DelveMode) Execute(command string) {
 		dm.player.AddItem(data.NewItem(data.ITEM_HEALTH))
 		dm.player.AddItem(data.NewItem(data.ITEM_HEALTH))
 		dm.BuildHUDInventory()
-	case "hp":
-		dm.player.CurStats.HP += 100
+	case "heal":
+		dm.player.HP = 100
 		dm.UpdateUI() 
 	}
 }

@@ -64,8 +64,8 @@ func NewDelvemode(p *data.Entity) *DelveMode {
 
 	dm.sidebar = ui.NewContainer(16, 52, 79, 1, 0, true)
 	dm.HUDname = ui.NewTextbox(16, 1, 0, 0, 0, false, true, dm.player.Name)
-	dm.HUDhp = ui.NewTextbox(16, 1, 0, 2, 0, false, false, "HP: "+strconv.Itoa(dm.player.CurStats.HP))
-	dm.HUDattack = ui.NewTextbox(16, 1, 0, 3, 0, false, false, "Attack: "+strconv.Itoa(dm.player.CurStats.Attack))
+	dm.HUDhp = ui.NewTextbox(16, 1, 0, 2, 0, false, false, "HP: "+strconv.Itoa(dm.player.CalcHP())+"/"+strconv.Itoa(dm.player.MaxStats.HP))
+	dm.HUDattack = ui.NewTextbox(16, 1, 0, 3, 0, false, false, "Attack: "+strconv.Itoa(dm.player.CalcAttack()))
 	dm.HUDweapon = ui.NewTextbox(16, 1, 0, 5, 0, false, false, "W: "+dm.player.GetEquipmentName(data.SLOT_WEAPON))
 	dm.HUDarmour = ui.NewTextbox(16, 1, 0, 6, 0, false, false, "A: "+dm.player.GetEquipmentName(data.SLOT_ARMOUR))
 	dm.HUDtestvalue = ui.NewTextbox(16, 1, 0, 8, 0, false, false, "MonNum :"+strconv.Itoa(len(dm.level.MobList)))
@@ -192,7 +192,7 @@ func (dm *DelveMode) Update() (error, GameModer) {
 	dm.UpdateUI()
 
 	//check for gamestate changes
-	if dm.player.CurStats.HP <= 0 {
+	if dm.player.CalcHP() <= 0 {
 		return errors.New("Mode Change"), NewGameOver()
 	} else if len(dm.level.MobList) == 0 {
 		return errors.New("Mode Change"), NewWinner()
@@ -202,8 +202,8 @@ func (dm *DelveMode) Update() (error, GameModer) {
 }
 
 func (dm *DelveMode) UpdateUI() {
-	dm.HUDhp.ChangeText("HP: " + strconv.Itoa(dm.player.CurStats.HP))
-	dm.HUDattack.ChangeText("Attack: " + strconv.Itoa(dm.player.CurStats.Attack))
+	dm.HUDhp.ChangeText("HP: "+strconv.Itoa(dm.player.CalcHP())+"/"+strconv.Itoa(dm.player.MaxStats.HP))
+	dm.HUDattack.ChangeText("Attack: " + strconv.Itoa(dm.player.CalcAttack()))
 	dm.HUDweapon.ChangeText("W: " + dm.player.GetEquipmentName(data.SLOT_WEAPON))
 	dm.HUDarmour.ChangeText("A: " + dm.player.GetEquipmentName(data.SLOT_ARMOUR))
 	dm.HUDtestvalue.ChangeText("MonNum :" + strconv.Itoa(len(dm.level.MobList)))
@@ -273,7 +273,7 @@ func (dm *DelveMode) Render() {
 }
 
 func (dm *DelveMode) UpdatePlayerVision() {
-	dm.level.LevelMap.ShadowCast(dm.player.X, dm.player.Y, dm.player.CurStats.SightRange, dm.MemoryCast())
+	dm.level.LevelMap.ShadowCast(dm.player.X, dm.player.Y, dm.player.MaxStats.SightRange, dm.MemoryCast())
 	dm.BuildHUDenemylist()
 }
 

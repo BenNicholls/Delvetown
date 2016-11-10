@@ -42,13 +42,13 @@ func (m *TileMap) SetTile(x, y int, t Tile) {
 func (m *TileMap) AddEntity(x, y int, e *Entity) {
 	if util.CheckBounds(x, y, m.width, m.height) {
 		m.tiles[x+y*m.width].Entity = e
-		m.ShadowCast(x, y, e.CurStats.LightStrength, Lighten)
+		m.ShadowCast(x, y, e.MaxStats.LightStrength, Lighten)
 	}
 }
 
 func (m *TileMap) RemoveEntity(x, y int) {
 	if util.CheckBounds(x, y, m.width, m.height) {
-		m.ShadowCast(x, y, m.tiles[x+y*m.width].Entity.CurStats.LightStrength, Darken)
+		m.ShadowCast(x, y, m.tiles[x+y*m.width].Entity.MaxStats.LightStrength, Darken)
 		m.tiles[x+y*m.width].Entity = nil
 	}
 }

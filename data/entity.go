@@ -14,10 +14,14 @@ type Entity struct {
 	ID                     int
 	NextTurn               int
 	X, Y                   int
+	HP, MP int //0-100, a percentage.
 
-	BaseStats Stats //Baseline Stats that define creature. CONSTANTS.
-	MaxStats Stats  //Stats after gear, levels, effects, whatever are taken into account
-	CurStats Stats  //For variable stats like HP
+	//Baseline Stats that define creature, including permanent bonuses and effects.
+	BaseStats Stats 
+	//Stats after gear, temporary effects, buffs, etc. BaseStats + Modifiers
+	MaxStats Stats
+	//Modifiers, both permanent (buffs) and duration-based (effects)  
+	Mods []*Modifier
 
 	Inventory []*Item
 	Equipment []*Item //indexed by the SLOT enum above
@@ -34,7 +38,7 @@ func NewEntity(x, y, id, eType int) *Entity {
 	if eType < MAX_ENTITYTYPES {
 		e := entitydata[eType]
 		//Max Inventory space is 30 for now. POSSIBLE: dynamically sized inventory? (bags, stronger, whatever)
-		return &Entity{e.name, e.enemy, eType, id, 1, x, y, e.baseStats, e.baseStats, e.baseStats, make([]*Item, 0, 30), make([]*Item, MAX_SLOTS), make([]*Entity, 0, 10), make(chan Action, 20)}
+		return &Entity{e.name, e.enemy, eType, id, 1, x, y, 100, 100, e.baseStats, e.baseStats, make([]*Modifier, 20), make([]*Item, 0, 30), make([]*Item, MAX_SLOTS), make([]*Entity, 0, 10), make(chan Action, 20)}
 	}
 	return nil
 }
@@ -55,8 +59,25 @@ func (e Entity) GetVisuals() Visuals {
 
 //This is going to do some heavy lifting someday.
 func (e Entity) CalcAttack() int {
-	return e.CurStats.Attack
+	return e.MaxStats.Attack
 }
+
+//Converts the percentage HP stored to a raw number
+func (e Entity) CalcHP() int {
+	return e.MaxStats.HP*e.HP/100
+}
+
+//can be used for heals (positive delta) or damage (negative delta)
+func (e *Entity) ChangeHP(delta int) {
+	hp := e.CalcHP()  + delta
+	if hp < 0 {
+		hp = 0
+	} else if hp > e.MaxStats.HP {
+		hp = e.MaxStats.HP
+	}
+
+	e.HP = hp * 100 / e.MaxStats.HP
+} 
 
 //Removes item from inventory at index i
 func (e *Entity) RemoveItem(i int) {
