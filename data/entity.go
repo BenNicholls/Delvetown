@@ -14,7 +14,7 @@ type Entity struct {
 	ID       int
 	NextTurn int
 	X, Y     int
-	HP, MP   int //0-100, a percentage.
+	HP, MP   int //0-100, a percentage. //TODO: rounding errors? think about this.
 
 	//Baseline Stats that define creature, including permanent bonuses and effects.
 	BaseStats Stats
@@ -77,6 +77,10 @@ func (e *Entity) ChangeHP(delta int) {
 	}
 
 	e.HP = hp * 100 / e.MaxStats.HP
+}
+
+func (e *Entity) CalculateStats() {
+	e.MaxStats = e.BaseStats
 }
 
 //Removes item from inventory at index i

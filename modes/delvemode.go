@@ -49,11 +49,8 @@ func NewDelvemode(p *data.Entity) *DelveMode {
 	dm.tick = 1
 
 	//Level Up!
-	dm.level = data.NewLevel(100, 100)
+	dm.level = data.GenerateCave(p, 100, 100)
 	dm.player = p
-	dm.level.SetPlayer(dm.player)
-
-	dm.level.GenerateCave()
 
 	//UI stuff
 	dm.view = ui.NewTileView(78, 38, 0, 0, 0, false)

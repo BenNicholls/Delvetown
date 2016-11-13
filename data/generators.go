@@ -3,61 +3,36 @@ package data
 import "github.com/bennicholls/delvetown/util"
 import "math/rand"
 
-func (l *Level) GenerateRandom() {
-	for i := 0; i < l.Width*l.Height; i++ {
-		r := rand.Intn(MAX_TILETYPES-1) + 1
-		if r != TILE_GRASS {
-			r = r - rand.Intn(2)
-		}
-		l.LevelMap.ChangeTileType(i%l.Width, i/l.Width, r)
-	}
-}
+func GenerateCave(p *Entity, w, h int) *Level {
 
-func (l *Level) GenerateArena(w, h int) {
-	for i := 0; i < l.Width*l.Height; i++ {
-		x, y := i%l.Width, i/l.Width
-		if x < l.Width/2-w/2 || x > l.Width/2+w/2 || y < l.Height/2-h/2 || y > l.Height/2+h/2 {
-			l.LevelMap.ChangeTileType(x, y, TILE_NOTHING)
-		} else {
-			l.LevelMap.ChangeTileType(x, y, TILE_GRASS)
-			if rand.Intn(40) == 0 {
-				l.AddMob(x, y, BUTTS)
-			}
-		}
-	}
-}
-
-func (l *Level) GenerateCave() {
-
-	l.ResetLevel()
+	l := NewLevel(w, h)
+	l.SetPlayer(p)  
 
 	//fill with walls
-	for i := 0; i < l.Width*l.Height; i++ {
-		x, y := i%l.Width, i/l.Width
+	for i := 0; i < w*h; i++ {
+		x, y := i%w, i/w
 		l.LevelMap.ChangeTileType(x, y, TILE_WALL)
 		l.LevelMap.SetVisible(x, y, 0)
 	}
 
-	l.seedBranch(l.Width/2, l.Height/2, 300, TILE_CAVEFLOOR)
-	l.Player.MoveTo(l.Width/2, l.Height/2)
-	l.LevelMap.AddEntity(l.Width/2, l.Height/2, l.Player)
+	l.seedBranch(w/2, h/2, 300, TILE_CAVEFLOOR)
 
 	//generate some little pools of water
 	for i := 0; i < 10; i++ {
 		//keep seeds away from the edges (-10, +10)
-		l.seedBranch(rand.Intn(l.Width-10)+10, rand.Intn(l.Height-10)+10, 40, TILE_WATER)
+		l.seedBranch(rand.Intn(w-10)+10, rand.Intn(h-10)+10, 40, TILE_WATER)
 	}
 
 	//place more seeds, let 'em grow!
 	for i := 0; i < 5; i++ {
 		//keep seeds away from the edges (-10, +10)
-		l.seedBranch(rand.Intn(l.Width-10)+10, rand.Intn(l.Height-10)+10, 250, TILE_CAVEFLOOR)
+		l.seedBranch(rand.Intn(w-10)+10, rand.Intn(h-10)+10, 250, TILE_CAVEFLOOR)
 	}
 
 	//populate with random enemies
-	l.RandomPlaceMobs(20, BUTTS)
-	l.RandomPlaceMobs(1, SUPER_BUTTS)
-	l.RandomPlaceMobs(2, BUTT_SWARM)
+	l.RandomPlaceMobs(20, GNOLL)
+	l.RandomPlaceMobs(1, SUPER_GNOLL)
+	l.RandomPlaceMobs(2, RAT) //places 2 SWARMS of rats. 
 
 	l.PlaceItems(5, ITEM_HEALTH)
 	l.PlaceItems(2, ITEM_POWERUP)
@@ -66,7 +41,7 @@ func (l *Level) GenerateCave() {
 
 	//place the stairs
 	for {
-		x, y := rand.Intn(l.Width), rand.Intn(l.Height)
+		x, y := rand.Intn(w), rand.Intn(h)
 		if l.LevelMap.GetTile(x, y).Passable() && l.LevelMap.GetItem(x, y) == nil {
 			l.LevelMap.ChangeTileType(x, y, TILE_STAIRS)
 			break
@@ -74,6 +49,8 @@ func (l *Level) GenerateCave() {
 	}
 
 	l.SyncClock()
+
+	return l
 }
 
 //Randomly places num copies of item in the level
@@ -92,7 +69,7 @@ func (l *Level) RandomPlaceMobs(num, eType int) {
 		x, y := rand.Intn(l.Width), rand.Intn(l.Height)
 		if l.LevelMap.GetTile(x, y).Passable() {
 
-			if eType == BUTT_SWARM {
+			if eType == RAT {
 				l.PlaceSwarm(x, y, 10)
 			} else {
 				l.AddMob(x, y, eType)
@@ -103,7 +80,7 @@ func (l *Level) RandomPlaceMobs(num, eType int) {
 }
 
 func (l *Level) PlaceSwarm(x, y, num int) {
-	l.AddMob(x, y, BUTT_SWARM)
+	l.AddMob(x, y, RAT)
 
 	spaces := make([]coord, 0, 150)
 	l.LevelMap.ShadowCast(x, y, 7, GetEmptySpacesCast(&spaces))
@@ -112,7 +89,7 @@ func (l *Level) PlaceSwarm(x, y, num int) {
 		if i == len(spaces) {
 			break
 		}
-		l.AddMob(spaces[i].x, spaces[i].y, BUTT_SWARM)
+		l.AddMob(spaces[i].x, spaces[i].y, RAT)
 	}
 
 }
@@ -134,6 +111,20 @@ func (l *Level) seedBranch(x, y, branch, tile int) {
 			continue
 		} else if t := l.LevelMap.GetTileType(x+dx, y+dy); t != tile && t != TILE_NOTHING {
 			l.seedBranch(x+dx, y+dy, branch-branches, tile)
+		}
+	}
+}
+
+func (l *Level) GenerateArena(w, h int) {
+	for i := 0; i < l.Width*l.Height; i++ {
+		x, y := i%l.Width, i/l.Width
+		if x < l.Width/2-w/2 || x > l.Width/2+w/2 || y < l.Height/2-h/2 || y > l.Height/2+h/2 {
+			l.LevelMap.ChangeTileType(x, y, TILE_NOTHING)
+		} else {
+			l.LevelMap.ChangeTileType(x, y, TILE_GRASS)
+			if rand.Intn(40) == 0 {
+				l.AddMob(x, y, GNOLL)
+			}
 		}
 	}
 }

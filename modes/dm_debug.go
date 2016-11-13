@@ -8,7 +8,7 @@ import "github.com/bennicholls/delvetown/util"
 func (dm *DelveMode) Execute(command string) {
 	switch command {
 	case "regen":
-		dm.level.GenerateCave()
+		dm.level = data.GenerateCave(dm.player, dm.level.Width, dm.level.Height)
 		dm.UpdatePlayerVision()
 		dm.gamelog.AddMessage("Level Regenerated!")
 	case "fps":

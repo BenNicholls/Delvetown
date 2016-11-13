@@ -70,6 +70,7 @@ func (tv TileView) GetDims() (int, int) {
 func (tv *TileView) Clear() {
 	for i, _ := range tv.grid {
 		tv.grid[i].Set(0, 0, 0, 0)
+		tv.grid[i].Dirty = true
 	}
 }
 

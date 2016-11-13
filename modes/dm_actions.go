@@ -8,7 +8,7 @@ func (dm *DelveMode) MoveAction(dx, dy int) data.Action {
 		dm.level.MoveEntity(dx, dy, e)
 
 		if e == dm.player && dm.level.LevelMap.GetTileType(e.X, e.Y) == data.TILE_STAIRS {
-			dm.level.GenerateCave()
+			dm.level = data.GenerateCave(dm.player, dm.level.Width, dm.level.Height)
 			return
 		}
 
