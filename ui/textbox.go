@@ -21,6 +21,29 @@ func NewTextbox(w, h, x, y, z int, bord, cent bool, txt string) *Textbox {
 	return &Textbox{w, h, x, y, z, bord, cent, "", txt, true, make([]Animator, 0, 20), false}
 }
 
+//returns the height required to fit a string after it has been wrapped
+func CalcWrapHeight(s string, width int) int {
+	line := ""
+	n := 0
+	for _, word := range strings.Split(s, " ") {
+		//super long word make-it-not-break hack.
+		if len(word) > width {
+			continue
+		}
+
+		if len(line)+len(word) > width {
+			n++
+			line = ""
+		}
+		line += word
+		if len(line) != width {
+			line += " "
+		}
+	}
+
+	return n + 1
+}
+
 func (t *Textbox) SetTitle(s string) {
 	t.title = s
 }
@@ -98,6 +121,10 @@ func (t *Textbox) Render(offset ...int) {
 
 func (t Textbox) GetDims() (int, int) {
 	return t.width, t.height
+}
+
+func (t Textbox) GetPos() (int, int, int) {
+	return t.x, t.y, t.z
 }
 
 func (t *Textbox) ToggleVisible() {

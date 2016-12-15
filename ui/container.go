@@ -57,6 +57,10 @@ func (c Container) GetDims() (int, int) {
 	return c.width, c.height
 }
 
+func (c Container) GetPos() (int, int, int) {
+	return c.x, c.y, c.z
+}
+
 func (c *Container) ToggleVisible() {
 	c.visible = !c.visible
 }

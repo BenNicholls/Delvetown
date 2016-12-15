@@ -5,6 +5,7 @@ import "github.com/bennicholls/delvetown/util"
 type UIElem interface {
 	Render(offset ...int)
 	GetDims() (w int, h int)
+	GetPos() (x int, y int, z int)
 	SetTitle(title string)
 	ToggleVisible()
 	SetVisibility(v bool)

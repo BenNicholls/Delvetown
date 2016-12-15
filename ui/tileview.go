@@ -67,6 +67,10 @@ func (tv TileView) GetDims() (int, int) {
 	return tv.Width, tv.Height
 }
 
+func (tv TileView) GetPos() (int, int, int) {
+	return tv.x, tv.y, tv.z
+}
+
 func (tv *TileView) Clear() {
 	for i, _ := range tv.grid {
 		tv.grid[i].Set(0, 0, 0, 0)

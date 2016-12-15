@@ -9,15 +9,16 @@ type List struct {
 	scrollOffset int
 	empty        bool
 	emptyElem    UIElem
+	contentHeight int
 }
 
 func NewList(w, h, x, y, z int, bord bool, empty string) *List {
 	c := NewContainer(w, h, x, y, z, bord)
-	return &List{*c, 0, true, 0, true, NewTextbox(w, 1, 0, h/2, z, false, true, empty)}
+	return &List{*c, 0, true, 0, true, NewTextbox(w, 1, 0, h/2, z, false, true, empty), 0}
 }
 
 func (l *List) Select(s int) {
-	if s < len(l.Elements) {
+	if s < len(l.Elements) && s >= 0 {
 		l.selected = s
 	}
 }
@@ -35,6 +36,8 @@ func (l *List) Next() {
 		l.selected++
 	}
 
+	l.ScrollToSelection()
+
 	PushEvent(l, CHANGE, "List Cycled +")
 }
 
@@ -51,7 +54,29 @@ func (l *List) Prev() {
 		l.selected--
 	}
 
+	l.ScrollToSelection()
+
 	PushEvent(l, CHANGE, "List Cycled -")
+}
+
+func (l *List) ScrollUp() {
+	if l.scrollOffset != 0 {
+		l.scrollOffset = l.scrollOffset - 1
+	}
+}
+
+func (l *List) ScrollDown() {
+	if l.scrollOffset < l.contentHeight - l.height {
+		l.scrollOffset = l.scrollOffset + 1
+	}
+}
+
+func (l *List) ScrollToBottom() {
+	l.scrollOffset = l.contentHeight - l.height
+}
+
+func (l *List) ScrollToTop() {
+	l.scrollOffset = 0
 }
 
 func (l List) GetSelection() int {
@@ -71,6 +96,14 @@ func (l *List) CheckSelection() {
 	}
 }
 
+func (l *List) ScrollToSelection() {
+	if l.selected < l.scrollOffset {
+		l.scrollOffset = l.selected
+	} else if l.scrollOffset < l.selected-l.height+1 {
+		l.scrollOffset = l.selected - l.height + 1
+	}
+}
+
 //appends an item (or items) to the internal list of items
 func (l *List) Append(items ...string) {
 	if len(l.Elements) == 0 {
@@ -78,9 +111,11 @@ func (l *List) Append(items ...string) {
 	}
 
 	for _, i := range items {
-		l.Add(NewTextbox(l.width, 1, 0, len(l.Elements), 0, false, false, i))
-		l.CheckSelection()
+		h := CalcWrapHeight(i, l.width)
+		l.Add(NewTextbox(l.width, h, 0, l.contentHeight, 0, false, false, i))
+		l.contentHeight += h
 	}
+	l.Calibrate()
 }
 
 //removes the ith item from the internal list of items
@@ -88,6 +123,7 @@ func (l *List) Remove(i int) {
 	if i < len(l.Elements) && len(l.Elements) != 0 {
 		if len(l.Elements) == 1 {
 			l.ClearElements()
+			l.contentHeight = 0
 		} else {
 			l.Elements = append(l.Elements[:i], l.Elements[i+1:]...)
 			l.Calibrate()
@@ -97,18 +133,26 @@ func (l *List) Remove(i int) {
 	}
 }
 
-//Ensures list element y values are correct after the list has been tampered with
+//Ensures list element y values are correct after the list has been tampered with. Also recalculates
+//contentHeight
 func (l *List) Calibrate() {
+	y := 0
+	h := 0
 	for i := range l.Elements {
-		l.Elements[i].MoveTo(0, i, 0)
+		l.Elements[i].MoveTo(0, y, 0)
+		_, h = l.Elements[i].GetDims()
+		y += h
 	}
+	l.contentHeight = y
 }
 
 //Changes the text of the ith item in the internal list of items
 func (l *List) Change(i int, item string) {
-	l.Elements[i] = NewTextbox(l.width, 1, 0, i, l.z, false, false, item)
+	l.Elements[i] = NewTextbox(l.width, CalcWrapHeight(item, l.width), 0, i, l.z, false, false, item)
+	l.Calibrate()
 }
 
+//Currently renders large items (h > 1) outside of list boundaries. TODO: think of way to prune these down.
 func (l *List) Render(offset ...int) {
 	if l.visible {
 		offX, offY, offZ := processOffset(offset)
@@ -121,24 +165,22 @@ func (l *List) Render(offset ...int) {
 		if len(l.Elements) <= 0 {
 			l.emptyElem.Render(l.x+offX, l.y+offY, l.z+offZ)
 		} else {
-			//calc scrollOffset
-			if l.selected < l.scrollOffset {
-				l.scrollOffset = l.selected
-			} else if l.scrollOffset < l.selected-l.height+1 {
-				l.scrollOffset = l.selected - l.height + 1
-			}
 
-			for i := l.scrollOffset; i < l.scrollOffset+l.height; i++ {
-				if i >= len(l.Elements) {
-					break
+			for _, e := range l.Elements {
+				_, y, _ := e.GetPos()
+				_, h := e.GetDims()
+				if y < l.scrollOffset + l.height && y + h > l.scrollOffset {
+					e.Render(l.x+offX, l.y+offY-l.scrollOffset, l.z+offZ)
 				}
-				l.Elements[i].Render(l.x+offX, l.y+offY-l.scrollOffset, l.z+offZ)
 			}
 
 			if l.Highlight {
-				w, _ := l.Elements[l.selected].GetDims()
-				for i := 0; i < w; i++ {
-					console.Invert(offX+l.x+i, offY+l.y+l.selected-l.scrollOffset, offZ+l.z)
+				w, h := l.Elements[l.selected].GetDims()
+				_, y, _ := l.Elements[l.selected].GetPos()
+				for j := 0; j < h; j++ {
+					for i := 0; i < w; i++ {
+						console.Invert(offX+l.x+i, offY+l.y-l.scrollOffset+j+y, offZ+l.z)
+					}
 				}
 			}
 		}
@@ -148,14 +190,23 @@ func (l *List) Render(offset ...int) {
 		}
 
 		//draw scrollbar
-		if len(l.Elements) > l.height {
+		if l.contentHeight > l.height {
 			console.ChangeGridPoint(offX+l.x+l.width, offY+l.y, offZ+l.z, 0x1e, 0xFFFFFFFF, 0xFF000000)
 			console.ChangeGridPoint(offX+l.x+l.width, offY+l.y+l.height-1, offZ+l.z, 0x1f, 0xFFFFFFFF, 0xFF000000)
 
-			sliderHeight := l.height - 2 - (len(l.Elements) - l.height)
+			sliderHeight := int(float32(l.height - 2) * (float32(l.height)/float32(l.contentHeight)))
+			if sliderHeight < 1 {
+				sliderHeight = 1
+			}
+
+			sliderPosition := int((float32(l.height - 2 - sliderHeight)) * (float32(l.scrollOffset)/float32(l.contentHeight - l.height)))
+			if sliderPosition == 0 && l.scrollOffset != 0 {
+				//ensure that slider is not at top unless top of list is visible
+				sliderPosition = 1
+			}
 
 			for i := 0; i < sliderHeight; i++ {
-				console.ChangeGridPoint(offX+l.x+l.width, offY+l.y+i+1+l.scrollOffset, offZ+l.z, 0xb1, 0xFFFFFFFF, 0xFF000000)
+				console.ChangeGridPoint(offX+l.x+l.width, offY+l.y+i+1+sliderPosition, offZ+l.z, 0xb1, 0xFFFFFFFF, 0xFF000000)
 			}
 		}
 	}

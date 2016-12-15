@@ -88,7 +88,7 @@ func (cm *CharGenMode) Update() (error, GameModer) {
 			}
 		case ui.ACTIVATE:
 			if e.Caller == cm.confirm {
-				dm := NewDelvemode(cm.character)
+				dm := NewDelvemode(cm.character, data.NewCaveDungeon())
 				return errors.New("Mode Change"), dm
 			}
 		}

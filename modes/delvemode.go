@@ -6,8 +6,6 @@ import "github.com/veandco/go-sdl2/sdl"
 import "strconv"
 import "errors"
 
-//import "math/rand"
-
 type DelveMode struct {
 
 	//UI stuff!
@@ -32,6 +30,7 @@ type DelveMode struct {
 
 	activeElem ui.UIElem
 
+	dungeon *data.Dungeon
 	level   *data.Level
 	player  *data.Entity
 	gamelog Log
@@ -44,21 +43,23 @@ type DelveMode struct {
 
 }
 
-func NewDelvemode(p *data.Entity) *DelveMode {
+func NewDelvemode(p *data.Entity, d *data.Dungeon) *DelveMode {
 	dm := new(DelveMode)
 	dm.tick = 1
 
 	//Level Up!
-	dm.level = data.GenerateCave(p, 100, 100)
+	dm.dungeon = d
+	dm.level = d.Generators[0](p, 100, 100)
 	dm.player = p
 
 	//UI stuff
 	dm.view = ui.NewTileView(78, 38, 0, 0, 0, false)
 
-	dm.logbox = ui.NewTextbox(76, 8, 1, 45, 1, true, false, "The Cave Feels Like It's Full of Mansters!!")
+	dm.logbox = ui.NewTextbox(76, 8, 1, 45, 1, true, false, "")
 	dm.logbox.SetTitle("LOG")
 
 	dm.gamelog = NewLog(dm.logbox)
+	dm.gamelog.AddMessage(dm.dungeon.Intro)
 
 	dm.sidebar = ui.NewContainer(16, 52, 79, 1, 0, true)
 	dm.HUDname = ui.NewTextbox(16, 1, 0, 0, 0, false, true, dm.player.Name)
@@ -92,13 +93,10 @@ func NewDelvemode(p *data.Entity) *DelveMode {
 
 func (dm *DelveMode) BuildHUDInventory() {
 	dm.HUDinventory.ClearElements()
-	w, _ := dm.HUDinventory.GetDims()
 
-	for i, item := range dm.player.Inventory {
-		dm.HUDinventory.Add(ui.NewTextbox(w, 1, 0, i, 0, false, false, item.Name))
+	for _, item := range dm.player.Inventory {
+		dm.HUDinventory.Append(item.Name)
 	}
-
-	dm.HUDinventory.CheckSelection()
 }
 
 func (dm *DelveMode) BuildHUDenemylist() {
