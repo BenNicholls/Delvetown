@@ -20,7 +20,6 @@ type DelveMode struct {
 	HUDtestvalue *ui.Textbox
 
 	HUDinventory *ui.List
-
 	HUDenemylist *ui.List
 
 	HUDweapon *ui.Textbox
