@@ -2,13 +2,15 @@ package ui
 
 import "github.com/bennicholls/delvetown/console"
 
+//List UI Elem is a special kind of container that arranges it's nested elements as a vertical list,
+//supporting scrollbars, scrolling, selection of list elements, etc.
 type List struct {
 	Container
-	selected     int
-	Highlight    bool
-	scrollOffset int
-	empty        bool
-	emptyElem    UIElem
+	selected      int
+	Highlight     bool
+	scrollOffset  int
+	empty         bool
+	emptyElem     UIElem
 	contentHeight int
 }
 
@@ -23,6 +25,20 @@ func (l *List) Select(s int) {
 	}
 }
 
+func (l List) GetSelection() int {
+	return l.selected
+}
+
+//Ensures Selected item is not out of bounds.
+func (l *List) CheckSelection() {
+	if l.selected < 0 {
+		l.selected = 0
+	} else if l.selected >= len(l.Elements) {
+		l.selected = len(l.Elements) - 1
+	}
+}
+
+//Selects next item in the List, keeping selection in view.
 func (l *List) Next() {
 	//small list protection
 	if len(l.Elements) <= 1 {
@@ -41,6 +57,7 @@ func (l *List) Next() {
 	PushEvent(l, CHANGE, "List Cycled +")
 }
 
+//Selects previous item in the List, keeping selection in view.
 func (l *List) Prev() {
 	//small list protection
 	if len(l.Elements) <= 1 {
@@ -66,7 +83,7 @@ func (l *List) ScrollUp() {
 }
 
 func (l *List) ScrollDown() {
-	if l.scrollOffset < l.contentHeight - l.height {
+	if l.scrollOffset < l.contentHeight-l.height {
 		l.scrollOffset = l.scrollOffset + 1
 	}
 }
@@ -77,23 +94,6 @@ func (l *List) ScrollToBottom() {
 
 func (l *List) ScrollToTop() {
 	l.scrollOffset = 0
-}
-
-func (l List) GetSelection() int {
-	return l.selected
-}
-
-func (l *List) ToggleHighlight() {
-	l.Highlight = !l.Highlight
-}
-
-//Ensures Selected item is not out of bounds.
-func (l *List) CheckSelection() {
-	if l.selected < 0 {
-		l.selected = 0
-	} else if l.selected >= len(l.Elements) {
-		l.selected = len(l.Elements) - 1
-	}
 }
 
 func (l *List) ScrollToSelection() {
@@ -140,16 +140,22 @@ func (l *List) Calibrate() {
 	h := 0
 	for i := range l.Elements {
 		l.Elements[i].MoveTo(0, y, 0)
-		_, h = l.Elements[i].GetDims()
+		_, h = l.Elements[i].Dims()
 		y += h
 	}
 	l.contentHeight = y
 }
 
-//Changes the text of the ith item in the internal list of items
+//Changes the text of the ith item in the internal list of items.
+//TODO: List elements do not necessarily need to be textboxes... this function may be deprecated.
 func (l *List) Change(i int, item string) {
 	l.Elements[i] = NewTextbox(l.width, CalcWrapHeight(item, l.width), 0, i, l.z, false, false, item)
 	l.Calibrate()
+}
+
+//Toggles highlighting of selected element.
+func (l *List) ToggleHighlight() {
+	l.Highlight = !l.Highlight
 }
 
 //Currently renders large items (h > 1) outside of list boundaries. TODO: think of way to prune these down.
@@ -167,16 +173,16 @@ func (l *List) Render(offset ...int) {
 		} else {
 
 			for _, e := range l.Elements {
-				_, y, _ := e.GetPos()
-				_, h := e.GetDims()
-				if y < l.scrollOffset + l.height && y + h > l.scrollOffset {
+				_, y, _ := e.Pos()
+				_, h := e.Dims()
+				if y < l.scrollOffset+l.height && y+h > l.scrollOffset {
 					e.Render(l.x+offX, l.y+offY-l.scrollOffset, l.z+offZ)
 				}
 			}
 
 			if l.Highlight {
-				w, h := l.Elements[l.selected].GetDims()
-				_, y, _ := l.Elements[l.selected].GetPos()
+				w, h := l.Elements[l.selected].Dims()
+				_, y, _ := l.Elements[l.selected].Pos()
 				for j := 0; j < h; j++ {
 					for i := 0; i < w; i++ {
 						console.Invert(offX+l.x+i, offY+l.y-l.scrollOffset+j+y, offZ+l.z)
@@ -190,16 +196,17 @@ func (l *List) Render(offset ...int) {
 		}
 
 		//draw scrollbar
+		//TODO: scrollbar could be useful for lots of other UI Elems (ex. textboxes with paragraphs of text). find way to make more general.
 		if l.contentHeight > l.height {
 			console.ChangeGridPoint(offX+l.x+l.width, offY+l.y, offZ+l.z, 0x1e, 0xFFFFFFFF, 0xFF000000)
 			console.ChangeGridPoint(offX+l.x+l.width, offY+l.y+l.height-1, offZ+l.z, 0x1f, 0xFFFFFFFF, 0xFF000000)
 
-			sliderHeight := int(float32(l.height - 2) * (float32(l.height)/float32(l.contentHeight)))
+			sliderHeight := int(float32(l.height-2) * (float32(l.height) / float32(l.contentHeight)))
 			if sliderHeight < 1 {
 				sliderHeight = 1
 			}
 
-			sliderPosition := int((float32(l.height - 2 - sliderHeight)) * (float32(l.scrollOffset)/float32(l.contentHeight - l.height)))
+			sliderPosition := int((float32(l.height - 2 - sliderHeight)) * (float32(l.scrollOffset) / float32(l.contentHeight-l.height)))
 			if sliderPosition == 0 && l.scrollOffset != 0 {
 				//ensure that slider is not at top unless top of list is visible
 				sliderPosition = 1

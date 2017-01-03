@@ -6,7 +6,7 @@ import "math/rand"
 func GenerateCave(p *Entity, w, h int) *Level {
 
 	l := NewLevel(w, h)
-	l.SetPlayer(p)  
+	l.SetPlayer(p)
 
 	//fill with walls
 	for i := 0; i < w*h; i++ {
@@ -32,7 +32,7 @@ func GenerateCave(p *Entity, w, h int) *Level {
 	//populate with random enemies
 	l.RandomPlaceMobs(20, GNOLL)
 	l.RandomPlaceMobs(1, SUPER_GNOLL)
-	l.RandomPlaceMobs(2, RAT) //places 2 SWARMS of rats. 
+	l.RandomPlaceMobs(2, RAT) //places 2 SWARMS of rats.
 
 	l.PlaceItems(5, ITEM_HEALTH)
 	l.PlaceItems(2, ITEM_POWERUP)

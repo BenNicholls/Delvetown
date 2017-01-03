@@ -4,7 +4,7 @@ var entitydata []entityTypeData
 
 const (
 	PLAYER = iota
-	GNOLL  
+	GNOLL
 	SUPER_GNOLL
 	RAT
 	MAX_ENTITYTYPES

@@ -4,9 +4,8 @@ import "github.com/bennicholls/delvetown/util"
 import "strings"
 import "strconv"
 
+//Inputbox is a textbox designed for user input of text, complete with mighty blinking cursor.
 //TODO: String longer than size of Textbox. How hard could that be????
-
-//Inputbox is based on textbox.
 type Inputbox struct {
 	Textbox
 	cursor          int
@@ -45,6 +44,7 @@ func (ib *Inputbox) Insert(s string) {
 	ib.MoveCursor(1, 0)
 }
 
+//Actually more of a backspace action.
 func (ib *Inputbox) Delete() {
 	switch len(ib.text) {
 	case 0:

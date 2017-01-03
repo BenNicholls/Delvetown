@@ -9,7 +9,7 @@ type Log struct {
 }
 
 func NewLog(logbox *ui.Textbox) Log {
-	w, h := logbox.GetDims()
+	w, h := logbox.Dims()
 	return Log{w, h, make([]string, 0, 50), logbox}
 }
 

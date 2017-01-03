@@ -2,6 +2,7 @@ package ui
 
 import "github.com/bennicholls/delvetown/console"
 
+//UI Element that acts as a way to group other elements. Allows for nesting of elements, etc.
 type Container struct {
 	width, height int
 	x, y, z       int
@@ -18,12 +19,14 @@ func NewContainer(w, h, x, y, z int, bord bool) *Container {
 	return &Container{w, h, x, y, z, bord, "", true, false, true, make([]UIElem, 0, 20)}
 }
 
+//Adds any number of UIElem to the container.
 func (c *Container) Add(elems ...UIElem) {
 	for _, e := range elems {
 		c.Elements = append(c.Elements, e)
 	}
 }
 
+//Deletes all UIElem from the container.
 func (c *Container) ClearElements() {
 	c.Elements = make([]UIElem, 0, 20)
 	c.redraw = true
@@ -33,8 +36,7 @@ func (c *Container) SetTitle(s string) {
 	c.title = s
 }
 
-//UIElem that acts as a container for others. Offets (x,y,z, all optional) are passed through
-//to the nested elements.
+//Offets (x,y,z, all optional) are passed through to the nested elements.
 func (c *Container) Render(offset ...int) {
 	if c.visible {
 		offX, offY, offZ := processOffset(offset)
@@ -53,11 +55,11 @@ func (c *Container) Render(offset ...int) {
 	}
 }
 
-func (c Container) GetDims() (int, int) {
+func (c Container) Dims() (int, int) {
 	return c.width, c.height
 }
 
-func (c Container) GetPos() (int, int, int) {
+func (c Container) Pos() (int, int, int) {
 	return c.x, c.y, c.z
 }
 

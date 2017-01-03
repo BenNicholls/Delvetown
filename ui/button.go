@@ -1,5 +1,7 @@
 package ui
 
+//Buttons are textboxes that can fire an event when "pressed". Event goes into the ui.EventStream
+//Currently the only button in the game uses a hardcoded PulseAnimation, this should probably be modifiable.
 type Button struct {
 	Textbox
 	press      *Event

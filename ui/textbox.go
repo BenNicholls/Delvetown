@@ -3,7 +3,7 @@ package ui
 import "strings"
 import "github.com/bennicholls/delvetown/console"
 
-//Area for displaying text.
+//UI Element for displaying text.
 type Textbox struct {
 	width, height int
 	x, y, z       int
@@ -16,12 +16,11 @@ type Textbox struct {
 	focused       bool
 }
 
-//TODO: sanity checks.
 func NewTextbox(w, h, x, y, z int, bord, cent bool, txt string) *Textbox {
 	return &Textbox{w, h, x, y, z, bord, cent, "", txt, true, make([]Animator, 0, 20), false}
 }
 
-//returns the height required to fit a string after it has been wrapped
+//Returns the height required to fit a string after it has been wrapped. Reimplements the word wrapper but cruder.
 func CalcWrapHeight(s string, width int) int {
 	line := ""
 	n := 0
@@ -55,7 +54,6 @@ func (t *Textbox) ChangeText(txt string) {
 	}
 }
 
-//TODO: scroll bar? (maybe a "MORE" prompt might be easier), separate dirty flag for the border?
 //Render function optionally takes an offset (for containering), 2 or 3 ints.
 func (t *Textbox) Render(offset ...int) {
 	if t.visible {
@@ -99,7 +97,7 @@ func (t *Textbox) Render(offset ...int) {
 
 			//offset if centerred
 			if t.centered {
-				offX += t.width/2 - len(lines[l])/2
+				offX += (t.width - len(lines[l])) / 2
 			}
 
 			//print text
@@ -119,11 +117,11 @@ func (t *Textbox) Render(offset ...int) {
 	}
 }
 
-func (t Textbox) GetDims() (int, int) {
+func (t Textbox) Dims() (int, int) {
 	return t.width, t.height
 }
 
-func (t Textbox) GetPos() (int, int, int) {
+func (t Textbox) Pos() (int, int, int) {
 	return t.x, t.y, t.z
 }
 

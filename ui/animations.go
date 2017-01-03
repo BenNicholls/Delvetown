@@ -2,15 +2,17 @@ package ui
 
 import "github.com/bennicholls/delvetown/console"
 
-//Animations!!! Remember that animations always start DISABLED (enabled = false)
-//and should be activated manually.
-
+//Animations! Animations have a initalized state, then they evolve for a time, and then are garbaged.
+//Some animations will naturally be specific to some ui elements and not others, those limitations
+//will have to be listed here as best we can.
+//Remember that animations always start DISABLED (enabled = false) and must be activated manually.
 type Animator interface {
 	Tick()
 	Render(offset ...int)
 	Toggle()
 }
 
+//BlinkAnimation inverts the fore/back colours of a single cell. Speed controls frequency.
 type BlinkAnimation struct {
 	tick    int
 	speed   int //number of frames between blinks

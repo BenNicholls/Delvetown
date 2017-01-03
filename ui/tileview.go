@@ -1,7 +1,6 @@
 package ui
 
 import "github.com/bennicholls/delvetown/console"
-import "github.com/bennicholls/delvetown/data"
 import "github.com/bennicholls/delvetown/util"
 
 //View object for drawing tiles. (eg. maps). Effectively a buffer for drawing before the console grabs it.
@@ -24,11 +23,7 @@ func (tv *TileView) SetTitle(s string) {
 	tv.title = s
 }
 
-func (tv *TileView) DrawVisuals(x, y int, v data.Visuals) {
-
-	tv.Draw(x, y, v.Glyph, v.ForeColour, 0x00000000)
-}
-
+//Draws a glyph to the TileView.
 func (tv *TileView) Draw(x, y, glyph int, f, b uint32) {
 	if util.CheckBounds(x, y, tv.Width, tv.Height) {
 		tv.grid[y*tv.Width+x].Set(glyph, f, b, tv.z)
@@ -36,6 +31,7 @@ func (tv *TileView) Draw(x, y, glyph int, f, b uint32) {
 }
 
 //Apply light level. 0-255. TODO: add colour mask (soft orange glow??)
+//TODO: This should not be here at all... move this to delvetown.render(), and add a tv.DrawAlpha() that can take an alpha value.
 func (tv *TileView) ApplyLight(x, y, b int) {
 	if util.CheckBounds(x, y, tv.Width, tv.Height) {
 		s := y*tv.Width + x
@@ -63,14 +59,15 @@ func (tv TileView) Render(offset ...int) {
 	}
 }
 
-func (tv TileView) GetDims() (int, int) {
+func (tv TileView) Dims() (int, int) {
 	return tv.Width, tv.Height
 }
 
-func (tv TileView) GetPos() (int, int, int) {
+func (tv TileView) Pos() (int, int, int) {
 	return tv.x, tv.y, tv.z
 }
 
+//Resets the TileView
 func (tv *TileView) Clear() {
 	for i, _ := range tv.grid {
 		tv.grid[i].Set(0, 0, 0, 0)

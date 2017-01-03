@@ -100,7 +100,7 @@ func (dm *DelveMode) BuildHUDInventory() {
 
 func (dm *DelveMode) BuildHUDenemylist() {
 	dm.HUDenemylist.ClearElements()
-	w, _ := dm.HUDenemylist.GetDims()
+	w, _ := dm.HUDenemylist.Dims()
 
 	for i, enemy := range dm.player.VisibleEntities {
 		dm.HUDenemylist.Add(ui.NewTextbox(w, 1, 0, i, 0, false, false, enemy.Name))
@@ -228,13 +228,15 @@ func (dm *DelveMode) Render() {
 				if dm.player.CanSee(e.ID) && !(e.X == x && e.Y == y) {
 					//dm.level.MemoryMap.RemoveEntity(x, y)
 				} else {
-					dm.view.DrawVisuals(i%w, i/w, e.GetVisuals())
+					v := e.GetVisuals()
+					dm.view.Draw(i%w, i/w, v.Glyph, v.ForeColour, 0)
 				}
 			} else if item != nil {
-				dm.view.DrawVisuals(i%w, i/w, item.GetVisuals())
+				v := item.GetVisuals()
+				dm.view.Draw(i%w, i/w, v.Glyph, v.ForeColour, 0)
 			} else {
-				t := dm.level.MemoryMap.GetTile(x, y)
-				dm.view.DrawVisuals(i%w, i/w, t.GetVisuals())
+				v := dm.level.MemoryMap.GetTile(x, y).GetVisuals()
+				dm.view.Draw(i%w, i/w, v.Glyph, v.ForeColour, 0)
 			}
 
 			if dm.level.MemoryMap.LastVisible(x, y) != dm.tick {
